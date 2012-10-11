@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    title CORMO - #{name}
+    link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
+    link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
+    link(href='style.css', rel='stylesheet', type='text/css')
+  body
+    div.container-fluid
+      div.row-fluid
+        div.span3.visible-desktop
+          include nav
+        div.span9
+          include class-body
+    script(src='http://code.jquery.com/jquery-1.8.2.min.js')
+    script(src='bootstrap/js/bootstrap.min.js')

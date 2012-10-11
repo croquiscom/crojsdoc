@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+var coffee = require('coffee-script');
+var generate_doc = require('../lib/generate_doc');
+generate_doc(process.argv.slice(2));

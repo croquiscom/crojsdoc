@@ -1,0 +1,12 @@
+if param.types && param.types.length && param.types.join('')
+  span
+    | {
+    each type, i in param.types
+      = type
+      if i+1 < param.types.length
+        | , 
+    | } 
+code= param.name
+span
+  | 
+  != param.description

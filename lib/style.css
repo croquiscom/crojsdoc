@@ -1,0 +1,14 @@
+.cormo-sidenav {
+	margin-top: 30px;
+}
+
+.cormo-sidenav > li > a {
+	margin: 0 0 -1px 0;
+	border: 1px solid #e5e5e5;
+	padding: 8px 14px;
+}
+
+.cormo-sidenav > li.cormo-class-property > a {
+	padding-left: 30px;
+	font-size: small;
+}

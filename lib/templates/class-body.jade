@@ -1,0 +1,51 @@
+div.page-header
+  h1= name
+  div!= klass.description.summary
+  div!= klass.description.body
+each property in properties
+  h2= property.ctx.string.replace('()', '')
+    if property.ctx.type==='method'
+      | (
+      each param, i in property.params
+        if param.optional
+          | [#{param.name}]
+        else
+          | #{param.name}
+        if i+1 < property.params.length
+          | , 
+      | )
+  div!= property.description.summary
+  div!= property.description.body
+  if property.params.length
+    h3 Parameters:
+    ul
+      each param1 in property.params
+        li 
+          - var param = param1;
+          include method-param
+          if param1.params
+            ul
+              each param2 in param1.params
+                li
+                  - var param = param2;
+                  include method-param
+                  if param2.params
+                    ul
+                      each param3 in param2.params
+                        li
+                          - var param = param3;
+                          include method-param
+  if property.return
+    h3 Returns:
+    ul
+      li
+        span
+          |  {
+          each type, i in property.return.types
+            = type
+            if i+1 < property.return.types.length
+              | , 
+          | } 
+        span
+          != property.return.description
+  hr.property-seperator

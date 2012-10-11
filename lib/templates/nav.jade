@@ -1,0 +1,13 @@
+ul.nav.nav-list.cormo-sidenav
+  li.nav-header
+    | Classes
+  each klass in classes
+    if klass===name
+      li.active
+        a(href=klass+'.html')= klass
+      each property in properties
+        li.cormo-class-property
+          a= property.ctx.name
+    else
+      li
+        a(href=klass+'.html')= klass
