@@ -69,7 +69,7 @@ processComments = (file, comments) ->
         comment.html_id = encodeURIComponent comment.ctx.name
         result.classes[comment.ctx.name] = comment
       when 'property', 'method'
-        comment.html_id = encodeURIComponent comment.ctx.string.replace '()', ''
+        comment.html_id = encodeURIComponent comment.ctx.string.replace('()', '').replace('::','__').replace('.','_')
         if comment.ctx.hasOwnProperty 'constructor'
           result.classes[comment.ctx.constructor]?.properties.push comment
         else if comment.ctx.receiver?
@@ -77,7 +77,7 @@ processComments = (file, comments) ->
 
 copyResources = (source, target) ->
   exec = require('child_process').exec
-  exec "cp -a #{source}/bootstrap #{target}/bootstrap"
+  exec "cp -a #{source}/bootstrap #{target}"
   exec "cp -a #{source}/style.css #{target}"
 
 generate = (paths) ->
