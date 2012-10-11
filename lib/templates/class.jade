@@ -11,7 +11,8 @@ html(lang='en')
     div.container-fluid
       div.row-fluid
         div.span3.visible-desktop
-          include nav
+          div.span3.sidebar(data-spy='affix')
+            include nav
         div.span9
           include class-body
     script(src='http://code.jquery.com/jquery-1.8.2.min.js')
