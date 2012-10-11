@@ -1,6 +1,9 @@
 {
   "name": "croquis-jsdoc",
   "version": "0.1.0",
+  "bin": {
+    "croquis-jsdoc": "./bin/croquis-jsdoc"
+  },
   "dependencies": {
     "coffee-script": "",
     "dox": "git://github.com/croquiscom/dox-for-coffee.git#master",
