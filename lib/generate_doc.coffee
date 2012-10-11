@@ -66,8 +66,10 @@ processComments = (file, comments) ->
 
     switch comment.ctx.type
       when 'class'
+        comment.html_id = encodeURIComponent comment.ctx.name
         result.classes[comment.ctx.name] = comment
       when 'property', 'method'
+        comment.html_id = encodeURIComponent comment.ctx.string.replace '()', ''
         if comment.ctx.hasOwnProperty 'constructor'
           result.classes[comment.ctx.constructor]?.properties.push comment
         else if comment.ctx.receiver?

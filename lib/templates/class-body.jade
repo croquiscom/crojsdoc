@@ -3,7 +3,7 @@ div.page-header
   div!= klass.description.summary
   div!= klass.description.body
 each property in properties
-  h2= property.ctx.string.replace('()', '')
+  h2(id=property.html_id)= property.ctx.string.replace('()', '')
     if property.ctx.type==='method'
       | (
       each param, i in property.params

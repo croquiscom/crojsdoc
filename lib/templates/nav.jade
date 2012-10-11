@@ -7,7 +7,7 @@ ul.nav.nav-list.cormo-sidenav
         a(href=klass+'.html')= klass
       each property in properties
         li.cormo-class-property
-          a= property.ctx.name
+          a(href='#'+property.html_id)= property.ctx.name
     else
       li
         a(href=klass+'.html')= klass
