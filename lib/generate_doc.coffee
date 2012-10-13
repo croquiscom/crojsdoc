@@ -96,6 +96,20 @@ generate = (paths) ->
   copyResources __dirname, doc_dir
 
   classes = Object.keys(result.classes).sort()
+
+  fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
+    options =
+      name: 'README'
+      content: content
+      first_class: classes[0]
+      type: 'home'
+    jade.renderFile "#{template_dir}/extra.jade", options, (error, result) ->
+      return console.error error.stack if error
+      file = "#{doc_dir}/index.html"
+      fs.writeFile file, result, (error) ->
+        return console.error 'failed to create '+file if error
+        console.log file + ' is created'
+
   classes.forEach (klass) ->
     properties = result.classes[klass].properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
@@ -103,6 +117,8 @@ generate = (paths) ->
       klass: result.classes[klass]
       properties: properties
       classes: classes
+      first_class: classes[0]
+      type: 'classes'
     jade.renderFile "#{template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{doc_dir}/#{klass}.html"

@@ -10,11 +10,7 @@ html(lang='en')
   body(data-spy='scroll', data-target='.sidebar')
     include nav
     div.container-fluid.content
-      div.row-fluid
-        div.span3.visible-desktop
-          div.span3.sidebar(data-spy='affix')
-            include class-nav
-        div.span9
-          include class-body
+      div.span12
+        != content
     script(src='http://code.jquery.com/jquery-1.8.2.min.js')
     script(src='bootstrap/js/bootstrap.min.js')

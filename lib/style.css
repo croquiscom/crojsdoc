@@ -8,7 +8,7 @@
 }
 
 .cormo-sidenav {
-	margin-top: 30px;
+	margin-top: 60px;
 }
 
 .cormo-sidenav > li > a {
@@ -20,4 +20,8 @@
 .cormo-sidenav > li.cormo-class-property > a {
 	padding-left: 30px;
 	font-size: small;
+}
+
+.content {
+	margin-top: 60px;
 }
