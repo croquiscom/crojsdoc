@@ -50,6 +50,17 @@ if item.return
                             li
                               - var param = prop3;
                               include method-param
+if item.resterrors.length
+  h3 Rest Errors:
+  ul
+    each tag in item.resterrors
+      li
+        {
+        span= tag.code
+        /
+        span= tag.message
+        } 
+        span!= tag.description
 if item.code
   button.showcode.btn.btn-info Show code
   pre.sourcecode.prettyprint.linenums!= item.code

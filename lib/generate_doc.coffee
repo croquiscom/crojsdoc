@@ -130,6 +130,7 @@ processComments = (file, comments) ->
     comment.defined_in = file
     comment.params = []
     comment.returnprops = []
+    comment.resterrors = []
     comment.properties = []
     comment.ctx or comment.ctx = {}
 
@@ -150,6 +151,10 @@ processComments = (file, comments) ->
         when 'restapi'
           comment.ctx.type = 'restapi'
           comment.ctx.name = tag.string
+        when 'resterror'
+          res = /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
+          if res
+            comment.resterrors.push code: res[1], message: res[2], description: res[3]
 
     # make parameters nested
     makeNested comment, 'params'
