@@ -1,3 +1,5 @@
-each page in result.pages
-  h2(id=page.html_id)= page.ctx.name
-  hr.property-seperator
+each item in result.pages
+  h2(id=item.html_id)= item.ctx.name
+  div!= item.description.summary
+  div!= item.description.body
+  hr.item-seperator

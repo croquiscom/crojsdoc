@@ -1,0 +1,37 @@
+div!= item.description.summary
+div!= item.description.body
+if item.params.length
+  h3 Parameters:
+  ul
+    each param1 in item.params
+      li 
+        - var param = param1;
+        include method-param
+        if param1.params
+          ul
+            each param2 in param1.params
+              li
+                - var param = param2;
+                include method-param
+                if param2.params
+                  ul
+                    each param3 in param2.params
+                      li
+                        - var param = param3;
+                        include method-param
+if item.return
+  h3 Returns:
+  ul
+    li
+      span
+        |  {
+        each type, i in item.return.types
+          = type
+          if i+1 < item.return.types.length
+            | , 
+        | } 
+      span
+        != item.return.description
+if item.code
+  button.showcode.btn.btn-info Show code
+  pre.sourcecode.prettyprint.linenums!= item.code

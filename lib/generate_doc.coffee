@@ -92,8 +92,7 @@ processComments = (file, comments) ->
 
 copyResources = (source, target) ->
   exec = require('child_process').exec
-  exec "cp -a #{source}/bootstrap #{target}"
-  exec "cp -a #{source}/style.css #{target}"
+  exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/style.css #{target}"
 
 generate = (paths) ->
   project_dir = process.cwd()

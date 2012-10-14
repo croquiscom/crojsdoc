@@ -1,5 +1,6 @@
-each api in result.restapis
-  h2(id=api.html_id)= api.ctx.name
-  div!= api.description.summary
-  div!= api.description.body
-  hr.property-seperator
+each item in result.restapis
+  h2(id=item.html_id)= item.ctx.name
+  div!= item.description.summary
+  div!= item.description.body
+  include method
+  hr.item-seperator

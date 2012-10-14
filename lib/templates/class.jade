@@ -1,20 +1,10 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset="utf-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-    title CORMO - #{name}
-    link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
-    link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
-    link(href='style.css', rel='stylesheet', type='text/css')
-  body(data-spy='scroll', data-target='.sidebar')
-    include nav
-    div.container-fluid.content
-      div.row-fluid
-        div.span3.visible-desktop
-          div.span3.sidebar(data-spy='affix')
-            include class-nav
-        div.span9
-          include class-body
-    script(src='http://code.jquery.com/jquery-1.8.2.min.js')
-    script(src='bootstrap/js/bootstrap.min.js')
+extends layout
+
+block content
+  div.container-fluid.content
+    div.row-fluid
+      div.span3.visible-desktop
+        div.span3.sidebar(data-spy='affix')
+          include class-nav
+      div.span9
+        include class-body

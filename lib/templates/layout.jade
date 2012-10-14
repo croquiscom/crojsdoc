@@ -1,0 +1,23 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    title CORMO - #{name}
+    link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
+    link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
+    link(href='style.css', rel='stylesheet', type='text/css')
+    link(href='google-code-prettify/prettify.css', rel='stylesheet', type='text/css')
+  body(data-spy='scroll', data-target='.sidebar')
+    include nav
+    block content
+    script(src='http://code.jquery.com/jquery-1.8.2.min.js')
+    script(src='bootstrap/js/bootstrap.min.js')
+    script(src='google-code-prettify/prettify.js')
+    script
+      $(function() {
+        window.prettyPrint && prettyPrint()
+      });
+      $('body').on('click', '.showcode', function () {
+        $(this).next('pre').toggle();
+      });
