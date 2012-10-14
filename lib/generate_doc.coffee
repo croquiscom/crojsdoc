@@ -17,6 +17,7 @@ getComments = (file) ->
 
 result =
   classes: {}
+  restapis: {}
 
 processParamFlags = (tag) ->
   # is optional parameter?
@@ -52,6 +53,7 @@ processComments = (file, comments) ->
     comment.defined_in = file
     comment.params = []
     comment.properties = []
+    comment.ctx or comment.ctx = {}
 
     for tag in comment.tags
       switch tag.type
@@ -60,6 +62,9 @@ processComments = (file, comments) ->
           comment.params.push tag
         when 'return'
           comment.return = tag
+        when 'restapi'
+          comment.ctx.type = 'restapi'
+          comment.ctx.name = tag.string
 
     # make parameters nested
     makeNested comment, 'params'
@@ -74,6 +79,9 @@ processComments = (file, comments) ->
           result.classes[comment.ctx.constructor]?.properties.push comment
         else if comment.ctx.receiver?
           result.classes[comment.ctx.receiver]?.properties.push comment
+      when 'restapi'
+        comment.html_id = encodeURIComponent comment.ctx.name.replace(/[(): /]/g, '_')
+        result.restapis[comment.ctx.name] = comment
 
 copyResources = (source, target) ->
   exec = require('child_process').exec
@@ -95,14 +103,19 @@ generate = (paths) ->
 
   copyResources __dirname, doc_dir
 
-  classes = Object.keys(result.classes).sort()
+  result.classes = Object.keys(result.classes).sort().map (name) -> result.classes[name]
+  result.restapis = Object.keys(result.restapis).sort( (a,b) ->
+    a = a.replace /([A-Z]+) \/(.*)/, '-$2 $1'
+    b = b.replace /([A-Z]+) \/(.*)/, '-$2 $1'
+    if a<b then -1 else 1
+  ).map (name) -> result.restapis[name]
 
   fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
     options =
       name: 'README'
       content: content
-      first_class: classes[0]
       type: 'home'
+      result: result
     jade.renderFile "#{template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{doc_dir}/index.html"
@@ -110,18 +123,29 @@ generate = (paths) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created'
 
-  classes.forEach (klass) ->
-    properties = result.classes[klass].properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
+  if result.restapis.length > 0
     options =
-      name: klass
-      klass: result.classes[klass]
+      name: 'REST APIs'
+      type: 'restapis'
+      result: result
+    jade.renderFile "#{template_dir}/restapis.jade", options, (error, result) ->
+      return console.error error.stack if error
+      file = "#{doc_dir}/restapis.html"
+      fs.writeFile file, result, (error) ->
+        return console.error 'failed to create '+file if error
+        console.log file + ' is created'
+
+  result.classes.forEach (klass) ->
+    properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
+    options =
+      name: klass.ctx.name
+      klass: klass
       properties: properties
-      classes: classes
-      first_class: classes[0]
       type: 'classes'
+      result: result
     jade.renderFile "#{template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/#{klass}.html"
+      file = "#{doc_dir}/#{klass.ctx.name}.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created'

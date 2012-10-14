@@ -4,5 +4,9 @@ div.navbar.navbar-inverse.navbar-fixed-top
       ui.nav
         li(class=(type=='home'?'active':''))
           a(href='index.html') Home
-        li(class=(type=='classes'?'active':''))
-          a(href=first_class+'.html') Classes
+        if result.classes.length > 0
+          li(class=(type=='classes'?'active':''))
+            a(href=result.classes[0].ctx.name+'.html') Classes
+        if result.restapis.length > 0
+          li(class=(type=='restapis'?'active':''))
+            a(href='restapis.html') REST APIs

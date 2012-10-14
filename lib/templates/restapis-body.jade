@@ -1,0 +1,5 @@
+each api in result.restapis
+  h2(id=api.html_id)= api.ctx.name
+  div!= api.description.summary
+  div!= api.description.body
+  hr.property-seperator
