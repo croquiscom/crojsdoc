@@ -26,7 +26,7 @@ if item.return
       span
         |  {
         each type, i in item.return.types
-          = type
+          != type
           if i+1 < item.return.types.length
             | , 
         | } 

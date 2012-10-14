@@ -3,6 +3,34 @@ fs = require 'fs'
 jade = require 'jade'
 walkdir = require 'walkdir'
 
+types =
+  Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
+  Boolean: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'
+  String: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'
+  Array: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'
+  Number: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'
+  Date: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date'
+  Function: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'
+  RegExp: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/RegExp'
+  Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
+  undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
+
+makeTypeLink = (type) ->
+  getlink = (type) ->
+    if types[type]
+      link = types[type]
+    else if result.ids[type]
+      filename = result.ids[type].filename + '.html'
+      html_id = result.ids[type].html_id
+      link = "#{filename}##{html_id}"
+    else
+      link = '#'
+    return "<a href='#{link}'>#{type}</a>"
+  if res = type.match /(.*)<(.*)>/
+    return "#{getlink res[1]}&lt;#{getlink res[2]}&gt;"
+  else
+    return getlink type
+
 getComments = (file) ->
   return if (fs.statSync file).isDirectory()
   return if not /\.coffee$/.test(file) and not /\.js$/.test(file)
@@ -16,6 +44,7 @@ getComments = (file) ->
     dox.parseComments content
 
 result =
+  ids: {}
   classes: {}
   pages: {}
   restapis: {}
@@ -49,6 +78,47 @@ makeNested = (comment, targetName) ->
         param.name = match[2]
         parentParam[targetName].unshift param
 
+convertLink = (str) ->
+  str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) ->
+    if result.ids[$1]
+      filename = result.ids[$1].filename + '.html'
+      html_id = result.ids[$1].html_id
+      return "<a href='#{filename}##{html_id}'>#{$1}</a>"
+    else
+      return $1
+  return str
+
+convertLinkParam = (param) ->
+  if param.params
+    for subparam, i in param.params
+      convertLinkParam subparam
+  for type, i in param.types
+    funcparams = []
+    if type is 'Function' and param.params
+      funcparams = param.params.map (p) -> p.name
+    type = makeTypeLink type
+    if funcparams.length > 0
+      type += '(' + funcparams.join(', ') + ')'
+    param.types[i] = type
+
+convertLinkComment = (comment) ->
+  desc = comment.description
+  if desc
+    desc.full = convertLink desc.full
+    desc.summary = convertLink desc.summary
+    desc.body = convertLink desc.body
+
+  for property in comment.properties
+    convertLinkComment property
+
+  for param, i in comment.params
+    convertLinkParam param
+
+  ret = comment.return
+  if ret?.types
+    for type, i in ret.types
+      ret.types[i] = makeTypeLink type
+
 processComments = (file, comments) ->
   comments.forEach (comment) ->
     comment.defined_in = file
@@ -73,22 +143,35 @@ processComments = (file, comments) ->
     # make parameters nested
     makeNested comment, 'params'
 
+    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
+      html_id = comment.ctx.string.replace('()', '')
+    else
+      html_id = comment.ctx.name
+    if html_id
+      comment.html_id = encodeURIComponent html_id.replace(/[():\. /]/g, '_')
+
     switch comment.ctx.type
       when 'class'
-        comment.html_id = encodeURIComponent comment.ctx.name
         result.classes[comment.ctx.name] = comment
+        result.ids[comment.ctx.name] = comment
+        comment.filename = comment.ctx.name
       when 'property', 'method'
-        comment.html_id = encodeURIComponent comment.ctx.string.replace('()', '').replace('::','__').replace('.','_')
         if comment.ctx.hasOwnProperty 'constructor'
           result.classes[comment.ctx.constructor]?.properties.push comment
+          result.ids[comment.ctx.string.replace('()', '')] = comment
+          comment.filename = comment.ctx.constructor
         else if comment.ctx.receiver?
           result.classes[comment.ctx.receiver]?.properties.push comment
+          result.ids[comment.ctx.string.replace('()', '')] = comment
+          comment.filename = comment.ctx.receiver
       when 'page'
-        comment.html_id = encodeURIComponent comment.ctx.name.replace(/[ /]/g, '_')
         result.pages[comment.ctx.name] = comment
+        result.ids[comment.ctx.name] = comment
+        comment.filename = 'pages'
       when 'restapi'
-        comment.html_id = encodeURIComponent comment.ctx.name.replace(/[(): /]/g, '_')
         result.restapis[comment.ctx.name] = comment
+        result.ids[comment.ctx.name] = comment
+        comment.filename = 'restapis'
 
 copyResources = (source, target) ->
   exec = require('child_process').exec
@@ -116,6 +199,8 @@ generate = (paths) ->
     b = b.replace /([A-Z]+) \/(.*)/, '-$2 $1'
     if a<b then -1 else 1
   ).map (name) -> result.restapis[name]
+
+  [].concat(result.classes, result.pages, result.restapis).forEach convertLinkComment
 
   fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
     options =
