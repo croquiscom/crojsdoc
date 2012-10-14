@@ -7,6 +7,9 @@ div.navbar.navbar-inverse.navbar-fixed-top
         if result.classes.length > 0
           li(class=(type=='classes'?'active':''))
             a(href=result.classes[0].ctx.name+'.html') Classes
+        if result.pages.length > 0
+          li(class=(type=='pages'?'active':''))
+            a(href='pages.html') Pages
         if result.restapis.length > 0
           li(class=(type=='restapis'?'active':''))
             a(href='restapis.html') REST APIs

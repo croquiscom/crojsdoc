@@ -17,6 +17,7 @@ getComments = (file) ->
 
 result =
   classes: {}
+  pages: {}
   restapis: {}
 
 processParamFlags = (tag) ->
@@ -62,6 +63,9 @@ processComments = (file, comments) ->
           comment.params.push tag
         when 'return'
           comment.return = tag
+        when 'page'
+          comment.ctx.type = 'page'
+          comment.ctx.name = tag.string
         when 'restapi'
           comment.ctx.type = 'restapi'
           comment.ctx.name = tag.string
@@ -79,6 +83,9 @@ processComments = (file, comments) ->
           result.classes[comment.ctx.constructor]?.properties.push comment
         else if comment.ctx.receiver?
           result.classes[comment.ctx.receiver]?.properties.push comment
+      when 'page'
+        comment.html_id = encodeURIComponent comment.ctx.name.replace(/[ /]/g, '_')
+        result.pages[comment.ctx.name] = comment
       when 'restapi'
         comment.html_id = encodeURIComponent comment.ctx.name.replace(/[(): /]/g, '_')
         result.restapis[comment.ctx.name] = comment
@@ -104,6 +111,7 @@ generate = (paths) ->
   copyResources __dirname, doc_dir
 
   result.classes = Object.keys(result.classes).sort().map (name) -> result.classes[name]
+  result.pages = Object.keys(result.pages).sort().map (name) -> result.pages[name]
   result.restapis = Object.keys(result.restapis).sort( (a,b) ->
     a = a.replace /([A-Z]+) \/(.*)/, '-$2 $1'
     b = b.replace /([A-Z]+) \/(.*)/, '-$2 $1'
@@ -119,6 +127,18 @@ generate = (paths) ->
     jade.renderFile "#{template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{doc_dir}/index.html"
+      fs.writeFile file, result, (error) ->
+        return console.error 'failed to create '+file if error
+        console.log file + ' is created'
+
+  if result.pages.length > 0
+    options =
+      name: 'Pages'
+      type: 'pages'
+      result: result
+    jade.renderFile "#{template_dir}/pages.jade", options, (error, result) ->
+      return console.error error.stack if error
+      file = "#{doc_dir}/pages.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created'
