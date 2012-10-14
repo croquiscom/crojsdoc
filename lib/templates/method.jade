@@ -32,6 +32,24 @@ if item.return
         | } 
       span
         != item.return.description
+      if item.returnprops
+        ul
+          each prop1 in item.returnprops
+            li
+              - var param = prop1;
+              include method-param
+              if prop1.returnprops
+                ul
+                  each prop2 in prop1.returnprops
+                    li
+                      - var param = prop2;
+                      include method-param
+                      if prop2.returnprops
+                        ul
+                          each prop3 in prop2.returnprops
+                            li
+                              - var param = prop3;
+                              include method-param
 if item.code
   button.showcode.btn.btn-info Show code
   pre.sourcecode.prettyprint.linenums!= item.code

@@ -92,6 +92,9 @@ convertLinkParam = (param) ->
   if param.params
     for subparam, i in param.params
       convertLinkParam subparam
+  if param.returnprops
+    for subparam, i in param.returnprops
+      convertLinkParam subparam
   for type, i in param.types
     funcparams = []
     if type is 'Function' and param.params
@@ -119,10 +122,14 @@ convertLinkComment = (comment) ->
     for type, i in ret.types
       ret.types[i] = makeTypeLink type
 
+  for param, i in comment.returnprops
+    convertLinkParam param
+
 processComments = (file, comments) ->
   comments.forEach (comment) ->
     comment.defined_in = file
     comment.params = []
+    comment.returnprops = []
     comment.properties = []
     comment.ctx or comment.ctx = {}
 
@@ -133,6 +140,10 @@ processComments = (file, comments) ->
           comment.params.push tag
         when 'return'
           comment.return = tag
+        when 'returnprop'
+          tag = dox.parseTag '@param ' + tag.string
+          tag = processParamFlags tag
+          comment.returnprops.push tag
         when 'page'
           comment.ctx.type = 'page'
           comment.ctx.name = tag.string
@@ -142,6 +153,7 @@ processComments = (file, comments) ->
 
     # make parameters nested
     makeNested comment, 'params'
+    makeNested comment, 'returnprops'
 
     if comment.ctx.type is 'property' or comment.ctx.type is 'method'
       html_id = comment.ctx.string.replace('()', '')
