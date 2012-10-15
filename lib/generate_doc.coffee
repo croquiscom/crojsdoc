@@ -122,7 +122,7 @@ classifyComments = (file, comments) ->
             id = comment.ctx.receiver + '.' + comment.ctx.name
             comment.ctx.fullname = comment.ctx.receiver.replace(/.*[\./](\w+)/, '$1') + '.' + comment.ctx.name
           console.log comment.ctx.fullname
-        when 'param', 'return', 'returnprop', 'throws', 'resterror'
+        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
 
@@ -153,6 +153,7 @@ processComments = (comments) ->
     comment.returnprops = []
     comment.throws = []
     comment.resterrors = []
+    comment.sees = []
     comment.properties = []
 
     desc = comment.description
@@ -189,6 +190,13 @@ processComments = (comments) ->
           res = /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
           if res
             comment.resterrors.push code: res[1], message: res[2], description: convertLink res[3]
+        when 'see'
+          str = tag.local or tag.url
+          if result.ids[str]
+            filename = result.ids[str].filename + '.html'
+            html_id = result.ids[str].html_id
+            str = "<a href='#{filename}##{html_id}'>#{str}</a>"
+          comment.sees.push str
 
     # make parameters nested
     makeNested comment, 'params'

@@ -70,6 +70,11 @@ if item.resterrors.length
         span= tag.message
         } 
         span!= tag.description
+if item.sees.length
+  h3 See Also:
+  ul
+    each tag in item.sees
+      li!= tag
 if item.code
   button.showcode.btn.btn-info Show code
   span  (defined in #{item.defined_in})
