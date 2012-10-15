@@ -1,18 +1,20 @@
 div.page-header
-  h1(id=klass.html_id)= name
-  div!= klass.description.summary
-  div!= klass.description.body
+  section(id=klass.html_id)
+    h1= name
+    div!= klass.description.summary
+    div!= klass.description.body
 each item in properties
-  h2(id=item.html_id)= item.ctx.string.replace('()', '')
-    if item.ctx.type==='method'
-      | (
-      each param, i in item.params
-        if param.optional
-          | [#{param.name}]
-        else
-          | #{param.name}
-        if i+1 < item.params.length
-          | , 
-      | )
-  include method
-  hr.item-seperator
+  section(id=item.html_id)
+    h2= item.ctx.string.replace('()', '')
+      if item.ctx.type==='method'
+        | (
+        each param, i in item.params
+          if param.optional
+            | [#{param.name}]
+          else
+            | #{param.name}
+          if i+1 < item.params.length
+            | , 
+        | )
+    include method
+    hr.item-seperator

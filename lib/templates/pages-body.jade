@@ -1,5 +1,6 @@
 each item in result.pages
-  h2(id=item.html_id)= item.ctx.name
-  div!= item.description.summary
-  div!= item.description.body
-  hr.item-seperator
+  section(id=item.html_id)
+    h2= item.ctx.name
+    div!= item.description.summary
+    div!= item.description.body
+    hr.item-seperator

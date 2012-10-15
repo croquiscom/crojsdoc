@@ -1,4 +1,5 @@
 each item in result.restapis
-  h2(id=item.html_id)= item.ctx.name
-  include method
-  hr.item-seperator
+  section(id=item.html_id)
+    h2= item.ctx.name
+    include method
+    hr.item-seperator

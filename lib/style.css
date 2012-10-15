@@ -9,6 +9,7 @@
 
 .cormo-sidenav {
 	margin-top: 60px;
+	margin-bottom: 20px;
 }
 
 .cormo-sidenav > li > a {
@@ -22,29 +23,25 @@
 	font-size: small;
 }
 
-.content {
-	margin-top: 60px;
-}
-
 .sourcecode {
 	display: none;
 }
 
-.optional:after {
-    content: "optional";
-    background: #afeeee;
-    color: #000;
-    font-size: 11px;
-    line-height: 15px;
-    font-weight: normal;
-    padding: 0 2px;
-    border-radius: 3px;
-    border: 1px solid #333;
-    display: inline-block;
-    margin-left: 5px;
+.label-optional {
+	margin-left: 5px;
+    background-color: #3a87ad;
+}
+
+.label-static {
+	margin-left: 5px;
+	background-color: #f89406;
 }
 
 .missing-link {
 	color: red;
 	background-color: gray;
+}
+
+section {
+	padding-top: 30px;
 }

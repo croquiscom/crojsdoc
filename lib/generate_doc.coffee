@@ -117,8 +117,10 @@ classifyComments = (file, comments) ->
       when 'property', 'method'
         if comment.ctx.hasOwnProperty 'constructor'
           comment.filename = comment.ctx.constructor
+          comment.static = false
         else if comment.ctx.receiver?
           comment.filename = comment.ctx.receiver
+          comment.static = true
       when 'page'
         comment.filename = 'pages'
       when 'restapi'
