@@ -8,6 +8,7 @@ html(lang='en')
     link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
     link(href='style.css', rel='stylesheet', type='text/css')
     link(href='google-code-prettify/prettify.css', rel='stylesheet', type='text/css')
+    block style
   body(data-spy='scroll', data-target='.sidebar')
     include nav
     block content
@@ -21,3 +22,4 @@ html(lang='en')
       $('body').on('click', '.showcode', function () {
         $(this).parent().find('pre.sourcecode').toggle();
       });
+    block script

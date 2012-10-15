@@ -1,6 +1,20 @@
 extends layout
 
+block style
+  link(href='tocify/jquery.tocify.css', rel='stylesheet', type='text/css')
+
 block content
   div.container-fluid.content.extra
-    div.span12
-      != content
+    div.row-fluid
+      div.span3
+        div#toc
+      div.span9
+        != content
+
+block script
+  script(src='http://code.jquery.com/ui/1.9.0/jquery-ui.min.js')
+  script(src='tocify/jquery.tocify.min.js')
+  script
+    $(function() {
+      $('#toc').tocify();
+    });
