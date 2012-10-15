@@ -93,6 +93,13 @@ classifyComments = (file, comments) ->
   comments.forEach (comment) ->
     comment.defined_in = file
     comment.ctx or comment.ctx = {}
+
+    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
+      id = comment.ctx.string.replace('()', '')
+    else
+      id = comment.ctx.name
+    comment.ctx.fullname = id
+
     for tag in comment.tags
       switch tag.type
         when 'page'
@@ -101,11 +108,21 @@ classifyComments = (file, comments) ->
         when 'restapi'
           comment.ctx.type = 'restapi'
           comment.ctx.name = tag.string
+        when 'class'
+          comment.ctx.type = 'class'
+          if tag.string
+            comment.ctx.name = tag.string
+        when 'memberOf'
+          if /(::|#|prototype)$/.test tag.parent
+            comment.ctx.constructor = tag.parent.replace /(::|#|prototype)$/, ''
+            id = comment.ctx.constructor + '::' + comment.ctx.name
+            comment.ctx.fullname = comment.ctx.constructor.replace(/.*[\./](\w+)/, '$1') + '::' + comment.ctx.name
+          else
+            comment.ctx.receiver = tag.parent
+            id = comment.ctx.receiver + '.' + comment.ctx.name
+            comment.ctx.fullname = comment.ctx.receiver.replace(/.*[\./](\w+)/, '$1') + '.' + comment.ctx.name
+          console.log comment.ctx.fullname
 
-    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
-      id = comment.ctx.string.replace('()', '')
-    else
-      id = comment.ctx.name
     if id
       result.ids[id] = comment
       comment.html_id = id.replace(/[^A-Za-z0-9_]/g, '_')
@@ -113,13 +130,13 @@ classifyComments = (file, comments) ->
     switch comment.ctx.type
       when 'class'
         result.classes[comment.ctx.name] = comment
-        comment.filename = comment.ctx.name
+        comment.filename = comment.ctx.name.replace(/\//g, '.')
       when 'property', 'method'
         if comment.ctx.hasOwnProperty 'constructor'
-          comment.filename = comment.ctx.constructor
+          comment.filename = comment.ctx.constructor.replace(/\//g, '.')
           comment.static = false
         else if comment.ctx.receiver?
-          comment.filename = comment.ctx.receiver
+          comment.filename = comment.ctx.receiver.replace(/\//g, '.')
           comment.static = true
       when 'page'
         comment.filename = 'pages'
@@ -257,7 +274,7 @@ generate = (paths) ->
       result: result
     jade.renderFile "#{template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/#{klass.ctx.name}.html"
+      file = "#{doc_dir}/#{klass.filename}.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created'

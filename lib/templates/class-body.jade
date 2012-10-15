@@ -3,9 +3,12 @@ div.page-header
     h1= name
     div!= klass.description.summary
     div!= klass.description.body
+    if klass.code
+      button.showcode.btn.btn-info Show code
+      pre.sourcecode.prettyprint.linenums!= klass.code
 each item in properties
   section(id=item.html_id)
-    h2= item.ctx.string.replace('()', '')
+    h2= item.ctx.fullname
       if item.ctx.type==='method'
         | (
         each param, i in item.params

@@ -6,7 +6,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
           a(href='index.html') Home
         if result.classes.length > 0
           li(class=(type=='classes'?'active':''))
-            a(href=result.classes[0].ctx.name+'.html') Classes
+            a(href=result.classes[0].filename+'.html') Classes
         if result.pages.length > 0
           li(class=(type=='pages'?'active':''))
             a(href='pages.html') Pages
