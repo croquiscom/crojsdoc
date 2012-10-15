@@ -108,7 +108,7 @@ classifyComments = (file, comments) ->
       id = comment.ctx.name
     if id
       result.ids[id] = comment
-      comment.html_id = encodeURIComponent id.replace(/[():\. /]/g, '_')
+      comment.html_id = id.replace(/[^A-Za-z0-9_]/g, '_')
 
     switch comment.ctx.type
       when 'class'
