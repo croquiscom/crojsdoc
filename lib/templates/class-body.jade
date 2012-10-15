@@ -5,6 +5,7 @@ div.page-header
     div!= klass.description.body
     if klass.code
       button.showcode.btn.btn-info Show code
+      span  (defined in #{klass.defined_in})
       pre.sourcecode.prettyprint.linenums!= klass.code
 each item in properties
   section(id=item.html_id)

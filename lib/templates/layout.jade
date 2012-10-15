@@ -19,5 +19,5 @@ html(lang='en')
         window.prettyPrint && prettyPrint()
       });
       $('body').on('click', '.showcode', function () {
-        $(this).next('pre').toggle();
+        $(this).parent().find('pre.sourcecode').toggle();
       });

@@ -63,4 +63,5 @@ if item.resterrors.length
         span!= tag.description
 if item.code
   button.showcode.btn.btn-info Show code
+  span  (defined in #{item.defined_in})
   pre.sourcecode.prettyprint.linenums!= item.code
