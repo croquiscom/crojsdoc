@@ -7,9 +7,7 @@
   "dependencies": {
     "coffee-script": "",
     "dox": "git://github.com/croquiscom/dox-for-coffee.git#master",
-    "highlight.js": "",
     "jade": "",
-    "markdown": "",
     "walkdir": ""
   },
   "devDependencies": {

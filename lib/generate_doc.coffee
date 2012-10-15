@@ -24,7 +24,7 @@ makeTypeLink = (type) ->
       html_id = result.ids[type].html_id
       link = "#{filename}##{html_id}"
     else
-      link = '#'
+      return "<span class='missing-link'>#{type}</span>"
     return "<a href='#{link}'>#{type}</a>"
   if res = type.match /(.*)<(.*)>/
     return "#{getlink res[1]}&lt;#{getlink res[2]}&gt;"
@@ -85,110 +85,97 @@ convertLink = (str) ->
       html_id = result.ids[$1].html_id
       return "<a href='#{filename}##{html_id}'>#{$1}</a>"
     else
-      return $1
+      return "<span class='missing-link'>#{$1}</span>"
   return str
 
-convertLinkParam = (param) ->
-  if param.params
-    for subparam, i in param.params
-      convertLinkParam subparam
-  if param.returnprops
-    for subparam, i in param.returnprops
-      convertLinkParam subparam
-  for type, i in param.types
-    funcparams = []
-    if type is 'Function' and param.params
-      funcparams = param.params.map (p) -> p.name
-    type = makeTypeLink type
-    if funcparams.length > 0
-      type += '(' + funcparams.join(', ') + ')'
-    param.types[i] = type
-
-convertLinkComment = (comment) ->
-  desc = comment.description
-  if desc
-    desc.full = convertLink desc.full
-    desc.summary = convertLink desc.summary
-    desc.body = convertLink desc.body
-
-  for property in comment.properties
-    convertLinkComment property
-
-  for param, i in comment.params
-    convertLinkParam param
-
-  ret = comment.return
-  if ret?.types
-    for type, i in ret.types
-      ret.types[i] = makeTypeLink type
-
-  for param, i in comment.returnprops
-    convertLinkParam param
-
-processComments = (file, comments) ->
+# classify type and collect id
+classifyComments = (file, comments) ->
   comments.forEach (comment) ->
     comment.defined_in = file
-    comment.params = []
-    comment.returnprops = []
-    comment.resterrors = []
-    comment.properties = []
     comment.ctx or comment.ctx = {}
-
     for tag in comment.tags
       switch tag.type
-        when 'param'
-          tag = processParamFlags tag
-          comment.params.push tag
-        when 'return'
-          comment.return = tag
-        when 'returnprop'
-          tag = dox.parseTag '@param ' + tag.string
-          tag = processParamFlags tag
-          comment.returnprops.push tag
         when 'page'
           comment.ctx.type = 'page'
           comment.ctx.name = tag.string
         when 'restapi'
           comment.ctx.type = 'restapi'
           comment.ctx.name = tag.string
+
+    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
+      id = comment.ctx.string.replace('()', '')
+    else
+      id = comment.ctx.name
+    if id
+      result.ids[id] = comment
+      comment.html_id = encodeURIComponent id.replace(/[():\. /]/g, '_')
+
+    switch comment.ctx.type
+      when 'class'
+        result.classes[comment.ctx.name] = comment
+        comment.filename = comment.ctx.name
+      when 'property', 'method'
+        if comment.ctx.hasOwnProperty 'constructor'
+          comment.filename = comment.ctx.constructor
+        else if comment.ctx.receiver?
+          comment.filename = comment.ctx.receiver
+      when 'page'
+        comment.filename = 'pages'
+      when 'restapi'
+        comment.filename = 'restapis'
+
+# structuralize comments
+processComments = (comments) ->
+  comments.forEach (comment) ->
+    comment.params = []
+    comment.returnprops = []
+    comment.resterrors = []
+    comment.properties = []
+
+    desc = comment.description
+    if desc
+      desc.full = convertLink desc.full
+      desc.summary = convertLink desc.summary
+      desc.body = convertLink desc.body
+
+    for tag in comment.tags
+      switch tag.type
+        when 'param'
+          tag = processParamFlags tag
+          for type, i in tag.types
+            tag.types[i] = makeTypeLink type
+          tag.description = convertLink tag.description
+          comment.params.push tag
+        when 'return'
+          for type, i in tag.types
+            tag.types[i] = makeTypeLink type
+          tag.description = convertLink tag.description
+          comment.return = tag
+        when 'returnprop'
+          tag = dox.parseTag '@param ' + tag.string
+          tag = processParamFlags tag
+          for type, i in tag.types
+            tag.types[i] = makeTypeLink type
+          tag.description = convertLink tag.description
+          comment.returnprops.push tag
         when 'resterror'
           res = /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
           if res
-            comment.resterrors.push code: res[1], message: res[2], description: res[3]
+            comment.resterrors.push code: res[1], message: res[2], description: convertLink res[3]
 
     # make parameters nested
     makeNested comment, 'params'
     makeNested comment, 'returnprops'
 
-    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
-      html_id = comment.ctx.string.replace('()', '')
-    else
-      html_id = comment.ctx.name
-    if html_id
-      comment.html_id = encodeURIComponent html_id.replace(/[():\. /]/g, '_')
-
     switch comment.ctx.type
-      when 'class'
-        result.classes[comment.ctx.name] = comment
-        result.ids[comment.ctx.name] = comment
-        comment.filename = comment.ctx.name
       when 'property', 'method'
-        if comment.ctx.hasOwnProperty 'constructor'
-          result.classes[comment.ctx.constructor]?.properties.push comment
-          result.ids[comment.ctx.string.replace('()', '')] = comment
-          comment.filename = comment.ctx.constructor
-        else if comment.ctx.receiver?
-          result.classes[comment.ctx.receiver]?.properties.push comment
-          result.ids[comment.ctx.string.replace('()', '')] = comment
-          comment.filename = comment.ctx.receiver
+        class_name = if comment.ctx.hasOwnProperty 'constructor' then comment.ctx.constructor else comment.ctx.receiver
+        if class_name
+          result.classes[class_name]?.properties.push comment
       when 'page'
         result.pages[comment.ctx.name] = comment
-        result.ids[comment.ctx.name] = comment
-        comment.filename = 'pages'
       when 'restapi'
         result.restapis[comment.ctx.name] = comment
-        result.ids[comment.ctx.name] = comment
-        comment.filename = 'restapis'
 
 copyResources = (source, target) ->
   exec = require('child_process').exec
@@ -201,11 +188,15 @@ generate = (paths) ->
   files = []
   paths.forEach (path) -> files.push.apply files, walkdir.sync "#{project_dir}/#{path}"
 
+  all_comments = []
   files.forEach (file) ->
     comments = getComments file
     return if not comments?
     file = file.replace new RegExp("^" + project_dir), ''
-    processComments file, comments
+    classifyComments file, comments
+    all_comments.push.apply all_comments, comments
+
+  processComments all_comments
 
   copyResources __dirname, doc_dir
 
@@ -216,8 +207,6 @@ generate = (paths) ->
     b = b.replace /([A-Z]+) \/(.*)/, '-$2 $1'
     if a<b then -1 else 1
   ).map (name) -> result.restapis[name]
-
-  [].concat(result.classes, result.pages, result.restapis).forEach convertLinkComment
 
   fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
     options =
