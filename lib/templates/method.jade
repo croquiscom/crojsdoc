@@ -50,6 +50,15 @@ if item.return
                             li
                               - var param = prop3;
                               include method-param
+if item.throws.length
+  h3 Throws:
+  ul
+    each tag in item.throws
+      li
+        {
+        span= tag.message
+        } 
+        span!= tag.description
 if item.resterrors.length
   h3 Rest Errors:
   ul

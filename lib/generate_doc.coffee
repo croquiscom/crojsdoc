@@ -122,6 +122,9 @@ classifyComments = (file, comments) ->
             id = comment.ctx.receiver + '.' + comment.ctx.name
             comment.ctx.fullname = comment.ctx.receiver.replace(/.*[\./](\w+)/, '$1') + '.' + comment.ctx.name
           console.log comment.ctx.fullname
+        when 'param', 'return', 'returnprop', 'throws', 'resterror'
+        else
+          console.log "Unknown tag : #{tag.type} in #{file}"
 
     if id
       result.ids[id] = comment
@@ -148,6 +151,7 @@ processComments = (comments) ->
   comments.forEach (comment) ->
     comment.params = []
     comment.returnprops = []
+    comment.throws = []
     comment.resterrors = []
     comment.properties = []
 
@@ -177,6 +181,10 @@ processComments = (comments) ->
             tag.types[i] = makeTypeLink type
           tag.description = convertLink tag.description
           comment.returnprops.push tag
+        when 'throws'
+          res = /{([^}]+)}\s*(.*)/.exec tag.string
+          if res
+            comment.throws.push message: res[1], description: convertLink res[2]
         when 'resterror'
           res = /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
           if res
