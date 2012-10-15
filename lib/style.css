@@ -49,3 +49,7 @@ section {
 .extends {
 	font-size: 50%;
 }
+
+.extra {
+	margin-top: 60px;
+}

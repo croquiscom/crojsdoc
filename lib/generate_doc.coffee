@@ -2,6 +2,7 @@ dox = require 'dox'
 fs = require 'fs'
 jade = require 'jade'
 walkdir = require 'walkdir'
+markdown = require('github-flavored-markdown').parse
 
 types =
   Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
@@ -247,6 +248,7 @@ generate = (paths) ->
   ).map (name) -> result.restapis[name]
 
   fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
+    content = convertLink markdown content
     options =
       name: 'README'
       content: content
