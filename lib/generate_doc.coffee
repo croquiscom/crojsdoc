@@ -25,6 +25,7 @@ makeTypeLink = (type) ->
       html_id = result.ids[type].html_id
       link = "#{filename}##{html_id}"
     else
+      console.log "'#{type}' link does not exist"
       return "<span class='missing-link'>#{type}</span>"
     return "<a href='#{link}'>#{type}</a>"
   if res = type.match /(.*)<(.*)>/
@@ -86,6 +87,7 @@ convertLink = (str) ->
       html_id = result.ids[$1].html_id
       return "<a href='#{filename}##{html_id}'>#{$1}</a>"
     else
+      console.log "'#{$1}' link does not exist"
       return "<span class='missing-link'>#{$1}</span>"
   return str
 
