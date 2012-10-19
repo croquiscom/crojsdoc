@@ -1,6 +1,6 @@
 div.page-header
   section(id=klass.html_id)
-    h1= name.substr(klass.namespace.length)
+    h1.class_title= name.substr(klass.namespace.length)
       if klass.extends.length
         span.extends!= ' extends ' + klass.extends.join(', ')
     div!= klass.description.summary
@@ -11,7 +11,7 @@ div.page-header
       pre.sourcecode.prettyprint.linenums!= klass.code
 each item in properties
   section(id=item.html_id)
-    h2= item.ctx.fullname
+    h2.class_method= item.ctx.fullname
       if item.ctx.type==='method'
         | (
         each param, i in item.params

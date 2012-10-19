@@ -53,3 +53,12 @@ section {
 .extra {
 	margin-top: 60px;
 }
+
+h1.class_title {
+	font-style: italic;
+}
+
+h2.class_method {
+	border-left: 10px solid #d9edf7;
+	padding-left: 10px;
+}

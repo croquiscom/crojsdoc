@@ -81,9 +81,9 @@ getComments = (file) ->
   return if not content
 
   if /\.coffee$/.test file
-    dox.parseCommentsCoffee content
+    dox.parseCommentsCoffee content, { raw: true }
   else
-    dox.parseComments content
+    dox.parseComments content, { raw: true }
 
 ###
 # Parsed result
@@ -152,6 +152,15 @@ convertLink = (str) ->
     else
       return makeMissingLink $1
   return str
+
+###
+# Apply markdown
+###
+applyMarkdown = (str) ->
+  # we cannot use '###' for header level 3 or above in CoffeeScript, instead web use '##\#', ''##\##', ...
+  # recover this for markdown
+  str = str.replace /#\\#/g, '##'
+  return markdown str
 
 ###
 # Classifies type and collect id
@@ -241,9 +250,9 @@ processComments = (comments) ->
 
     desc = comment.description
     if desc
-      desc.full = convertLink desc.full
-      desc.summary = convertLink desc.summary
-      desc.body = convertLink desc.body
+      desc.full = convertLink applyMarkdown desc.full
+      desc.summary = convertLink applyMarkdown desc.summary
+      desc.body = convertLink applyMarkdown desc.body
 
     for tag in comment.tags
       switch tag.type
@@ -346,7 +355,7 @@ generate = (paths) ->
 
   fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
     if content
-      content = convertLink markdown content
+      content = convertLink applyMarkdown content
     options =
       name: 'README'
       content: content
