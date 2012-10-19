@@ -1,6 +1,6 @@
 div.page-header
   section(id=klass.html_id)
-    h1= name
+    h1= name.substr(klass.namespace.length)
       if klass.extends.length
         span.extends!= ' extends ' + klass.extends.join(', ')
     div!= klass.description.summary

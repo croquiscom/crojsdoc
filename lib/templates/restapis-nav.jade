@@ -1,4 +1,8 @@
+- var current_namespace = ''
 ul.nav.nav-list.cormo-sidenav
   each item in result.restapis
+    if current_namespace!==item.namespace
+      - current_namespace = item.namespace
+      li.nav-header= current_namespace.replace(/\.$/, '')
     li
       a(href='#'+item.html_id)= item.ctx.name
