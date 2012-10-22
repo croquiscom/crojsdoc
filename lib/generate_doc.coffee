@@ -169,6 +169,13 @@ classifyComments = (file, comments) ->
   comments.forEach (comment) ->
     comment.defined_in = file
     comment.ctx or comment.ctx = {}
+    comment.params = []
+    comment.returnprops = []
+    comment.throws = []
+    comment.resterrors = []
+    comment.sees = []
+    comment.extends = []
+    comment.properties = []
 
     if comment.ctx.type is 'property' or comment.ctx.type is 'method'
       id = comment.ctx.string.replace('()', '')
@@ -240,14 +247,6 @@ classifyComments = (file, comments) ->
 ###
 processComments = (comments) ->
   comments.forEach (comment) ->
-    comment.params = []
-    comment.returnprops = []
-    comment.throws = []
-    comment.resterrors = []
-    comment.sees = []
-    comment.extends = []
-    comment.properties = []
-
     desc = comment.description
     if desc
       desc.full = convertLink applyMarkdown desc.full
