@@ -73,17 +73,37 @@ makeTypeLink = (type) ->
 # @returnprop {String} ctx.constructor
 # @returnprop {String} ctx.receiver
 ###
-getComments = (file) ->
+getComments = (file, path) ->
   return if (fs.statSync file).isDirectory()
-  return if not /\.coffee$/.test(file) and not /\.js$/.test(file)
-
   content = fs.readFileSync(file, 'utf-8').trim()
   return if not content
 
+  file = file.substr(path.length+1)
+
   if /\.coffee$/.test file
-    dox.parseCommentsCoffee content, { raw: true }
-  else
-    dox.parseComments content, { raw: true }
+    comments = dox.parseCommentsCoffee content, { raw: true }
+  else if /\.js$/.test file
+    comments = dox.parseComments content, { raw: true }
+  else if /Page\.md$/.test file
+    namespace = ''
+    file = file.substr 0, file.length-3
+    file = file.replace /(.*)\//, (_, $1) ->
+      namespace = $1
+      return ''
+    comments = [ {
+      description:
+        summary: ''
+        body: content
+        full: ''
+      tags: [
+        { type: 'page', string: file }
+        { type: 'namespace', string: namespace }
+      ]
+    } ]
+
+  # filter out empty comments
+  return comments?.filter (comment) ->
+    return comment.description.full or comment.description.summary or comment.description.body
 
 ###
 # Parsed result
@@ -209,7 +229,7 @@ classifyComments = (file, comments) ->
             id = comment.ctx.receiver + '.' + comment.ctx.name
             comment.ctx.fullname = comment.ctx.receiver.replace(/.*[\./](\w+)/, '$1') + '.' + comment.ctx.name
         when 'namespace'
-          comment.namespace = tag.string + '.'
+          comment.namespace = if tag.string then tag.string + '.' else ''
         when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
@@ -313,16 +333,16 @@ generate = (paths) ->
   project_dir = process.cwd()
   doc_dir = project_dir + '/doc'
   template_dir = __dirname + '/templates'
-  files = []
-  paths.forEach (path) -> files.push.apply files, walkdir.sync "#{project_dir}/#{path}"
 
   all_comments = []
-  files.forEach (file) ->
-    comments = getComments file
-    return if not comments?
-    file = file.replace new RegExp("^" + project_dir), ''
-    classifyComments file, comments
-    all_comments.push.apply all_comments, comments
+  paths.forEach (path) ->
+    path = "#{project_dir}/#{path}"
+    walkdir.sync(path).forEach (file) ->
+      comments = getComments file, path
+      return if not comments?
+      file = file.replace new RegExp("^" + project_dir), ''
+      classifyComments file, comments
+      all_comments.push.apply all_comments, comments
 
   processComments all_comments
 
