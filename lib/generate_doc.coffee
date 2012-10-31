@@ -195,6 +195,7 @@ classifyComments = (file, comments) ->
     comment.resterrors = []
     comment.sees = []
     comment.extends = []
+    comment.subclasses = []
     comment.properties = []
 
     if comment.ctx.type is 'property' or comment.ctx.type is 'method'
@@ -310,6 +311,12 @@ processComments = (comments) ->
           comment.sees.push str
         when 'extends'
           comment.extends.push makeTypeLink tag.string
+          result.classes[tag.string]?.subclasses.push makeTypeLink comment.ctx.name
+
+    if comment.ctx.type is 'class'
+      if /^class +\w+ +extends +(\w+)/.exec comment.code
+        comment.extends.push makeTypeLink RegExp.$1
+        result.classes[RegExp.$1]?.subclasses.push makeTypeLink comment.ctx.name
 
     # make parameters nested
     makeNested comment, 'params'

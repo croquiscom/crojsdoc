@@ -9,6 +9,10 @@ div.page-header
       button.showcode.btn.btn-info Show code
       span  (defined in #{klass.defined_in})
       pre.sourcecode.prettyprint.linenums!= klass.code
+    if klass.subclasses.length
+      dl
+        dt Direct known subclasses:
+        dd!= klass.subclasses.join(', ')
 each item in properties
   section(id=item.html_id)
     h2.class_method= item.ctx.fullname
