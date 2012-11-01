@@ -1,4 +1,4 @@
-dox = require 'dox'
+dox = require './dox'
 fs = require 'fs'
 jade = require 'jade'
 walkdir = require 'walkdir'

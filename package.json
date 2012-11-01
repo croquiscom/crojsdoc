@@ -6,7 +6,6 @@
   },
   "dependencies": {
     "coffee-script": "",
-    "dox": "git://github.com/croquiscom/dox-for-coffee.git#master",
     "github-flavored-markdown": "",
     "jade": "",
     "walkdir": ""
