@@ -2,7 +2,7 @@ dox = require './dox'
 fs = require 'fs'
 jade = require 'jade'
 walkdir = require 'walkdir'
-markdown = require('github-flavored-markdown').parse
+markdown = require 'marked'
 
 ###
 # Links for pre-known types

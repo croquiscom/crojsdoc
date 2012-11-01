@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "coffee-script": "",
-    "github-flavored-markdown": "",
+    "marked": "",
     "jade": "",
     "walkdir": ""
   },
