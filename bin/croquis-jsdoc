@@ -8,9 +8,11 @@ options = {}
 var optparse = require('optparse');
 var switches = [
   [ '-t', '--title TITLE', 'Document Title' ],
+  [ '-q', '--quite', 'less output' ],
 ];
 parser = new optparse.OptionParser(switches);
 parser.on('*', function (opt, value) {
+  if(value===undefined) value = true;
   options[opt] = value;
 });
 argv = parser.parse(process.argv.slice(2));

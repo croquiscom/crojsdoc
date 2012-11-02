@@ -125,10 +125,15 @@ result =
 ###
 processParamFlags = (tag) ->
   # is optional parameter?
-  if /\[([^\[\]]+)\]/g.test tag.name
-    tag.name = tag.name.replace /\[([^\[\]]+)\]/g, (_, $1) ->
-      return $1
+  if /\[([^\[\]]+)\]/.exec tag.name
+    tag.name = RegExp.$1
     tag.optional = true
+  if tag.name.substr(0, 1) is '+'
+    tag.name = tag.name.substr(1)
+    tag.addable = true
+  if tag.name.substr(0, 1) is '-'
+    tag.name = tag.name.substr(1)
+    tag.excludable = true
   return tag
 
 ###
@@ -296,13 +301,13 @@ processComments = (comments) ->
           tag.description = convertLink tag.description
           comment.returnprops.push tag
         when 'throws'
-          res = /{([^}]+)}\s*(.*)/.exec tag.string
-          if res
-            comment.throws.push message: res[1], description: convertLink res[2]
+          if /{([^}]+)}\s*(.*)/.exec tag.string
+            comment.throws.push message: RegExp.$1, description: convertLink RegExp.$2
+          else
+            comment.throws.push message: tag.string, description: ''
         when 'resterror'
-          res = /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
-          if res
-            comment.resterrors.push code: res[1], message: res[2], description: convertLink res[3]
+          if /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
+            comment.resterrors.push code: RegExp.$1, message: RegExp.$2, description: convertLink RegExp.$3
         when 'see'
           str = tag.local or tag.url
           if result.ids[str]
@@ -395,7 +400,7 @@ generate = (paths, genopts) ->
       file = "#{doc_dir}/index.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
-        console.log file + ' is created'
+        console.log file + ' is created' if not genopts.quite
 
   if result.pages.length > 0
     options =
@@ -407,7 +412,7 @@ generate = (paths, genopts) ->
       file = "#{doc_dir}/pages.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
-        console.log file + ' is created'
+        console.log file + ' is created' if not genopts.quite
 
   if result.restapis.length > 0
     options =
@@ -419,7 +424,7 @@ generate = (paths, genopts) ->
       file = "#{doc_dir}/restapis.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
-        console.log file + ' is created'
+        console.log file + ' is created' if not genopts.quite
 
   result.classes.forEach (klass) ->
     properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
@@ -434,6 +439,6 @@ generate = (paths, genopts) ->
       file = "#{doc_dir}/#{klass.filename}.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
-        console.log file + ' is created'
+        console.log file + ' is created' if not genopts.quite
 
 module.exports = generate

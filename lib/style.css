@@ -37,6 +37,16 @@
 	background-color: #f89406;
 }
 
+.label-addable {
+	margin-left: 5px;
+    background-color: #468847;
+}
+
+.label-excludable {
+	margin-left: 5px;
+    background-color: #468847;
+}
+
 .missing-link {
 	color: red;
 	background-color: gray;
