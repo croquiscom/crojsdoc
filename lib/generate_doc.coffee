@@ -109,6 +109,7 @@ getComments = (file, path) ->
 # Parsed result
 ###
 result =
+  project_title: ''
   ids: {}
   classes: {}
   pages: {}
@@ -336,7 +337,9 @@ copyResources = (source, target) ->
   exec = require('child_process').exec
   exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
 
-generate = (paths) ->
+generate = (paths, genopts) ->
+  result.project_title = genopts?.title or 'croquis-jsdoc'
+
   project_dir = process.cwd()
   doc_dir = project_dir + '/doc'
   template_dir = __dirname + '/templates'

@@ -8,6 +8,7 @@
     "coffee-script": "",
     "marked": "",
     "jade": "",
+    "optparse": "",
     "walkdir": ""
   },
   "devDependencies": {

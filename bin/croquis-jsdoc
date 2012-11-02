@@ -2,4 +2,17 @@
 
 var coffee = require('coffee-script');
 var generate_doc = require('../lib/generate_doc');
-generate_doc(process.argv.slice(2));
+
+options = {}
+
+var optparse = require('optparse');
+var switches = [
+  [ '-t', '--title TITLE', 'Document Title' ],
+];
+parser = new optparse.OptionParser(switches);
+parser.on('*', function (opt, value) {
+  options[opt] = value;
+});
+argv = parser.parse(process.argv.slice(2));
+
+generate_doc(argv, options);
