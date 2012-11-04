@@ -398,6 +398,9 @@ generate = (paths, genopts) ->
     if a<b then -1 else 1
   ).map (name) -> result.restapis[name]
 
+  result.modules = result.classes.filter (klass) -> klass.is_module
+  result.classes = result.classes.filter (klass) -> not klass.is_module
+
   fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
     if content
       content = convertLink applyMarkdown content
@@ -436,9 +439,6 @@ generate = (paths, genopts) ->
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
-
-  result.modules = result.classes.filter (klass) -> klass.is_module
-  result.classes = result.classes.filter (klass) -> not klass.is_module
 
   result.classes.forEach (klass) ->
     properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
