@@ -344,6 +344,18 @@ copyResources = (source, target) ->
 generate = (paths, genopts) ->
   result.project_title = genopts?.title or 'croquis-jsdoc'
 
+  if genopts?['external-types']
+    try
+      content = fs.readFileSync(genopts['external-types'], 'utf-8').trim()
+      try
+        ext_types = JSON.parse content
+        for type, url of ext_types
+          types[type] = url
+      catch e
+        console.log "external-types: Invalid JSON file"
+    catch e
+      console.log "external-types: Cannot open #{genopts['external-types']}"
+
   project_dir = process.cwd()
   doc_dir = project_dir + '/doc'
   template_dir = __dirname + '/templates'

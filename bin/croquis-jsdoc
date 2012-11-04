@@ -9,6 +9,7 @@ var optparse = require('optparse');
 var switches = [
   [ '-t', '--title TITLE', 'Document Title' ],
   [ '-q', '--quite', 'less output' ],
+  [ '--external-types JSONFILE', 'external type definitions' ],
 ];
 parser = new optparse.OptionParser(switches);
 parser.on('*', function (opt, value) {
