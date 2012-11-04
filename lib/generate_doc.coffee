@@ -200,6 +200,7 @@ classifyComments = (file, comments) ->
     comment.throws = []
     comment.resterrors = []
     comment.sees = []
+    comment.todos = []
     comment.extends = []
     comment.subclasses = []
     comment.properties = []
@@ -236,7 +237,7 @@ classifyComments = (file, comments) ->
             comment.ctx.fullname = comment.ctx.receiver.replace(/.*[\./](\w+)/, '$1') + '.' + comment.ctx.name
         when 'namespace'
           comment.namespace = if tag.string then tag.string + '.' else ''
-        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends'
+        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
 
@@ -314,6 +315,8 @@ processComments = (comments) ->
             html_id = result.ids[str].html_id
             str = "<a href='#{filename}##{html_id}'>#{str}</a>"
           comment.sees.push str
+        when 'todo'
+          comment.todos.push tag.string
         when 'extends'
           comment.extends.push makeTypeLink tag.string
           result.classes[tag.string]?.subclasses.push makeTypeLink comment.ctx.name

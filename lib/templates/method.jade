@@ -75,6 +75,11 @@ if item.sees.length
   ul
     each tag in item.sees
       li!= tag
+if item.todos.length
+  h3 TODO:
+  ul
+    each tag in item.todos
+      li!= tag
 if item.code
   button.showcode.btn.btn-info Show code
   span  (defined in #{item.defined_in})
