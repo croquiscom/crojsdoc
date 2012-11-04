@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  div.container-fluid.content
+    div.row-fluid
+      div.span3.visible-desktop
+        div.span3.sidebar(data-spy='affix')
+          include module-nav
+      div.span9
+        include module-body

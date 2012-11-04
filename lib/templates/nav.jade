@@ -4,6 +4,9 @@ div.navbar.navbar-inverse.navbar-fixed-top
       ul.nav
         li(class=(type=='home'?'active':''))
           a(href='index.html') Home
+        if result.modules.length > 0
+          li(class=(type=='modules'?'active':''))
+            a(href=result.modules[0].filename+'.html') Modules
         if result.classes.length > 0
           li(class=(type=='classes'?'active':''))
             a(href=result.classes[0].filename+'.html') Classes

@@ -1,0 +1,27 @@
+div.page-header
+  section(id=module.html_id)
+    h1.class_title= name.substr(module.namespace.length)
+      if module.extends.length
+        span.extends!= ' extends ' + module.extends.join(', ')
+    div!= module.description.summary
+    div!= module.description.body
+    if module.code
+      button.showcode.btn.btn-info Show code
+      span  (defined in #{module.defined_in})
+      pre.sourcecode.prettyprint.linenums!= module.code
+each item in properties
+  section(id=item.html_id)
+    - var display_name = item.ctx.name.substr(module.namespace.length)
+    h2.class_method= display_name
+      if item.ctx.type==='method'
+        | (
+        each param, i in item.params
+          if param.optional
+            | [#{param.name}]
+          else
+            | #{param.name}
+          if i+1 < item.params.length
+            | , 
+        | )
+    include method
+    hr.item-seperator

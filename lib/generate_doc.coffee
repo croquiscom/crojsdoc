@@ -213,19 +213,18 @@ classifyComments = (file, comments) ->
 
     for tag in comment.tags
       switch tag.type
-        when 'page'
-          comment.ctx.type = 'page'
-          comment.ctx.name = tag.string
-          comment.ctx.fullname = id = comment.ctx.name
-        when 'restapi'
-          comment.ctx.type = 'restapi'
-          comment.ctx.name = tag.string
-          comment.ctx.fullname = id = comment.ctx.name
-        when 'class'
-          comment.ctx.type = 'class'
+        when 'page', 'restapi', 'class'
+          comment.ctx.type = tag.type
           if tag.string
             comment.ctx.name = tag.string
             comment.ctx.fullname = id = comment.ctx.name
+        when 'module'
+          comment.ctx.type = 'class'
+          comment.is_module = true
+          if tag.string
+            comment.ctx.name = tag.string
+            comment.ctx.fullname = id = comment.ctx.name
+          comment.code = null
         when 'memberOf'
           if /(::|#|prototype)$/.test tag.parent
             comment.ctx.constructor = tag.parent.replace /(::|#|prototype)$/, ''
@@ -426,6 +425,9 @@ generate = (paths, genopts) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+  result.modules = result.classes.filter (klass) -> klass.is_module
+  result.classes = result.classes.filter (klass) -> not klass.is_module
+
   result.classes.forEach (klass) ->
     properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
@@ -437,6 +439,21 @@ generate = (paths, genopts) ->
     jade.renderFile "#{template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{doc_dir}/#{klass.filename}.html"
+      fs.writeFile file, result, (error) ->
+        return console.error 'failed to create '+file if error
+        console.log file + ' is created' if not genopts.quite
+
+  result.modules.forEach (module) ->
+    properties = module.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
+    options =
+      name: module.ctx.name
+      module: module
+      properties: properties
+      type: 'modules'
+      result: result
+    jade.renderFile "#{template_dir}/module.jade", options, (error, result) ->
+      return console.error error.stack if error
+      file = "#{doc_dir}/#{module.filename}.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite

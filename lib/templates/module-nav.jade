@@ -1,0 +1,16 @@
+- var current_namespace = ''
+ul.nav.nav-list.cormo-sidenav
+  each item in result.modules
+    if current_namespace!==item.namespace
+      - current_namespace = item.namespace
+      li.nav-header= current_namespace.replace(/\.$/, '')
+    - var display_name = item.ctx.name.substr(current_namespace.length)
+    if item.ctx.name===name
+      li.active
+        a(href='#'+module.html_id)= display_name
+      each property in properties
+        li.cormo-class-property
+          a(href='#'+property.html_id)= property.ctx.name
+    else
+      li
+        a(href=item.filename+'.html')= display_name
