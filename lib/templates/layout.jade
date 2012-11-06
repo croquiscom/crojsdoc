@@ -17,8 +17,8 @@ html(lang='en')
     script(src='google-code-prettify/prettify.js')
     script
       $(function() {
-        // make result of github-flavored-markdown for pretty print
-        $('.highlight').find('pre').addClass('.prettyprint');
+        // make result of marked for pretty print
+        $('pre code[class^="lang-"]').addClass('.prettyprint');
         window.prettyPrint && prettyPrint()
       });
       $('body').on('click', '.showcode', function () {
