@@ -7,8 +7,8 @@ div.page-header
     div!= klass.description.body
     if klass.code
       button.showcode.btn.btn-info Show code
-      span  (defined in #{klass.defined_in})
-      pre.sourcecode.prettyprint.linenums!= klass.code
+      span (defined in #{klass.defined_in}:#{klass.line_number})
+      pre.sourcecode.prettyprint(class='.linenums:'+klass.line_number)!= klass.code
     if klass.subclasses.length
       dl
         dt Direct known subclasses:

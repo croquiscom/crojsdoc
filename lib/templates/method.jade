@@ -82,5 +82,5 @@ if item.todos.length
       li!= tag
 if item.code
   button.showcode.btn.btn-info Show code
-  span  (defined in #{item.defined_in})
-  pre.sourcecode.prettyprint.linenums!= item.code
+  span  (defined in #{item.defined_in}:#{item.line_number})
+  pre.sourcecode.prettyprint(class='.linenums:'+item.line_number)!= item.code

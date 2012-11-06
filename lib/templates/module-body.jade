@@ -7,8 +7,8 @@ div.page-header
     div!= module.description.body
     if module.code
       button.showcode.btn.btn-info Show code
-      span  (defined in #{module.defined_in})
-      pre.sourcecode.prettyprint.linenums!= module.code
+      span  (defined in #{module.defined_in}:#{module.line_number})
+      pre.sourcecode.prettyprint(class='.linenums:'+module.line_number)!= module.code
 each item in properties
   section(id=item.html_id)
     - var display_name = item.ctx.name.substr(module.namespace.length)
