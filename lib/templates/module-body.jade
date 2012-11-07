@@ -11,7 +11,7 @@ div.page-header
       pre.sourcecode.prettyprint(class='.linenums:'+module.line_number)!= module.code
 each item in properties
   section(id=item.html_id)
-    - var display_name = item.ctx.name.substr(module.namespace.length)
+    - var display_name = item.ctx.name
     h2.class_method= display_name
       if item.ctx.type==='method'
         | (
