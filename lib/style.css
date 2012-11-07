@@ -27,23 +27,28 @@
 	display: none;
 }
 
-.label-optional {
+.label-optional, .label-static, .label-property, .label-addable, .label-excludable {
 	margin-left: 5px;
+	font-size: 0.7em;
+}
+
+.label-optional {
     background-color: #3a87ad;
 }
 
 .label-static {
-	margin-left: 5px;
 	background-color: #f89406;
 }
 
+.label-property {
+	background-color: #c09853;
+}
+
 .label-addable {
-	margin-left: 5px;
     background-color: #468847;
 }
 
 .label-excludable {
-	margin-left: 5px;
     background-color: #468847;
 }
 

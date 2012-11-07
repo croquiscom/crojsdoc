@@ -11,6 +11,8 @@ ul.nav.nav-list.cormo-sidenav
       each property in properties
         li.cormo-class-property
           a(href='#'+property.html_id)= property.ctx.name
+            if property.ctx.type==='property'
+              span.label.label-property property
     else
       li
         a(href=item.filename+'.html')= display_name

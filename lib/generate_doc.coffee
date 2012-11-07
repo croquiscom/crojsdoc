@@ -212,6 +212,14 @@ classifyComments = (file, comments) ->
     comment.ctx.fullname = id
     comment.namespace = ''
 
+    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
+      if comment.ctx.hasOwnProperty 'constructor'
+        comment.static = false
+        comment.ctx.class_name = comment.ctx.constructor
+      else if comment.ctx.receiver?
+        comment.static = true
+        comment.ctx.class_name = comment.ctx.receiver
+
     for tag in comment.tags
       switch tag.type
         when 'page', 'restapi', 'class'
@@ -228,18 +236,26 @@ classifyComments = (file, comments) ->
           comment.code = null
         when 'memberOf'
           if /(::|#|prototype)$/.test tag.parent
-            comment.ctx.constructor = tag.parent.replace /(::|#|prototype)$/, ''
-            id = comment.ctx.constructor + '::' + comment.ctx.name
-            comment.ctx.fullname = comment.ctx.constructor.replace(/.*[\./](\w+)/, '$1') + '::' + comment.ctx.name
+            comment.static = false
+            comment.ctx.class_name = tag.parent.replace /(::|#|prototype)$/, ''
           else
-            comment.ctx.receiver = tag.parent
-            id = comment.ctx.receiver + '.' + comment.ctx.name
-            comment.ctx.fullname = comment.ctx.receiver.replace(/.*[\./](\w+)/, '$1') + '.' + comment.ctx.name
+            comment.static = true
+            comment.ctx.class_name = tag.parent
         when 'namespace'
           comment.namespace = if tag.string then tag.string + '.' else ''
-        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo'
+        when 'property'
+          comment.ctx.type = 'property'
+          comment.ctx.name = tag.string
+        when 'static'
+          comment.static = true
+        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo', 'type'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
+
+    if comment.ctx.class_name
+      seperator = if comment.static then '.' else '::'
+      id = comment.ctx.class_name + seperator + comment.ctx.name
+      comment.ctx.fullname = comment.ctx.class_name.replace(/.*[\./](\w+)/, '$1') + seperator + comment.ctx.name
 
     if id
       if result.ids.hasOwnProperty id
@@ -256,14 +272,8 @@ classifyComments = (file, comments) ->
         result.classes[comment.ctx.name] = comment
         comment.filename = comment.ctx.name.replace(/\//g, '.')
       when 'property', 'method'
-        if comment.ctx.hasOwnProperty 'constructor'
-          comment.ctx.constructor = comment.namespace + comment.ctx.constructor
-          comment.filename = comment.ctx.constructor.replace(/\//g, '.')
-          comment.static = false
-        else if comment.ctx.receiver?
-          comment.ctx.receiver = comment.namespace + comment.ctx.receiver
-          comment.filename = comment.ctx.receiver.replace(/\//g, '.')
-          comment.static = true
+        comment.ctx.class_name = comment.namespace + comment.ctx.class_name
+        comment.filename = comment.ctx.class_name.replace(/\//g, '.')
       when 'page'
         comment.filename = 'pages'
       when 'restapi'
@@ -320,6 +330,10 @@ processComments = (comments) ->
         when 'extends'
           comment.extends.push makeTypeLink tag.string
           result.classes[tag.string]?.subclasses.push makeTypeLink comment.ctx.name
+        when 'type'
+          for type, i in tag.types
+            tag.types[i] = makeTypeLink type
+          comment.types = tag.types
 
     if comment.ctx.type is 'class'
       if /^class +\w+ +extends +(\w+)/.exec comment.code
@@ -332,7 +346,7 @@ processComments = (comments) ->
 
     switch comment.ctx.type
       when 'property', 'method'
-        class_name = if comment.ctx.hasOwnProperty 'constructor' then comment.ctx.constructor else comment.ctx.receiver
+        class_name = comment.ctx.class_name
         if class_name
           result.classes[class_name]?.properties.push comment
       when 'page'

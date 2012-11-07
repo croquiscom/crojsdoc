@@ -1,3 +1,25 @@
+h2.class_method
+  | #{display_name}
+  if item.ctx.type==='method'
+    | (
+    each param, i in item.params
+      if param.optional
+        | [#{param.name}]
+      else
+        | #{param.name}
+      if i+1 < item.params.length
+        | , 
+    | )
+  if item.types && item.types.length && item.types.join('')
+    |  : 
+    each type, i in item.types
+      != type
+      if i+1 < item.types.length
+        | , 
+  if is_method_of_class && item.static
+    span.label.label-static static
+  if item.ctx.type==='property'
+    span.label.label-property property
 div!= item.description.summary
 div!= item.description.body
 if item.params.length

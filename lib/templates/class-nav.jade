@@ -13,6 +13,8 @@ ul.nav.nav-list.cormo-sidenav
           a(href='#'+property.html_id)= property.ctx.name
             if property.static
               span.label.label-static static
+            if property.ctx.type==='property'
+              span.label.label-property property
     else
       li
         a(href=item.filename+'.html')= display_name
