@@ -267,6 +267,11 @@ classifyComments = (file, comments) ->
         result.ids[comment.namespace+id] = comment
       comment.html_id = (comment.namespace+id).replace(/[^A-Za-z0-9_]/g, '_')
 
+    if comment.ctx.type is 'function' and comment.ctx.class_name
+      comment.ctx.type = 'method'
+    else if comment.ctx.type is 'declaration' and comment.ctx.class_name
+      comment.ctx.type = 'property'
+
     switch comment.ctx.type
       when 'class'
         comment.ctx.name = comment.namespace + comment.ctx.name
