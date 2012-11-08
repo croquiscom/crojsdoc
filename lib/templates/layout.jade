@@ -23,5 +23,10 @@ html(lang='en')
       });
       $('body').on('click', '.showcode', function () {
         $(this).parent().find('pre.sourcecode').toggle();
+        $('body').scrollspy('refresh');
+      });
+      $('#options-private').on('click', function () {
+        $('.private').toggle();
+        $('body').scrollspy('refresh');
       });
     block script

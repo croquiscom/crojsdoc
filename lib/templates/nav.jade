@@ -16,3 +16,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
         if result.restapis.length > 0
           li(class=(type=='restapis'?'active':''))
             a(href='restapis.html') REST APIs
+      div.options
+        label(class='checkbox')
+          input#options-private(type='checkbox')
+          |  Private 

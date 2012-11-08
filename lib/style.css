@@ -27,7 +27,17 @@
 	display: none;
 }
 
-.label-optional, .label-static, .label-property, .label-addable, .label-excludable {
+.private {
+	display: none;
+}
+
+.options {
+	float: right;
+	margin-right: 20px;
+	margin-top: 10px;
+}
+
+.label-optional, .label-static, .label-property, .label-addable, .label-excludable, .label-private {
 	margin-left: 5px;
 	font-size: 0.7em;
 }
@@ -50,6 +60,10 @@
 
 .label-excludable {
     background-color: #468847;
+}
+
+.label-private {
+    background-color: #333333;
 }
 
 .missing-link {

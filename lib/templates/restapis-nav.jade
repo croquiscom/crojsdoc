@@ -4,5 +4,5 @@ ul.nav.nav-list.cormo-sidenav
     if current_namespace!==item.namespace
       - current_namespace = item.namespace
       li.nav-header= current_namespace.replace(/\.$/, '')
-    li
+    li(class=item.isPrivate ? 'private' : '')
       a(href='#'+item.html_id)= item.ctx.name

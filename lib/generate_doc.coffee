@@ -248,7 +248,9 @@ classifyComments = (file, comments) ->
           comment.ctx.name = tag.string
         when 'static'
           comment.static = true
-        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo', 'type'
+        when 'private'
+          comment.isPrivate = true
+        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo', 'type', 'api'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
 

@@ -14,7 +14,7 @@ div.page-header
         dt Direct known subclasses:
         dd!= klass.subclasses.join(', ')
 each item in properties
-  section(id=item.html_id)
+  section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.fullname
     - var is_method_of_class = true
     include method

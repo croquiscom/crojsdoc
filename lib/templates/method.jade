@@ -16,6 +16,8 @@ h2.class_method
       != type
       if i+1 < item.types.length
         | , 
+  if item.isPrivate
+    span.label.label-private private
   if is_method_of_class && item.static
     span.label.label-static static
   if item.ctx.type==='property'

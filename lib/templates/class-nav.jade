@@ -9,8 +9,10 @@ ul.nav.nav-list.cormo-sidenav
       li.active
         a(href='#'+klass.html_id)= display_name
       each property in properties
-        li.cormo-class-property
+        li.cormo-class-property(class=property.isPrivate ? 'private' : '')
           a(href='#'+property.html_id)= property.ctx.name
+            if property.isPrivate
+              span.label.label-private private
             if property.static
               span.label.label-static static
             if property.ctx.type==='property'

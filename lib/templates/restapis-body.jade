@@ -1,5 +1,5 @@
 each item in result.restapis
-  section(id=item.html_id)
+  section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.name
     - var is_method_of_class = false
     include method
