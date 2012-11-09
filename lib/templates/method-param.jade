@@ -4,9 +4,11 @@ if param.types && param.types.length && param.types.join('')
     each type, i in param.types
       != type
       if type.indexOf('Function')!=-1
-        - var funcparams = param.params.map(function (p) { return p.name })
-        if funcparams.length > 0
-          | (#{funcparams.join(', ')})
+        | (
+        if param.params
+          - var funcparams = param.params.map(function (p) { return p.name })
+          | #{funcparams.join(', ')}
+        | )
       if i+1 < param.types.length
         | , 
     | } 
