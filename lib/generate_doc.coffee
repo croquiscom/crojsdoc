@@ -192,6 +192,8 @@ applyMarkdown = (str) ->
 # Classifies type and collect id
 ###
 classifyComments = (file, comments) ->
+  current_class = undefined
+
   comments.forEach (comment) ->
     comment.defined_in = file
     comment.ctx or comment.ctx = {}
@@ -255,9 +257,19 @@ classifyComments = (file, comments) ->
           console.log "Unknown tag : #{tag.type} in #{file}"
 
     if comment.ctx.class_name
+      if comment.ctx.type is 'function'
+        comment.ctx.type = 'method'
+      else if comment.ctx.type is 'declaration'
+        comment.ctx.type = 'property'
       seperator = if comment.static then '.' else '::'
       id = comment.ctx.class_name + seperator + comment.ctx.name
       comment.ctx.fullname = comment.ctx.class_name.replace(/.*[\./](\w+)/, '$1') + seperator + comment.ctx.name
+
+    if comment.ctx.type is 'class'
+      current_class = comment
+
+    if (comment.ctx.type is 'property' or comment.ctx.type is 'method') and not comment.namespace and current_class
+      comment.namespace = current_class.namespace
 
     if id
       if result.ids.hasOwnProperty id
@@ -266,11 +278,6 @@ classifyComments = (file, comments) ->
         result.ids[id] = comment
         result.ids[comment.namespace+id] = comment
       comment.html_id = (comment.namespace+id).replace(/[^A-Za-z0-9_]/g, '_')
-
-    if comment.ctx.type is 'function' and comment.ctx.class_name
-      comment.ctx.type = 'method'
-    else if comment.ctx.type is 'declaration' and comment.ctx.class_name
-      comment.ctx.type = 'property'
 
     switch comment.ctx.type
       when 'class'
