@@ -3,6 +3,8 @@ div.page-header
     h1.class_title= name.substr(klass.namespace.length)
       if klass.extends.length
         span.extends!= ' extends ' + klass.extends.join(', ')
+      if klass.uses.length
+        span.uses!= ' uses ' + klass.uses.join(', ')
     div!= klass.description.summary
     div!= klass.description.body
     if klass.code
@@ -13,6 +15,10 @@ div.page-header
       dl
         dt Direct known subclasses:
         dd!= klass.subclasses.join(', ')
+    if klass.usedbys.length
+      dl
+        dt Used by:
+        dd!= klass.usedbys.join(', ')
 each item in properties
   section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.fullname

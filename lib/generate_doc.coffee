@@ -205,6 +205,8 @@ classifyComments = (file, comments) ->
     comment.todos = []
     comment.extends = []
     comment.subclasses = []
+    comment.uses = []
+    comment.usedbys = []
     comment.properties = []
 
     if comment.ctx.type is 'property' or comment.ctx.type is 'method'
@@ -252,7 +254,7 @@ classifyComments = (file, comments) ->
           comment.static = true
         when 'private'
           comment.isPrivate = true
-        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo', 'type', 'api'
+        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo', 'type', 'api', 'uses'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
 
@@ -343,7 +345,10 @@ processComments = (comments) ->
           comment.todos.push tag.string
         when 'extends'
           comment.extends.push makeTypeLink tag.string
-          result.classes[tag.string]?.subclasses.push makeTypeLink comment.ctx.name
+          result.ids[tag.string]?.subclasses.push makeTypeLink comment.ctx.name
+        when 'uses'
+          comment.uses.push makeTypeLink tag.string
+          result.ids[tag.string]?.usedbys.push makeTypeLink comment.ctx.name
         when 'type'
           for type, i in tag.types
             tag.types[i] = makeTypeLink type
@@ -352,7 +357,7 @@ processComments = (comments) ->
     if comment.ctx.type is 'class'
       if /^class +\w+ +extends +(\w+)/.exec comment.code
         comment.extends.push makeTypeLink RegExp.$1
-        result.classes[RegExp.$1]?.subclasses.push makeTypeLink comment.ctx.name
+        result.ids[RegExp.$1]?.subclasses.push makeTypeLink comment.ctx.name
 
     # make parameters nested
     makeNested comment, 'params'
