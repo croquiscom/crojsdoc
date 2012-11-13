@@ -37,7 +37,8 @@
 	margin-top: 10px;
 }
 
-.label-optional, .label-static, .label-property, .label-addable, .label-excludable, .label-private {
+.label-optional, .label-static, .label-abstract, .label-override,
+.label-property, .label-addable, .label-excludable, .label-private {
 	margin-left: 5px;
 	font-size: 0.7em;
 }
@@ -48,6 +49,14 @@
 
 .label-static {
 	background-color: #f89406;
+}
+
+.label-abstract {
+	background-color: #389486;
+}
+
+.label-override {
+	background-color: #389486;
 }
 
 .label-property {

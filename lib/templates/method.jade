@@ -1,33 +1,44 @@
+//- item: current comment to process
+//- method: comment that includes description
+//- item!=method if overridden method
+
 h2.class_method
   | #{display_name}
-  if item.ctx.type==='method'
+  if method.ctx.type==='method'
     | (
-    each param, i in item.params
+    each param, i in method.params
       if param.optional
         | [#{param.name}]
       else
         | #{param.name}
-      if i+1 < item.params.length
+      if i+1 < method.params.length
         | , 
     | )
-  if item.types && item.types.length && item.types.join('')
+  if method.types && method.types.length && method.types.join('')
     |  : 
-    each type, i in item.types
+    each type, i in method.types
       != type
-      if i+1 < item.types.length
+      if i+1 < method.types.length
         | , 
-  if item.isPrivate
+  if method.isPrivate
     span.label.label-private private
-  if is_method_of_class && item.static
+  if is_method_of_class && method.static
     span.label.label-static static
-  if item.ctx.type==='property'
+  if is_method_of_class && item.abstract
+    span.label.label-abstract abstract
+  if is_method_of_class && item!==method
+    span.label.label-override override
+  if method.ctx.type==='property'
     span.label.label-property property
-div!= item.description.summary
-div!= item.description.body
-if item.params.length
+if item!==method
+  div!= 'Overrides ' + item.override_link
+  br
+div!= method.description.summary
+div!= method.description.body
+if method.params.length
   h3 Parameters:
   ul
-    each param1 in item.params
+    each param1 in method.params
       li 
         - var param = param1;
         include method-param
@@ -43,22 +54,22 @@ if item.params.length
                       li
                         - var param = param3;
                         include method-param
-if item.return
+if method.return
   h3 Returns:
   ul
     li
       span
         |  {
-        each type, i in item.return.types
+        each type, i in method.return.types
           != type
-          if i+1 < item.return.types.length
+          if i+1 < method.return.types.length
             | , 
         | } 
       span
-        != item.return.description
-      if item.returnprops
+        != method.return.description
+      if method.returnprops
         ul
-          each prop1 in item.returnprops
+          each prop1 in method.returnprops
             li
               - var param = prop1;
               include method-param
@@ -74,19 +85,19 @@ if item.return
                             li
                               - var param = prop3;
                               include method-param
-if item.throws.length
+if method.throws.length
   h3 Throws:
   ul
-    each tag in item.throws
+    each tag in method.throws
       li
         {
         span= tag.message
         } 
         span!= tag.description
-if item.resterrors.length
+if method.resterrors.length
   h3 Rest Errors:
   ul
-    each tag in item.resterrors
+    each tag in method.resterrors
       li
         {
         span= tag.code
@@ -94,10 +105,10 @@ if item.resterrors.length
         span= tag.message
         } 
         span!= tag.description
-if item.sees.length
+if method.sees.length
   h3 See Also:
   ul
-    each tag in item.sees
+    each tag in method.sees
       li!= tag
 if item.todos.length
   h3 TODO:

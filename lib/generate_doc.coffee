@@ -103,7 +103,7 @@ getComments = (file, path) ->
 
   # filter out empty comments
   return comments?.filter (comment) ->
-    return comment.description.full or comment.description.summary or comment.description.body
+    return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
 
 ###
 # Parsed result
@@ -254,7 +254,10 @@ classifyComments = (file, comments) ->
           comment.static = true
         when 'private'
           comment.isPrivate = true
-        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see', 'extends', 'todo', 'type', 'api', 'uses'
+        when 'abstract'
+          comment.abstract = true
+        when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
+          , 'extends', 'todo', 'type', 'api', 'uses', 'override'
         else
           console.log "Unknown tag : #{tag.type} in #{file}"
 
@@ -353,6 +356,10 @@ processComments = (comments) ->
           for type, i in tag.types
             tag.types[i] = makeTypeLink type
           comment.types = tag.types
+        when 'override'
+          if result.ids[tag.string] and result.ids[tag.string] isnt 'DUPLICATED ENTRY'
+            comment.override = result.ids[tag.string]
+          comment.override_link = makeTypeLink tag.string
 
     if comment.ctx.type is 'class'
       if /^class +\w+ +extends +(\w+)/.exec comment.code

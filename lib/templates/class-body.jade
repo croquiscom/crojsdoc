@@ -23,5 +23,6 @@ each item in properties
   section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.fullname
     - var is_method_of_class = true
+    - var method = item.override || item
     include method
     hr.item-seperator
