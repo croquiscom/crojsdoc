@@ -400,7 +400,11 @@ generate = (paths, genopts) ->
       console.log "external-types: Cannot open #{genopts['external-types']}"
 
   project_dir = process.cwd()
-  doc_dir = project_dir + '/doc'
+  output_dir = genopts?.output or 'doc'
+  if output_dir[0] is '/'
+    doc_dir = output_dir
+  else
+    doc_dir = project_dir + '/' + output_dir
   template_dir = __dirname + '/templates'
 
   all_comments = []
