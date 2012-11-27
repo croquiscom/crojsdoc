@@ -1,8 +1,24 @@
 {
-  "name": "croquis-jsdoc",
-  "version": "0.1.0",
+  "name": "crojsdoc",
+  "description": "A documentation generator for JavaScript and CoffeeScript",
+  "version": "0.2.0",
+  "keywords": [
+    "documentation",
+    "doc",
+    "jsdoc",
+    "coffeescript"
+  ],
+  "homepage": "https://croquiscom.github.com/crojsdoc",
+  "bugs": {
+    "url": "https://github.com/croquiscom/crojsdoc/issues"
+  },
+  "author": "Sangmin Yoon <sangmin.yoon@croquis.com>",
   "bin": {
-    "croquis-jsdoc": "./bin/croquis-jsdoc"
+    "crojsdoc": "./bin/crojsdoc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/croquiscom/crojsdoc.git"
   },
   "dependencies": {
     "coffee-script": "",
