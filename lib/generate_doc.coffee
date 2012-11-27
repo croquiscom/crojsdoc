@@ -1,12 +1,17 @@
+##
+# @module generate_doc
+
 dox = require './dox'
 fs = require 'fs'
 jade = require 'jade'
 walkdir = require 'walkdir'
 markdown = require 'marked'
 
-###
+##
 # Links for pre-known types
-###
+# @private
+# @memberOf generate_doc
+# @property types
 types =
   Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
   Boolean: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'
@@ -26,14 +31,15 @@ makeMissingLink = (type) ->
     console.log "'#{type}' link does not exist"
   return "<span class='missing-link'>#{type}</span>"
 
-###
+##
 # Makes links for given type
 #
-# "String" -> "<a href='reference url for String'>String</a>"
-# "Array<Model>" -> "<a href='reference url for Array'>Array</a>&lt;<a href='internal url for Model'>Model</a>&gt;"
+# * "String" -&gt; "&lt;a href='reference url for String'&gt;String&lt;/a&gt;"
+# * "Array&lt;Model&gt;" -&gt; "&lt;a href='reference url for Array'&gt;Array&lt;/a&gt;&amp;lt;&lt;a href='internal url for Model'&gt;Model&lt;/a&gt;&amp;gt;"
+# @private
+# @memberOf generate_doc
 # @param {String} type
 # @return {String}
-###
 makeTypeLink = (type) ->
   return type if not type
   getlink = (type) ->
@@ -51,28 +57,12 @@ makeTypeLink = (type) ->
   else
     return getlink type
 
-###
+##
 # Returns list of comments of the given file
+# @private
+# @memberOf generate_doc
 # @param {String} file
-# @return {Array<Object>}
-# @returnprop {Object} description
-# @returnprop {String} description.summary
-# @returnprop {String} description.body
-# @returnprop {String} description.full
-# @returnprop {Array<Object>} tags
-# @returnprop {String} tags.type
-# @returnprop {Array<String>} [tags.types]
-# @returnprop {String} [tags.name]
-# @returnprop {String} [tags.description]
-# @returnprop {String} [tags.string]
-# @returnprop {String} code
-# @returnprop {Object} ctx
-# @returnprop {String} ctx.type
-# @returnprop {String} ctx.name
-# @returnprop {String} ctx.string
-# @returnprop {String} ctx.constructor
-# @returnprop {String} ctx.receiver
-###
+# @return {Array<Comment>}
 getComments = (file, path) ->
   return if (fs.statSync file).isDirectory()
   content = fs.readFileSync(file, 'utf-8').trim()
@@ -105,9 +95,11 @@ getComments = (file, path) ->
   return comments?.filter (comment) ->
     return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
 
-###
+##
 # Parsed result
-###
+# @private
+# @memberOf generate_doc
+# @property result
 result =
   project_title: ''
   ids: {}
@@ -115,14 +107,17 @@ result =
   pages: {}
   restapis: {}
 
-###
+##
 # Checks flags of parameter
 #
-# * is optional?
-# * default value
+# * '[' name ']' : optional
+# * name '=' value : default value
+# * '+' name : addable
+# * '-' name : excludable
+# @private
+# @memberOf generate_doc
 # @param {Object} tag
 # @return {Object} given tag
-###
 processParamFlags = (tag) ->
   # is optional parameter?
   if /\[([^\[\]]+)\]/.exec tag.name
@@ -136,12 +131,13 @@ processParamFlags = (tag) ->
     tag.excludable = true
   return tag
 
-###
+##
 # Finds a parameter in the list
+# @private
+# @memberOf generate_doc
 # @param {Array<Object>} params
 # @param {String} name
 # @return {Object}
-###
 findParam = (params, name) ->
   for param in params
     if param.name is name
@@ -151,9 +147,10 @@ findParam = (params, name) ->
       return found if found
   return
 
-###
+##
 # Makes parameters(or returnprops) nested
-###
+# @private
+# @memberOf generate_doc
 makeNested = (comment, targetName) ->
   i = comment[targetName].length
   while i-->0
@@ -166,9 +163,10 @@ makeNested = (comment, targetName) ->
         param.name = match[2]
         parentParam[targetName].unshift param
 
-###
+##
 # Converts link markups to HTML links in the description
-###
+# @private
+# @memberOf generate_doc
 convertLink = (str) ->
   str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) ->
     if result.ids[$1] and result.ids[$1] isnt 'DUPLICATED ENTRY'
@@ -179,18 +177,20 @@ convertLink = (str) ->
       return makeMissingLink $1
   return str
 
-###
+##
 # Apply markdown
-###
+# @private
+# @memberOf generate_doc
 applyMarkdown = (str) ->
   # we cannot use '###' for header level 3 or above in CoffeeScript, instead web use '##\#', ''##\##', ...
   # recover this for markdown
   str = str.replace /#\\#/g, '##'
   return markdown str
 
-###
+##
 # Classifies type and collect id
-###
+# @private
+# @memberOf generate_doc
 classifyComments = (file, comments) ->
   current_class = undefined
 
@@ -298,9 +298,10 @@ classifyComments = (file, comments) ->
       when 'restapi'
         comment.filename = 'restapis'
 
-###
+##
 # Structuralizes comments
-###
+# @private
+# @memberOf generate_doc
 processComments = (comments) ->
   comments.forEach (comment) ->
     desc = comment.description
@@ -384,6 +385,9 @@ copyResources = (source, target) ->
   exec = require('child_process').exec
   exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
 
+##
+# Generates documents
+# @memberOf generate_doc
 generate = (paths, genopts) ->
   result.project_title = genopts?.title or 'croquis-jsdoc'
 
