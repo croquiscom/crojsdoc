@@ -52,8 +52,8 @@ makeTypeLink = (type) ->
     else
       return makeMissingLink type
     return "<a href='#{link}'>#{type}</a>"
-  if res = type.match /(.*)<(.*)>/
-    return "#{getlink res[1]}&lt;#{getlink res[2]}&gt;"
+  if res = type.match /(.*?)<(.*)>/
+    return "#{makeTypeLink res[1]}&lt;#{makeTypeLink res[2]}&gt;"
   else
     return getlink type
 
