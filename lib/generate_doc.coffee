@@ -6,6 +6,7 @@ fs = require 'fs'
 jade = require 'jade'
 walkdir = require 'walkdir'
 markdown = require 'marked'
+dirname = require('path').dirname
 
 ##
 # Links for pre-known types
@@ -64,7 +65,7 @@ makeTypeLink = (type) ->
 # @param {String} file
 # @return {Array<Comment>}
 getComments = (file, path) ->
-  return if (fs.statSync file).isDirectory()
+  return if fs.statSync(file).isDirectory()
   content = fs.readFileSync(file, 'utf-8').trim()
   return if not content
 
@@ -523,7 +524,12 @@ generate = (paths, genopts) ->
   all_comments = []
   paths.forEach (path) ->
     path = "#{genopts.project_dir}/#{path}"
-    walkdir.sync(path).forEach (file) ->
+    if fs.statSync(path).isDirectory()
+      list = walkdir.sync path
+    else
+      list = [path]
+      path = dirname path
+    list.forEach (file) ->
       comments = getComments file, path
       return if not comments?
 
