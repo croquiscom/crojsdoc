@@ -518,15 +518,23 @@ generate = (paths, genopts) ->
     genopts.doc_dir = genopts.project_dir + '/' + output_dir
   genopts.template_dir = __dirname + '/templates'
 
+  file_count_read = 0
+
   all_comments = []
   paths.forEach (path) ->
     path = "#{genopts.project_dir}/#{path}"
     walkdir.sync(path).forEach (file) ->
       comments = getComments file, path
       return if not comments?
+
+      file_count_read++
+      console.log file + ' is processed' if not genopts.quite
+
       file = file.replace new RegExp("^" + genopts.project_dir), ''
       classifyComments file, comments
       all_comments.push.apply all_comments, comments
+
+  console.log 'Total ' + file_count_read + ' files processed'
 
   processComments all_comments
 
