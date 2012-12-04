@@ -381,50 +381,12 @@ processComments = (comments) ->
       when 'restapi'
         result.restapis[comment.ctx.name] = comment
 
-copyResources = (source, target) ->
-  exec = require('child_process').exec
-  exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
-
 ##
-# Generates documents
-# @memberOf generate_doc
-generate = (paths, genopts) ->
-  result.project_title = genopts?.title or 'croquis-jsdoc'
-
-  if genopts?['external-types']
-    try
-      content = fs.readFileSync(genopts['external-types'], 'utf-8').trim()
-      try
-        ext_types = JSON.parse content
-        for type, url of ext_types
-          types[type] = url
-      catch e
-        console.log "external-types: Invalid JSON file"
-    catch e
-      console.log "external-types: Cannot open #{genopts['external-types']}"
-
-  project_dir = process.cwd()
-  output_dir = genopts?.output or 'doc'
-  if output_dir[0] is '/'
-    doc_dir = output_dir
-  else
-    doc_dir = project_dir + '/' + output_dir
-  template_dir = __dirname + '/templates'
-
-  all_comments = []
-  paths.forEach (path) ->
-    path = "#{project_dir}/#{path}"
-    walkdir.sync(path).forEach (file) ->
-      comments = getComments file, path
-      return if not comments?
-      file = file.replace new RegExp("^" + project_dir), ''
-      classifyComments file, comments
-      all_comments.push.apply all_comments, comments
-
-  processComments all_comments
-
-  copyResources __dirname, doc_dir
-
+# Refines result.
+#
+# - convert hash to sorted array
+# - classes -> classes & modules
+refineResult = (result) ->
   result.classes = Object.keys(result.classes).sort( (a,b) ->
     a_ns = result.classes[a].namespace
     b_ns = result.classes[b].namespace
@@ -452,7 +414,12 @@ generate = (paths, genopts) ->
   result.modules = result.classes.filter (klass) -> klass.is_module
   result.classes = result.classes.filter (klass) -> not klass.is_module
 
-  fs.readFile "#{project_dir}/README.md", 'utf-8', (error, content) ->
+copyResources = (source, target) ->
+  exec = require('child_process').exec
+  exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
+
+renderReadme = (result, genopts) ->
+  fs.readFile "#{genopts.project_dir}/README.md", 'utf-8', (error, content) ->
     if content
       content = convertLink applyMarkdown content
     options =
@@ -460,37 +427,40 @@ generate = (paths, genopts) ->
       content: content
       type: 'home'
       result: result
-    jade.renderFile "#{template_dir}/extra.jade", options, (error, result) ->
+    jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/index.html"
+      file = "#{genopts.doc_dir}/index.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+renderPages = (result, genopts) ->
   if result.pages.length > 0
     options =
       name: 'Pages'
       type: 'pages'
       result: result
-    jade.renderFile "#{template_dir}/pages.jade", options, (error, result) ->
+    jade.renderFile "#{genopts.template_dir}/pages.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/pages.html"
+      file = "#{genopts.doc_dir}/pages.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+renderRESTApis = (result, genopts) ->
   if result.restapis.length > 0
     options =
       name: 'REST APIs'
       type: 'restapis'
       result: result
-    jade.renderFile "#{template_dir}/restapis.jade", options, (error, result) ->
+    jade.renderFile "#{genopts.template_dir}/restapis.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/restapis.html"
+      file = "#{genopts.doc_dir}/restapis.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+renderClasses = (result, genopts) ->
   result.classes.forEach (klass) ->
     properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
@@ -499,13 +469,14 @@ generate = (paths, genopts) ->
       properties: properties
       type: 'classes'
       result: result
-    jade.renderFile "#{template_dir}/class.jade", options, (error, result) ->
+    jade.renderFile "#{genopts.template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/#{klass.filename}.html"
+      file = "#{genopts.doc_dir}/#{klass.filename}.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+renderModules = (result, genopts) ->
   result.modules.forEach (module) ->
     properties = module.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
@@ -514,11 +485,58 @@ generate = (paths, genopts) ->
       properties: properties
       type: 'modules'
       result: result
-    jade.renderFile "#{template_dir}/module.jade", options, (error, result) ->
+    jade.renderFile "#{genopts.template_dir}/module.jade", options, (error, result) ->
       return console.error error.stack if error
-      file = "#{doc_dir}/#{module.filename}.html"
+      file = "#{genopts.doc_dir}/#{module.filename}.html"
       fs.writeFile file, result, (error) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
+
+##
+# Generates documents
+# @memberOf generate_doc
+generate = (paths, genopts) ->
+  result.project_title = genopts?.title or 'croquis-jsdoc'
+
+  if genopts?['external-types']
+    try
+      content = fs.readFileSync(genopts['external-types'], 'utf-8').trim()
+      try
+        ext_types = JSON.parse content
+        for type, url of ext_types
+          types[type] = url
+      catch e
+        console.log "external-types: Invalid JSON file"
+    catch e
+      console.log "external-types: Cannot open #{genopts['external-types']}"
+
+  genopts.project_dir = process.cwd()
+  output_dir = genopts?.output or 'doc'
+  if output_dir[0] is '/'
+    genopts.doc_dir = output_dir
+  else
+    genopts.doc_dir = genopts.project_dir + '/' + output_dir
+  genopts.template_dir = __dirname + '/templates'
+
+  all_comments = []
+  paths.forEach (path) ->
+    path = "#{genopts.project_dir}/#{path}"
+    walkdir.sync(path).forEach (file) ->
+      comments = getComments file, path
+      return if not comments?
+      file = file.replace new RegExp("^" + genopts.project_dir), ''
+      classifyComments file, comments
+      all_comments.push.apply all_comments, comments
+
+  processComments all_comments
+
+  refineResult result
+
+  copyResources __dirname, genopts.doc_dir
+  renderReadme result, genopts
+  renderPages result, genopts
+  renderRESTApis result, genopts
+  renderClasses result, genopts
+  renderModules result, genopts
 
 module.exports = generate
