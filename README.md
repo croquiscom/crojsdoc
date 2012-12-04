@@ -6,6 +6,17 @@ And Markdown comments are processed with [marked](https://github.com/chjj/marked
 
 See live examples on http://croquiscom.github.com/cormo/ and http://croquiscom.github.com/crojsdoc/.
 
+# Command
+
+```bash
+$ crojsdoc [-q] [-o DIRECTORY] [-t TITLE] SOURCES...
+```
+
+* -q : quiet output
+* -o DIRECTORY : set output directory
+* -t TITLE : set documents title
+* SOURCES : source files or directories
+
 # Comment blocks
 
 This accepts JavaDoc style's comments basically.
