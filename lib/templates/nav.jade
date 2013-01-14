@@ -7,9 +7,10 @@ div.navbar.navbar-inverse.navbar-fixed-top
         if result.guides.length > 0
           li.dropdown(class=(type=='guides'?'active':''))
             a.dropdown-toggle(data-toggle='dropdown',href='#')
-              = 'Guides '
+              = 'Guides'
               if type=='guides'
-                = '- ' + name + ' '
+                = ' - ' + name
+              = ' '
               span.caret
             ul.dropdown-menu
               each item in result.guides
@@ -18,9 +19,13 @@ div.navbar.navbar-inverse.navbar-fixed-top
         if result.modules.length > 0
           li(class=(type=='modules'?'active':''))
             a(href=result.modules[0].filename+'.html') Modules
+              if type=='modules'
+                = ' - ' + name
         if result.classes.length > 0
           li(class=(type=='classes'?'active':''))
             a(href=result.classes[0].filename+'.html') Classes
+              if type=='classes'
+                = ' - ' + name
         if result.pages.length > 0
           li(class=(type=='pages'?'active':''))
             a(href='pages.html') Pages
