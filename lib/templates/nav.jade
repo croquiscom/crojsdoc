@@ -4,6 +4,17 @@ div.navbar.navbar-inverse.navbar-fixed-top
       ul.nav
         li(class=(type=='home'?'active':''))
           a(href='index.html') Home
+        if result.guides.length > 0
+          li.dropdown(class=(type=='guides'?'active':''))
+            a.dropdown-toggle(data-toggle='dropdown',href='#')
+              = 'Guides '
+              if type=='guides'
+                = '- ' + name + ' '
+              span.caret
+            ul.dropdown-menu
+              each item in result.guides
+                li
+                  a(href=item.filename+'.html')= item.name
         if result.modules.length > 0
           li(class=(type=='modules'?'active':''))
             a(href=result.modules[0].filename+'.html') Modules

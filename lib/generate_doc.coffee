@@ -91,6 +91,12 @@ getComments = (file, path) ->
         { type: 'namespace', string: namespace }
       ]
     } ]
+  else if /Guide\.md$/.test file
+    file = file.substr 0, file.length-3
+    result.guides.push
+      name: file.substr 0, file.length-5
+      filename: file
+      content: content
 
   # filter out empty comments
   return comments?.filter (comment) ->
@@ -105,6 +111,7 @@ result =
   project_title: ''
   ids: {}
   classes: {}
+  guides: []
   pages: {}
   restapis: {}
 
@@ -435,6 +442,23 @@ renderReadme = (result, genopts) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+renderGuides = (result, genopts) ->
+  result.guides.forEach (guide) ->
+    content = guide.content
+    if content
+      content = convertLink applyMarkdown content
+    options =
+      name: guide.name
+      content: content
+      type: 'guides'
+      result: result
+    jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
+      return console.error error.stack if error
+      file = "#{genopts.doc_dir}/#{guide.filename}.html"
+      fs.writeFile file, result, (error) ->
+        return console.error 'failed to create '+file if error
+        console.log file + ' is created' if not genopts.quite
+
 renderPages = (result, genopts) ->
   if result.pages.length > 0
     options =
@@ -548,6 +572,7 @@ generate = (paths, genopts) ->
 
   copyResources __dirname, genopts.doc_dir
   renderReadme result, genopts
+  renderGuides result, genopts
   renderPages result, genopts
   renderRESTApis result, genopts
   renderClasses result, genopts
