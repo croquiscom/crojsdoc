@@ -54,6 +54,12 @@ if method.params.length
                       li
                         - var param = param3;
                         include method-param
+                        if param3.params
+                          ul
+                            each param4 in param3.params
+                              li
+                                - var param = param4;
+                                include method-param
 if method.return
   h3 Returns:
   ul
@@ -85,6 +91,12 @@ if method.return
                             li
                               - var param = prop3;
                               include method-param
+                              if prop3.returnprops
+                                ul
+                                  each prop4 in prop3.returnprops
+                                    li
+                                      - var param = prop4;
+                                      include method-param
 if method.throws.length
   h3 Throws:
   ul
