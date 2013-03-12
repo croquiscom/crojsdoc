@@ -39,9 +39,10 @@ makeMissingLink = (type) ->
 # * "Array&lt;Model&gt;" -&gt; "&lt;a href='reference url for Array'&gt;Array&lt;/a&gt;&amp;lt;&lt;a href='internal url for Model'&gt;Model&lt;/a&gt;&amp;gt;"
 # @private
 # @memberOf generate_doc
+# @param {String} rel_path
 # @param {String} type
 # @return {String}
-makeTypeLink = (type) ->
+makeTypeLink = (rel_path, type) ->
   return type if not type
   getlink = (type) ->
     if types[type]
@@ -49,14 +50,21 @@ makeTypeLink = (type) ->
     else if result.ids[type] and result.ids[type] isnt 'DUPLICATED ENTRY'
       filename = result.ids[type].filename + '.html'
       html_id = result.ids[type].html_id
-      link = "#{filename}##{html_id}"
+      link = "#{rel_path}#{filename}##{html_id}"
     else
       return makeMissingLink type
     return "<a href='#{link}'>#{type}</a>"
   if res = type.match /(.*?)<(.*)>/
-    return "#{makeTypeLink res[1]}&lt;#{makeTypeLink res[2]}&gt;"
+    return "#{makeTypeLink rel_path, res[1]}&lt;#{makeTypeLink rel_path, res[2]}&gt;"
   else
     return getlink type
+
+makeSeeLink = (rel_path, str) ->
+  if result.ids[str]
+    filename = result.ids[str].filename + '.html'
+    html_id = result.ids[str].html_id
+    str = "<a href='#{rel_path}#{filename}##{html_id}'>#{str}</a>"
+  return str
 
 ##
 # Returns list of comments of the given file
@@ -92,10 +100,10 @@ getComments = (file, path) ->
       ]
     } ]
   else if /Guide\.md$/.test file
-    file = file.substr 0, file.length-3
+    file = file.substr 0, file.length-8
     result.guides.push
-      name: file.substr 0, file.length-5
-      filename: file
+      name: file
+      filename: 'guides/' + file
       content: content
 
   # filter out empty comments
@@ -175,12 +183,13 @@ makeNested = (comment, targetName) ->
 # Converts link markups to HTML links in the description
 # @private
 # @memberOf generate_doc
-convertLink = (str) ->
+convertLink = (rel_path, str) ->
+  return '' if not str
   str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) ->
     if result.ids[$1] and result.ids[$1] isnt 'DUPLICATED ENTRY'
       filename = result.ids[$1].filename + '.html'
       html_id = result.ids[$1].html_id
-      return "<a href='#{filename}##{html_id}'>#{$1}</a>"
+      return "<a href='#{rel_path}#{filename}##{html_id}'>#{$1}</a>"
     else
       return makeMissingLink $1
   return str
@@ -297,10 +306,13 @@ classifyComments = (file, comments) ->
         comment.ctx.name = comment.namespace + comment.ctx.name
         comment.ctx.fullname = comment.namespace + comment.ctx.fullname
         result.classes[comment.ctx.name] = comment
-        comment.filename = comment.ctx.name.replace(/\//g, '.')
+        if comment.is_module
+          comment.filename = 'modules/' + comment.ctx.name.replace(/\//g, '.')
+        else
+          comment.filename = 'classes/' + comment.ctx.name.replace(/\//g, '.')
       when 'property', 'method'
         comment.ctx.class_name = comment.namespace + comment.ctx.class_name
-        comment.filename = comment.ctx.class_name.replace(/\//g, '.')
+        comment.filename = 'classes/' + comment.ctx.class_name.replace(/\//g, '.')
       when 'page'
         comment.filename = 'pages'
       when 'restapi'
@@ -314,66 +326,62 @@ processComments = (comments) ->
   comments.forEach (comment) ->
     desc = comment.description
     if desc
-      desc.full = convertLink applyMarkdown desc.full
-      desc.summary = convertLink applyMarkdown desc.summary
-      desc.body = convertLink applyMarkdown desc.body
+      desc.full = applyMarkdown desc.full
+      desc.summary = applyMarkdown desc.summary
+      desc.body = applyMarkdown desc.body
 
     for tag in comment.tags
       switch tag.type
         when 'param'
           tag = processParamFlags tag
           for type, i in tag.types
-            tag.types[i] = makeTypeLink type
-          tag.description = convertLink tag.description
+            tag.types[i] = type
+          tag.description = tag.description
           comment.params.push tag
         when 'return'
           for type, i in tag.types
-            tag.types[i] = makeTypeLink type
-          tag.description = convertLink tag.description
+            tag.types[i] = type
+          tag.description = tag.description
           comment.return = tag
         when 'returnprop'
           tag = dox.parseTag '@param ' + tag.string
           tag = processParamFlags tag
           for type, i in tag.types
-            tag.types[i] = makeTypeLink type
-          tag.description = convertLink tag.description
+            tag.types[i] = type
+          tag.description = tag.description
           comment.returnprops.push tag
         when 'throws'
           if /{([^}]+)}\s*(.*)/.exec tag.string
-            comment.throws.push message: RegExp.$1, description: convertLink RegExp.$2
+            comment.throws.push message: RegExp.$1, description: RegExp.$2
           else
             comment.throws.push message: tag.string, description: ''
         when 'resterror'
           if /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
-            comment.resterrors.push code: RegExp.$1, message: RegExp.$2, description: convertLink RegExp.$3
+            comment.resterrors.push code: RegExp.$1, message: RegExp.$2, description: RegExp.$3
         when 'see'
           str = tag.local or tag.url
-          if result.ids[str]
-            filename = result.ids[str].filename + '.html'
-            html_id = result.ids[str].html_id
-            str = "<a href='#{filename}##{html_id}'>#{str}</a>"
           comment.sees.push str
         when 'todo'
           comment.todos.push tag.string
         when 'extends'
-          comment.extends.push makeTypeLink tag.string
-          result.ids[tag.string]?.subclasses.push makeTypeLink comment.ctx.name
+          comment.extends.push tag.string
+          result.ids[tag.string]?.subclasses.push comment.ctx.name
         when 'uses'
-          comment.uses.push makeTypeLink tag.string
-          result.ids[tag.string]?.usedbys.push makeTypeLink comment.ctx.name
+          comment.uses.push tag.string
+          result.ids[tag.string]?.usedbys.push comment.ctx.name
         when 'type'
           for type, i in tag.types
-            tag.types[i] = makeTypeLink type
+            tag.types[i] = type
           comment.types = tag.types
         when 'override'
           if result.ids[tag.string] and result.ids[tag.string] isnt 'DUPLICATED ENTRY'
             comment.override = result.ids[tag.string]
-          comment.override_link = makeTypeLink tag.string
+          comment.override_link = tag.string
 
     if comment.ctx.type is 'class'
       if /^class +\w+ +extends +(\w+)/.exec comment.code
-        comment.extends.push makeTypeLink RegExp.$1
-        result.ids[RegExp.$1]?.subclasses.push makeTypeLink comment.ctx.name
+        comment.extends.push RegExp.$1
+        result.ids[RegExp.$1]?.subclasses.push comment.ctx.name
 
     # make parameters nested
     makeNested comment, 'params'
@@ -382,8 +390,10 @@ processComments = (comments) ->
     switch comment.ctx.type
       when 'property', 'method'
         class_name = comment.ctx.class_name
-        if class_name
-          result.classes[class_name]?.properties.push comment
+        if class_name and class_comment = result.classes[class_name]
+          class_comment.properties.push comment
+          if class_comment.is_module
+            comment.filename = comment.filename.replace('classes/', 'modules/')
       when 'page'
         result.pages[comment.ctx.name] = comment
       when 'restapi'
@@ -429,12 +439,16 @@ copyResources = (source, target) ->
 renderReadme = (result, genopts) ->
   fs.readFile "#{genopts.project_dir}/README.md", 'utf-8', (error, content) ->
     if content
-      content = convertLink applyMarkdown content
+      content = applyMarkdown content
     options =
+      rel_path: './'
       name: 'README'
       content: content
       type: 'home'
       result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
     jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{genopts.doc_dir}/index.html"
@@ -443,15 +457,23 @@ renderReadme = (result, genopts) ->
         console.log file + ' is created' if not genopts.quite
 
 renderGuides = (result, genopts) ->
+  return if result.guides.length is 0
+  try
+    fs.mkdirSync "#{genopts.doc_dir}/guides"
+  catch e
   result.guides.forEach (guide) ->
     content = guide.content
     if content
-      content = convertLink applyMarkdown content
+      content = applyMarkdown content
     options =
+      rel_path: '../'
       name: guide.name
       content: content
       type: 'guides'
       result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
     jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{genopts.doc_dir}/#{guide.filename}.html"
@@ -462,9 +484,13 @@ renderGuides = (result, genopts) ->
 renderPages = (result, genopts) ->
   if result.pages.length > 0
     options =
+      rel_path: './'
       name: 'Pages'
       type: 'pages'
       result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
     jade.renderFile "#{genopts.template_dir}/pages.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{genopts.doc_dir}/pages.html"
@@ -475,9 +501,13 @@ renderPages = (result, genopts) ->
 renderRESTApis = (result, genopts) ->
   if result.restapis.length > 0
     options =
+      rel_path: './'
       name: 'REST APIs'
       type: 'restapis'
       result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
     jade.renderFile "#{genopts.template_dir}/restapis.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{genopts.doc_dir}/restapis.html"
@@ -486,14 +516,22 @@ renderRESTApis = (result, genopts) ->
         console.log file + ' is created' if not genopts.quite
 
 renderClasses = (result, genopts) ->
+  return if result.classes.length is 0
+  try
+    fs.mkdirSync "#{genopts.doc_dir}/classes"
+  catch e
   result.classes.forEach (klass) ->
     properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
+      rel_path: '../'
       name: klass.ctx.name
       klass: klass
       properties: properties
       type: 'classes'
       result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
     jade.renderFile "#{genopts.template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{genopts.doc_dir}/#{klass.filename}.html"
@@ -502,14 +540,22 @@ renderClasses = (result, genopts) ->
         console.log file + ' is created' if not genopts.quite
 
 renderModules = (result, genopts) ->
+  return if result.modules.length is 0
+  try
+    fs.mkdirSync "#{genopts.doc_dir}/modules"
+  catch e
   result.modules.forEach (module) ->
     properties = module.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
+      rel_path: '../'
       name: module.ctx.name
       module: module
       properties: properties
       type: 'modules'
       result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
     jade.renderFile "#{genopts.template_dir}/module.jade", options, (error, result) ->
       return console.error error.stack if error
       file = "#{genopts.doc_dir}/#{module.filename}.html"

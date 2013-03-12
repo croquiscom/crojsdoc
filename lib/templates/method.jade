@@ -16,10 +16,7 @@ h2.class_method
     | )
   if method.types && method.types.length && method.types.join('')
     |  : 
-    each type, i in method.types
-      != type
-      if i+1 < method.types.length
-        | , 
+    != method.types.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
   if method.isPrivate
     span.label.label-private private
   if is_method_of_class && method.static
@@ -31,10 +28,10 @@ h2.class_method
   if method.ctx.type==='property'
     span.label.label-property property
 if item!==method
-  div!= 'Overrides ' + item.override_link
+  div!= 'Overrides ' + makeTypeLink(rel_path, item.override_link)
   br
-div!= method.description.summary
-div!= method.description.body
+div!= convertLink(rel_path, method.description.summary)
+div!= convertLink(rel_path, method.description.body)
 if method.params.length
   h3 Parameters:
   ul
@@ -67,12 +64,12 @@ if method.return
       span
         |  {
         each type, i in method.return.types
-          != type
+          != makeTypeLink(rel_path, type)
           if i+1 < method.return.types.length
             | , 
         | } 
       span
-        != method.return.description
+        != convertLink(rel_path, method.return.description)
       if method.returnprops
         ul
           each prop1 in method.returnprops
@@ -105,7 +102,7 @@ if method.throws.length
         {
         span= tag.message
         } 
-        span!= tag.description
+        span!= convertLink(rel_path, tag.description)
 if method.resterrors.length
   h3 Rest Errors:
   ul
@@ -116,12 +113,12 @@ if method.resterrors.length
         /
         span= tag.message
         } 
-        span!= tag.description
+        span!= convertLink(rel_path, tag.description)
 if method.sees.length
   h3 See Also:
   ul
-    each tag in method.sees
-      li!= tag
+    each str in method.sees
+      li!= makeSeeLink(rel_path, str)
 if item.todos.length
   h3 TODO:
   ul

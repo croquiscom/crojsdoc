@@ -4,17 +4,17 @@ html(lang='en')
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     title #{result.project_title} - #{name}
-    link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
-    link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
-    link(href='google-code-prettify/prettify.css', rel='stylesheet', type='text/css')
-    link(href='style.css', rel='stylesheet', type='text/css')
+    link(href='#{rel_path}bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
+    link(href='#{rel_path}bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
+    link(href='#{rel_path}google-code-prettify/prettify.css', rel='stylesheet', type='text/css')
+    link(href='#{rel_path}style.css', rel='stylesheet', type='text/css')
     block style
   body(data-spy='scroll', data-target='.sidebar')
     include nav
     block content
     script(src='http://code.jquery.com/jquery-1.8.2.min.js')
-    script(src='bootstrap/js/bootstrap.min.js')
-    script(src='google-code-prettify/prettify.js')
+    script(src='#{rel_path}bootstrap/js/bootstrap.min.js')
+    script(src='#{rel_path}google-code-prettify/prettify.js')
     script
       $(function() {
         // make result of marked for pretty print

@@ -2,9 +2,9 @@ div.page-header
   section(id=klass.html_id)
     h1.class_title= name.substr(klass.namespace.length)
       if klass.extends.length
-        span.extends!= ' extends ' + klass.extends.join(', ')
+        span.extends!= ' extends ' + klass.extends.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
       if klass.uses.length
-        span.uses!= ' uses ' + klass.uses.join(', ')
+        span.uses!= ' uses ' + klass.uses.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
     div!= klass.description.summary
     div!= klass.description.body
     if klass.code
@@ -14,11 +14,11 @@ div.page-header
     if klass.subclasses.length
       dl
         dt Direct known subclasses:
-        dd!= klass.subclasses.join(', ')
+        dd!= klass.subclasses.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
     if klass.usedbys.length
       dl
         dt Used by:
-        dd!= klass.usedbys.join(', ')
+        dd!= klass.usedbys.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
 each item in properties
   section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.fullname

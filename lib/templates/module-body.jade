@@ -2,8 +2,8 @@ div.page-header
   section(id=module.html_id)
     h1.class_title= name.substr(module.namespace.length)
     div (defined in #{module.defined_in.replace(/index.(coffee|js)$/, '')})
-    div!= module.description.summary
-    div!= module.description.body
+    div!= convertLink(rel_path, module.description.summary)
+    div!= convertLink(rel_path, module.description.body)
 each item in properties
   section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.name
