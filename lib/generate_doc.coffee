@@ -445,6 +445,10 @@ refineResult = (result) ->
     b = b.replace /([A-Z]+) \/(.*)/, '-$2 $1'
     if a<b then -1 else 1
   ).map (name) -> result.restapis[name]
+  result.guides = result.guides.sort (a,b) ->
+    if a.name<b.name then -1 else 1
+  result.features = result.features.sort (a,b) ->
+    if a.name<b.name then -1 else 1
 
   result.modules = result.classes.filter (klass) -> klass.is_module
   result.classes = result.classes.filter (klass) -> not klass.is_module
