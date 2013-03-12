@@ -32,6 +32,18 @@ div.navbar.navbar-inverse.navbar-fixed-top
         if result.restapis.length > 0
           li(class=(type=='restapis'?'active':''))
             a(href='#{rel_path}restapis.html') REST APIs
+        if result.features.length > 0
+          li.dropdown(class=(type=='features'?'active':''))
+            a.dropdown-toggle(data-toggle='dropdown',href='#')
+              = 'Features'
+              if type=='features'
+                = ' - ' + name
+              = ' '
+              span.caret
+            ul.dropdown-menu
+              each item in result.features
+                li
+                  a(href=rel_path+item.filename+'.html')= item.name
       div.options
         label(class='checkbox')
           input#options-private(type='checkbox')

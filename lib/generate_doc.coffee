@@ -105,6 +105,22 @@ getComments = (file, path) ->
       name: file
       filename: 'guides/' + file
       content: content
+  else if /\.feature$/.test file
+    file = file.substr 0, file.length-8
+    namespace = ''
+    file = file.replace /(.*)\//, (_, $1) ->
+      namespace = $1 + '.'
+      return ''
+    feature = ''
+    content = content.replace /Feature: (.*)/, (_, $1) ->
+      feature = $1
+      return ''
+    result.features.push
+      name: namespace + file
+      namespace: namespace
+      filename: 'features/' + namespace + file
+      feature: feature
+      content: content
 
   # filter out empty comments
   return comments?.filter (comment) ->
@@ -122,6 +138,7 @@ result =
   guides: []
   pages: {}
   restapis: {}
+  features: []
 
 ##
 # Checks flags of parameter
@@ -563,6 +580,28 @@ renderModules = (result, genopts) ->
         return console.error 'failed to create '+file if error
         console.log file + ' is created' if not genopts.quite
 
+renderFeatures = (result, genopts) ->
+  return if result.features.length is 0
+  try
+    fs.mkdirSync "#{genopts.doc_dir}/features"
+  catch e
+  result.features.forEach (feature) ->
+    options =
+      rel_path: '../'
+      name: feature.name
+      feature: feature
+      type: 'features'
+      result: result
+      makeTypeLink: makeTypeLink
+      makeSeeLink: makeSeeLink
+      convertLink: convertLink
+    jade.renderFile "#{genopts.template_dir}/feature.jade", options, (error, result) ->
+      return console.error error.stack if error
+      file = "#{genopts.doc_dir}/#{feature.filename}.html"
+      fs.writeFile file, result, (error) ->
+        return console.error 'failed to create '+file if error
+        console.log file + ' is created' if not genopts.quite
+
 ##
 # Generates documents
 # @memberOf generate_doc
@@ -623,5 +662,6 @@ generate = (paths, genopts) ->
   renderRESTApis result, genopts
   renderClasses result, genopts
   renderModules result, genopts
+  renderFeatures result, genopts
 
 module.exports = generate
