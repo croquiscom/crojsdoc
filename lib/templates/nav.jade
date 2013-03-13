@@ -44,6 +44,18 @@ div.navbar.navbar-inverse.navbar-fixed-top
               each item in result.features
                 li
                   a(href=rel_path+item.filename+'.html')= item.name
+        if result.files.length > 0
+          li.dropdown(class=(type=='files'?'active':''))
+            a.dropdown-toggle(data-toggle='dropdown',href='#')
+              = 'Files'
+              if type=='files'
+                = ' - ' + name
+              = ' '
+              span.caret
+            ul.dropdown-menu
+              each item in result.files
+                li
+                  a(href=rel_path+item.filename+'.html')= item.name
       div.options
         label(class='checkbox')
           input#options-private(type='checkbox')
