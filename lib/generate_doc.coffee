@@ -7,6 +7,7 @@ jade = require 'jade'
 walkdir = require 'walkdir'
 markdown = require 'marked'
 dirname = require('path').dirname
+resolve = require('path').resolve
 
 ##
 # Links for pre-known types
@@ -678,7 +679,7 @@ generate = (paths, genopts) ->
 
   all_comments = []
   paths.forEach (path) ->
-    path = "#{genopts.project_dir}/#{path}"
+    path = resolve "#{genopts.project_dir}/#{path}"
     if fs.statSync(path).isDirectory()
       list = walkdir.sync path
     else
