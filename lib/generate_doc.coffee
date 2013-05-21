@@ -266,9 +266,9 @@ classifyComments = (file, comments) ->
     comment.namespace = ''
 
     if comment.ctx.type is 'property' or comment.ctx.type is 'method'
-      if comment.ctx.hasOwnProperty 'constructor'
+      if comment.ctx.cons?
         comment.static = false
-        comment.ctx.class_name = comment.ctx.constructor
+        comment.ctx.class_name = comment.ctx.cons
       else if comment.ctx.receiver?
         comment.static = true
         comment.ctx.class_name = comment.ctx.receiver
