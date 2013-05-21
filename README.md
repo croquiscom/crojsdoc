@@ -9,13 +9,24 @@ See live examples on http://croquiscom.github.com/cormo/ and http://croquiscom.g
 # Command
 
 ```bash
-$ crojsdoc [-q] [-o DIRECTORY] [-t TITLE] SOURCES...
+$ crojsdoc [-o DIRECTORY] [-t TITLE] [-q] SOURCES...
 ```
 
-* -q : quiet output
-* -o DIRECTORY : set output directory
+* -o DIRECTORY : set output directory, default is doc
 * -t TITLE : set documents title
+* -q : quiet output
 * SOURCES : source files or directories
+
+Or, you can specify options in crojsdoc.yaml like this:
+
+```
+output: doc
+title: Title
+quite: true
+sources:
+  - lib
+  - guides
+```
 
 # Comment blocks
 

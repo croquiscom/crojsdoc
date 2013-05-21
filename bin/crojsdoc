@@ -2,6 +2,8 @@
 
 var coffee = require('coffee-script');
 var generate_doc = require('../lib/generate_doc');
+var path = require('path');
+var yaml = require('js-yaml');
 
 options = {}
 
@@ -19,5 +21,32 @@ parser.on('*', function (opt, value) {
   options[opt] = value;
 });
 argv = parser.parse(process.argv.slice(2));
+
+try {
+  var config = require(path.join(process.cwd(), 'crojsdoc.yaml'));
+  if (config.hasOwnProperty('output')) {
+    options.output = config.output;
+  }
+  if (config.hasOwnProperty('title')) {
+    options.title = config.title;
+  }
+  if (config.hasOwnProperty('quite')) {
+    options.quite = config.quite === true;
+  }
+  if (config.hasOwnProperty('files')) {
+    options.files = config.files === true;
+  }
+  if (config.hasOwnProperty('external-types')) {
+    options['external-types'] = config['external-types']
+  }
+  if (config.hasOwnProperty('sources')) {
+    if (Array.isArray(config.sources)) {
+      [].push.apply(argv, config.sources);
+    } else {
+      argv.push(config.sources);
+    }
+  }
+} catch (e) {
+}
 
 generate_doc(argv, options);

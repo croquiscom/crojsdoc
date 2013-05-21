@@ -1,0 +1,8 @@
+output: doc
+title: CroJSDoc
+quite: true
+files: true
+sources:
+  - lib
+  - examples
+  - guides

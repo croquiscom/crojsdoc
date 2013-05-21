@@ -655,17 +655,19 @@ renderFiles = (result, genopts) ->
 generate = (paths, genopts) ->
   result.project_title = genopts?.title or 'croquis-jsdoc'
 
-  if genopts?['external-types']
-    try
-      content = fs.readFileSync(genopts['external-types'], 'utf-8').trim()
+  if external_types = genopts?['external-types']
+    if typeof external_types is 'string'
       try
-        ext_types = JSON.parse content
-        for type, url of ext_types
-          types[type] = url
+        content = fs.readFileSync(external_types, 'utf-8').trim()
+        try
+          external_types = JSON.parse content
+        catch e
+          console.log "external-types: Invalid JSON file"
       catch e
-        console.log "external-types: Invalid JSON file"
-    catch e
-      console.log "external-types: Cannot open #{genopts['external-types']}"
+        console.log "external-types: Cannot open #{genopts['external-types']}"
+    if typeof external_types is 'object'
+      for type, url of external_types
+        types[type] = url
 
   genopts.project_dir = process.cwd()
   output_dir = genopts?.output or 'doc'

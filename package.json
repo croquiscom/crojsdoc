@@ -25,6 +25,7 @@
     "coffee-script": "",
     "marked": "",
     "jade": "",
+    "js-yaml": "",
     "optparse": "",
     "walkdir": ""
   },
