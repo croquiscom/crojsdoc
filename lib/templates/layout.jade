@@ -30,3 +30,7 @@ html(lang='en')
         $('body').scrollspy('refresh');
       });
     block script
+
+    if genopts && genopts.github && genopts.github.ribbon
+      a(href='#{genopts.github.repository}')
+        img(class='github-ribbon', src='https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png', alt='Fork me on GitHub')

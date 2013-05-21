@@ -6,3 +6,6 @@ sources:
   - lib
   - examples
   - guides
+github:
+  repository: https://github.com/croquiscom/crojsdoc
+  ribbon: true

@@ -46,6 +46,9 @@ try {
       argv.push(config.sources);
     }
   }
+  if (config.hasOwnProperty('github')) {
+    options.github = config.github;
+  }
 } catch (e) {
 }
 
