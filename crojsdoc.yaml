@@ -9,3 +9,4 @@ sources:
 github:
   repository: https://github.com/croquiscom/crojsdoc
   ribbon: true
+  sourcelink: true

@@ -9,7 +9,13 @@ div.page-header
     div!= klass.description.body
     if klass.code
       button.showcode.btn.btn-info Show code
-      span  (defined in #{klass.defined_in}:#{klass.line_number})
+      span
+        |  (defined in 
+        if genopts && genopts.github && genopts.github.sourcelink
+          a(href='#{genopts.github.repository}/blob/master/#{klass.defined_in}#L#{klass.line_number}') #{klass.defined_in}:#{klass.line_number}
+        else
+          | #{klass.defined_in}:#{klass.line_number}
+        |)
       pre.sourcecode.prettyprint(class='.linenums:'+klass.line_number)!= klass.code
     if klass.subclasses.length
       dl
