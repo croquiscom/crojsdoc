@@ -13,6 +13,7 @@
     "url": "https://github.com/croquiscom/crojsdoc/issues"
   },
   "author": "Sangmin Yoon <sangmin.yoon@croquis.com>",
+  "license": "MIT",
   "bin": {
     "crojsdoc": "./bin/crojsdoc"
   },
