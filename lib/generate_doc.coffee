@@ -203,7 +203,7 @@ makeNested = (comment, targetName) ->
   i = comment[targetName].length
   while i-->0
     param = comment[targetName][i]
-    if match = param.name.match /\[?(.*)\.([^\]]*)\]?/
+    if match = param.name.match /\[?([^=]*)\.([^\]]*)\]?/
       parentParam = findParam comment[targetName], match[1]
       if parentParam
         comment[targetName].splice i, 1
