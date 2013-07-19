@@ -257,6 +257,7 @@ classifyComments = (file, comments) ->
     comment.uses = []
     comment.usedbys = []
     comment.properties = []
+    comment.examples = []
 
     if comment.ctx.type is 'property' or comment.ctx.type is 'method'
       id = comment.ctx.string.replace('()', '')
@@ -273,7 +274,12 @@ classifyComments = (file, comments) ->
         comment.static = true
         comment.ctx.class_name = comment.ctx.receiver
 
-    for tag in comment.tags
+    last = 0
+    for tag, i in comment.tags
+      if tag.type is ''
+        comment.tags[last].string += "\n#{tag.string}"
+        continue
+      last = i
       switch tag.type
         when 'page', 'restapi', 'class'
           comment.ctx.type = tag.type
@@ -405,6 +411,8 @@ processComments = (comments) ->
           for type, i in tag.types
             tag.types[i] = type
           comment.types = tag.types
+        when 'example'
+          comment.examples.push tag
         when 'override'
           if result.ids[tag.string] and result.ids[tag.string] isnt 'DUPLICATED ENTRY'
             comment.override = result.ids[tag.string]

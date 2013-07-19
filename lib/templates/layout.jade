@@ -4,6 +4,8 @@ html(lang='en')
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     title #{result.project_title} - #{name}
+    script.
+      if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {location.href = location.href + '/'; }
     link(href='#{rel_path}bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
     link(href='#{rel_path}bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', type='text/css')
     link(href='#{rel_path}google-code-prettify/prettify.css', rel='stylesheet', type='text/css')
