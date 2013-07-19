@@ -88,7 +88,7 @@ getComments = (file, path) ->
     add_to_file = true
   else if /Page\.md$/.test file
     namespace = ''
-    file = file.substr 0, file.length-3
+    file = file.substr(0, file.length-3).replace(/[\w]Page$/, '')
     file = file.replace /(.*)\//, (_, $1) ->
       namespace = $1
       return ''
@@ -103,7 +103,7 @@ getComments = (file, path) ->
       ]
     } ]
   else if /Guide\.md$/.test file
-    file = file.substr 0, file.length-8
+    file = file.substr(0, file.length-8).replace(/\//g, '.')
     result.guides.push
       name: file
       filename: 'guides/' + file
@@ -479,7 +479,7 @@ copyResources = (source, target) ->
   exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
 
 renderReadme = (result, genopts) ->
-  fs.readFile "#{genopts.project_dir}/README.md", 'utf-8', (error, content) ->
+  fs.readFile "#{genopts.readme || genopts.project_dir}/README.md", 'utf-8', (error, content) ->
     if content
       content = applyMarkdown content
     options =
