@@ -151,3 +151,9 @@
 ```
 @todo description
 ```
+
+## @example
+
+```
+@example code
+```
