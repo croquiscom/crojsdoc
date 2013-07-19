@@ -88,7 +88,7 @@ getComments = (file, path) ->
     add_to_file = true
   else if /Page\.md$/.test file
     namespace = ''
-    file = file.substr(0, file.length-3).replace(/[\w]Page$/, '')
+    file = file.substr(0, file.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
     file = file.replace /(.*)\//, (_, $1) ->
       namespace = $1
       return ''
