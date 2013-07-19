@@ -76,6 +76,12 @@
 @property name
 ```
 
+## @method
+
+```
+@method name
+```
+
 ## @type
 
 ```
@@ -102,6 +108,12 @@
 
 ```
 @private
+```
+
+## @async
+
+```
+@async
 ```
 
 ## @api
