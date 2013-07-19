@@ -273,7 +273,12 @@ classifyComments = (file, comments) ->
         comment.static = true
         comment.ctx.class_name = comment.ctx.receiver
 
-    for tag in comment.tags
+    last = 0
+    for tag, i in comment.tags
+      if tag.type is ''
+        comment.tags[last].string += "\n#{tag.string}"
+        continue
+      last = i
       switch tag.type
         when 'page', 'restapi', 'class'
           comment.ctx.type = tag.type
