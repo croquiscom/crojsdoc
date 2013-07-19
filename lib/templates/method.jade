@@ -129,7 +129,7 @@ if item.code
   span
     |  (defined in 
     if genopts && genopts.github && genopts.github.sourcelink
-      a(href='#{genopts.github.repository}/blob/master/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
+      a(href='#{genopts.github.repository}/blob/#{genopts.github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
     else
       | #{item.defined_in}:#{item.line_number}
     |)
