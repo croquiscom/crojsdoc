@@ -5,15 +5,16 @@ var generate_doc = require('../lib/generate_doc');
 var path = require('path');
 var yaml = require('js-yaml');
 
-options = {}
+options = {};
 
 var optparse = require('optparse');
 var switches = [
   [ '-o', '--output DIRECTORY', 'Output directory' ],
   [ '-t', '--title TITLE', 'Document Title' ],
   [ '-q', '--quite', 'less output' ],
+  [ '-r', '--readme DIRECTORY', 'README.md directory path'],
   [ '-f', '--files', 'included source files' ],
-  [ '--external-types JSONFILE', 'external type definitions' ],
+  [ '--external-types JSONFILE', 'external type definitions' ]
 ];
 parser = new optparse.OptionParser(switches);
 parser.on('*', function (opt, value) {
@@ -36,8 +37,11 @@ try {
   if (config.hasOwnProperty('files')) {
     options.files = config.files === true;
   }
+  if (config.hasOwnProperty('readme') && typeof config.readme === 'string') {
+    options.readme = config.readme;
+  }
   if (config.hasOwnProperty('external-types')) {
-    options['external-types'] = config['external-types']
+    options['external-types'] = config['external-types'];
   }
   if (config.hasOwnProperty('sources')) {
     if (Array.isArray(config.sources)) {
