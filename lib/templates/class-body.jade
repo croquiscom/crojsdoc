@@ -12,7 +12,7 @@ div.page-header
       span
         |  (defined in 
         if genopts && genopts.github && genopts.github.sourcelink
-          a(href='#{genopts.github.repository}/blob/master/#{klass.defined_in}#L#{klass.line_number}') #{klass.defined_in}:#{klass.line_number}
+          a(href='#{genopts.github.repository}/blob/#{genopts.github.branch}/#{klass.defined_in}#L#{klass.line_number}') #{klass.defined_in}:#{klass.line_number}
         else
           | #{klass.defined_in}:#{klass.line_number}
         |)
