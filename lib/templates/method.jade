@@ -57,6 +57,12 @@ if method.params.length
                               li
                                 - var param = param4;
                                 include method-param
+if method.examples.length
+  h3 Examples
+  ul
+    each example, i in method.examples
+      li
+        pre.prettyprint!= example.string
 if method.return
   h3 Returns:
   ul
