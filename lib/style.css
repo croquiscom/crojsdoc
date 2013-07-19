@@ -37,8 +37,7 @@
 	margin-top: 10px;
 }
 
-.label-optional, .label-static, .label-abstract, .label-override,
-.label-property, .label-addable, .label-excludable, .label-private {
+.cormo-class-property .label {
 	margin-left: 5px;
 	font-size: 0.7em;
 }
@@ -57,6 +56,10 @@
 
 .label-override {
 	background-color: #389486;
+}
+
+.label-async {
+  	background-color: #8DAF28;
 }
 
 .label-property {

@@ -296,8 +296,8 @@ classifyComments = (file, comments) ->
             comment.ctx.class_name = tag.parent
         when 'namespace'
           comment.namespace = if tag.string then tag.string + '.' else ''
-        when 'property'
-          comment.ctx.type = 'property'
+        when 'property', 'method'
+          comment.ctx.type = tag.type
           comment.ctx.name = tag.string
         when 'static'
           comment.static = true
@@ -305,6 +305,8 @@ classifyComments = (file, comments) ->
           comment.isPrivate = true
         when 'abstract'
           comment.abstract = true
+        when 'async'
+          comment.async = true
         when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
           , 'extends', 'todo', 'type', 'api', 'uses', 'override'
         else
