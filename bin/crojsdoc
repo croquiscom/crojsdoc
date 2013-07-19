@@ -52,6 +52,9 @@ try {
   }
   if (config.hasOwnProperty('github')) {
     options.github = config.github;
+    if (options.github.branch === undefined) {
+      options.github.branch = 'master';
+    }
   }
 } catch (e) {
 }

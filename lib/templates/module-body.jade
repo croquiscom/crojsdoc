@@ -4,7 +4,7 @@ div.page-header
     div
       | (defined in 
       if genopts && genopts.github && genopts.github.sourcelink
-        a(href='#{genopts.github.repository}/blob/master/#{module.defined_in}') #{module.defined_in.replace(/index.(coffee|js)$/, '')}
+        a(href='#{genopts.github.repository}/blob/#{genopts.github.branch}/#{module.defined_in}') #{module.defined_in.replace(/index.(coffee|js)$/, '')}
       else
         | #{module.defined_in.replace(/index.(coffee|js)$/, '')}
       |)
