@@ -305,6 +305,8 @@ classifyComments = (file, comments) ->
           comment.isPrivate = true
         when 'abstract'
           comment.abstract = true
+        when 'async'
+          comment.async = true
         when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
           , 'extends', 'todo', 'type', 'api', 'uses', 'override'
         else
