@@ -1,7 +1,7 @@
 {
   "name": "crojsdoc",
   "description": "A documentation generator for JavaScript and CoffeeScript",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "keywords": [
     "documentation",
     "doc",
