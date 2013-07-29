@@ -4,7 +4,7 @@ html(lang='en')
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     title #{result.project_title} - #{name}
-    script
+    script.
       if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
         location.href = location.href + '/';
       }
@@ -19,7 +19,7 @@ html(lang='en')
     script(src='http://code.jquery.com/jquery-1.8.2.min.js')
     script(src='#{rel_path}bootstrap/js/bootstrap.min.js')
     script(src='#{rel_path}google-code-prettify/prettify.js')
-    script
+    script.
       $(function() {
         // make result of marked for pretty print
         $('pre code[class^="lang-"]').addClass('.prettyprint');
