@@ -611,6 +611,7 @@ renderModules = (result, genopts) ->
       module: module
       properties: properties
       type: 'modules'
+      makeTypeLink: makeTypeLink
       result: result
       makeSeeLink: makeSeeLink
       convertLink: convertLink
