@@ -26,11 +26,12 @@ types =
   Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
   undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
 
-makeMissingLink = (type) ->
-  if result.ids[type]
-    console.log "'#{type}' link is ambiguous"
+makeMissingLink = (type, place = '') ->
+  txt = if result.ids[type]
+    "'#{type}' link is ambiguous"
   else
-    console.log "'#{type}' link does not exist"
+    "'#{type}' link does not exist"
+  console.log txt + " #{place}"
   return "<span class='missing-link'>#{type}</span>"
 
 ##
@@ -43,7 +44,7 @@ makeMissingLink = (type) ->
 # @param {String} rel_path
 # @param {String} type
 # @return {String}
-makeTypeLink = (rel_path, type) ->
+makeTypeLink = (rel_path, type, place = '') ->
   return type if not type
   getlink = (type) ->
     if types[type]
@@ -53,7 +54,7 @@ makeTypeLink = (rel_path, type) ->
       html_id = result.ids[type].html_id
       link = "#{rel_path}#{filename}##{html_id}"
     else
-      return makeMissingLink type
+      return makeMissingLink type, place
     return "<a href='#{link}'>#{type}</a>"
   if res = type.match /(.*?)<(.*)>/
     return "#{makeTypeLink rel_path, res[1]}&lt;#{makeTypeLink rel_path, res[2]}&gt;"
@@ -585,7 +586,8 @@ renderClasses = (result, genopts) ->
       properties: properties
       type: 'classes'
       result: result
-      makeTypeLink: makeTypeLink
+      makeTypeLink: (path, type) -> 
+        makeTypeLink path, type, "(in #{klass.defined_in})"
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
@@ -609,8 +611,8 @@ renderModules = (result, genopts) ->
       module: module
       properties: properties
       type: 'modules'
-      result: result
       makeTypeLink: makeTypeLink
+      result: result
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
