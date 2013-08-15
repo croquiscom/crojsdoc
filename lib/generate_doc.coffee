@@ -422,7 +422,7 @@ processComments = (comments) ->
           comment.override_link = tag.string
 
     if comment.ctx.type is 'class'
-      if /^class +\w+ +extends +(\w+)/.exec comment.code
+      if /^class +\w+ +extends +([\w\.]+)/.exec comment.code
         comment.extends.push RegExp.$1
         result.ids[RegExp.$1]?.subclasses.push comment.ctx.name
 
