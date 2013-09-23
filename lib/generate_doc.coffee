@@ -246,6 +246,7 @@ applyMarkdown = (str) ->
 # @memberOf generate_doc
 classifyComments = (file, comments) ->
   current_class = undefined
+  current_module = undefined
 
   comments.forEach (comment) ->
     comment.defined_in = file
@@ -333,9 +334,14 @@ classifyComments = (file, comments) ->
 
     if comment.ctx.type is 'class'
       current_class = comment
+      if comment.is_module
+        current_module = comment
 
-    if (comment.ctx.type is 'property' or comment.ctx.type is 'method') and not comment.namespace and current_class
-      comment.namespace = current_class.namespace
+    if (comment.ctx.type is 'property' or comment.ctx.type is 'method') and not comment.namespace
+      if current_class
+        comment.namespace = current_class.namespace
+      if current_module and not comment.ctx.class_name
+        comment.ctx.class_name = current_module.ctx.name
 
     if id
       if result.ids.hasOwnProperty id
@@ -589,7 +595,7 @@ renderClasses = (result, genopts) ->
       properties: properties
       type: 'classes'
       result: result
-      makeTypeLink: (path, type) -> 
+      makeTypeLink: (path, type) ->
         makeTypeLink path, type, "(in #{klass.defined_in})"
       makeSeeLink: makeSeeLink
       convertLink: convertLink
