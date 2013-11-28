@@ -3,7 +3,7 @@ ul.nav.nav-list.cormo-sidenav
   each item in result.files
     if current_namespace!==item.namespace
       - current_namespace = item.namespace
-      li.nav-header= current_namespace.replace(/\.$/, '')
+      li.nav-header= current_namespace.replace(/\/$/, '')
     - var display_name = item.name.substr(current_namespace.length)
     if item.name===name
       li.active

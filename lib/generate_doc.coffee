@@ -118,7 +118,7 @@ getComments = (file, path) ->
     file = file.substr 0, file.length-8
     namespace = ''
     file = file.replace /(.*)\//, (_, $1) ->
-      namespace = $1 + '.'
+      namespace = $1 + '/'
       return ''
     feature = ''
     content = content.replace /Feature: (.*)/, (_, $1) ->
@@ -127,19 +127,19 @@ getComments = (file, path) ->
     result.features.push
       name: namespace + file
       namespace: namespace
-      filename: 'features/' + namespace.replace('/', '.') + file
+      filename: 'features/' + namespace.replace(/\//g, '.') + file
       feature: feature
       content: content
 
   if add_to_file
     namespace = ''
     file = file.replace /(.*)\//, (_, $1) ->
-      namespace = $1 + '.'
+      namespace = $1 + '/'
       return ''
     result.files.push
       name: namespace + file
       namespace: namespace
-      filename: 'files/' + namespace.replace('/', '.') + file
+      filename: 'files/' + namespace.replace(/\//g, '.') + file
       content: content
 
   # filter out empty comments
