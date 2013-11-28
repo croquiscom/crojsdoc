@@ -514,6 +514,7 @@ renderReadme = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/index.html"
@@ -540,6 +541,7 @@ renderGuides = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/#{guide.filename}.html"
@@ -558,6 +560,7 @@ renderPages = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/pages.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/pages.html"
@@ -576,6 +579,7 @@ renderRESTApis = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/restapis.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/restapis.html"
@@ -602,6 +606,7 @@ renderClasses = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/class.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/#{klass.filename}.html"
@@ -627,6 +632,7 @@ renderModules = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/module.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/#{module.filename}.html"
@@ -650,6 +656,7 @@ renderFeatures = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/feature.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/#{feature.filename}.html"
@@ -673,6 +680,7 @@ renderFiles = (result, genopts) ->
       makeSeeLink: makeSeeLink
       convertLink: convertLink
       genopts: genopts
+      cache: true
     jade.renderFile "#{genopts.template_dir}/file.jade", options, (error, result) ->
       return console.error error.stack if error
       output_file = "#{genopts.doc_dir}/#{file.filename}.html"
