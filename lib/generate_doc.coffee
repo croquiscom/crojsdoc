@@ -1,13 +1,15 @@
 ##
 # @module generate_doc
 
-dox = require './dox'
 fs = require 'fs'
+{basename,dirname,resolve} = require 'path'
+
+glob = require 'glob'
 jade = require 'jade'
-walkdir = require 'walkdir'
 markdown = require 'marked'
-dirname = require('path').dirname
-resolve = require('path').resolve
+walkdir = require 'walkdir'
+
+dox = require './dox'
 
 ##
 # Links for pre-known types
@@ -710,22 +712,23 @@ generate = (paths, genopts) ->
 
   all_comments = []
   paths.forEach (path) ->
-    path = resolve "#{genopts.project_dir}/#{path}"
-    if fs.statSync(path).isDirectory()
-      list = walkdir.sync path
-    else
-      list = [path]
-      path = dirname path
-    list.forEach (file) ->
-      comments = getComments file, path
-      return if not comments?
+    base_path = path = resolve genopts.project_dir, path
+    base_path = dirname base_path while /[*?]/.test basename(base_path)
+    glob.sync(path).forEach (path) ->
+      if fs.statSync(path).isDirectory()
+        list = walkdir.sync path
+      else
+        list = [path]
+      list.forEach (file) ->
+        comments = getComments file, base_path
+        return if not comments?
 
-      file_count_read++
-      console.log file + ' is processed' if not genopts.quite
+        file_count_read++
+        console.log file + ' is processed' if not genopts.quite
 
-      file = file.replace new RegExp("^" + genopts.project_dir), ''
-      classifyComments file, comments
-      all_comments.push.apply all_comments, comments
+        file = file.replace new RegExp("^" + genopts.project_dir), ''
+        classifyComments file, comments
+        all_comments.push.apply all_comments, comments
 
   console.log 'Total ' + file_count_read + ' files processed'
 

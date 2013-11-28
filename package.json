@@ -23,12 +23,12 @@
   },
   "dependencies": {
     "coffee-script": "",
-    "marked": "",
+    "glob": "",
     "jade": "",
     "js-yaml": "",
+    "marked": "",
     "optparse": "",
     "walkdir": ""
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
