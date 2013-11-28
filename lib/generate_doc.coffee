@@ -500,6 +500,20 @@ copyResources = (source, target) ->
   exec = require('child_process').exec
   exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
 
+render = (result, genopts, options, template, output) ->
+  options.result = result
+  options.makeTypeLink = makeTypeLink if not options.makeTypeLink
+  options.makeSeeLink = makeSeeLink
+  options.convertLink = convertLink
+  options.genopts = genopts
+  options.cache = true
+  jade.renderFile "#{genopts.template_dir}/#{template}.jade", options, (error, result) ->
+    return console.error error.stack if error
+    output_file = "#{genopts.doc_dir}/#{output}.html"
+    fs.writeFile output_file, result, (error) ->
+      return console.error 'failed to create '+output_file if error
+      console.log output_file + ' is created' if not genopts.quite
+
 renderReadme = (result, genopts) ->
   fs.readFile "#{genopts.readme || genopts.project_dir}/README.md", 'utf-8', (error, content) ->
     if content
@@ -509,18 +523,7 @@ renderReadme = (result, genopts) ->
       name: 'README'
       content: content
       type: 'home'
-      result: result
-      makeTypeLink: makeTypeLink
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/index.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'extra', 'index'
 
 renderGuides = (result, genopts) ->
   return if result.guides.length is 0
@@ -536,18 +539,7 @@ renderGuides = (result, genopts) ->
       name: guide.name
       content: content
       type: 'guides'
-      result: result
-      makeTypeLink: makeTypeLink
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/extra.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/#{guide.filename}.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'extra', guide.filename
 
 renderPages = (result, genopts) ->
   if result.pages.length > 0
@@ -555,18 +547,7 @@ renderPages = (result, genopts) ->
       rel_path: './'
       name: 'Pages'
       type: 'pages'
-      result: result
-      makeTypeLink: makeTypeLink
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/pages.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/pages.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'pages', 'pages'
 
 renderRESTApis = (result, genopts) ->
   if result.restapis.length > 0
@@ -574,18 +555,7 @@ renderRESTApis = (result, genopts) ->
       rel_path: './'
       name: 'REST APIs'
       type: 'restapis'
-      result: result
-      makeTypeLink: makeTypeLink
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/restapis.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/restapis.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'restapis', 'restapis'
 
 renderClasses = (result, genopts) ->
   return if result.classes.length is 0
@@ -600,19 +570,9 @@ renderClasses = (result, genopts) ->
       klass: klass
       properties: properties
       type: 'classes'
-      result: result
       makeTypeLink: (path, type) ->
         makeTypeLink path, type, "(in #{klass.defined_in})"
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/class.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/#{klass.filename}.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'class', klass.filename
 
 renderModules = (result, genopts) ->
   return if result.modules.length is 0
@@ -627,18 +587,7 @@ renderModules = (result, genopts) ->
       module: module
       properties: properties
       type: 'modules'
-      makeTypeLink: makeTypeLink
-      result: result
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/module.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/#{module.filename}.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'module', module.filename
 
 renderFeatures = (result, genopts) ->
   return if result.features.length is 0
@@ -651,18 +600,7 @@ renderFeatures = (result, genopts) ->
       name: feature.name
       feature: feature
       type: 'features'
-      result: result
-      makeTypeLink: makeTypeLink
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/feature.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/#{feature.filename}.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'feature', feature.filename
 
 renderFiles = (result, genopts) ->
   return if result.files.length is 0
@@ -675,18 +613,7 @@ renderFiles = (result, genopts) ->
       name: file.name
       file: file
       type: 'files'
-      result: result
-      makeTypeLink: makeTypeLink
-      makeSeeLink: makeSeeLink
-      convertLink: convertLink
-      genopts: genopts
-      cache: true
-    jade.renderFile "#{genopts.template_dir}/file.jade", options, (error, result) ->
-      return console.error error.stack if error
-      output_file = "#{genopts.doc_dir}/#{file.filename}.html"
-      fs.writeFile output_file, result, (error) ->
-        return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not genopts.quite
+    render result, genopts, options, 'file', file.filename
 
 ##
 # Generates documents

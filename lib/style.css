@@ -43,7 +43,7 @@
 }
 
 .label-optional {
-    background-color: #3a87ad;
+	background-color: #3a87ad;
 }
 
 .label-static {
@@ -59,7 +59,7 @@
 }
 
 .label-async {
-  	background-color: #8DAF28;
+	background-color: #8DAF28;
 }
 
 .label-property {
@@ -67,15 +67,15 @@
 }
 
 .label-addable {
-    background-color: #468847;
+	background-color: #468847;
 }
 
 .label-excludable {
-    background-color: #468847;
+	background-color: #468847;
 }
 
 .label-private {
-    background-color: #333333;
+	background-color: #333333;
 }
 
 .missing-link {
