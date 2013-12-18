@@ -12,6 +12,10 @@
 	margin-bottom: 20px;
 }
 
+.cormo-sidenav > li {
+	overflow: hidden;
+}
+
 .cormo-sidenav > li > a {
 	margin: 0 0 -1px 0;
 	border: 1px solid #e5e5e5;
