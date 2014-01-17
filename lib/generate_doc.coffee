@@ -496,9 +496,10 @@ refineResult = (result) ->
   result.modules = result.classes.filter (klass) -> klass.is_module
   result.classes = result.classes.filter (klass) -> not klass.is_module
 
-copyResources = (source, target) ->
+copyResources = (source, target, callback) ->
   exec = require('child_process').exec
-  exec "mkdir -p #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
+  exec "rm -rf #{target}/* ; mkdir -p #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}", ->
+    callback()
 
 render = (result, genopts, options, template, output) ->
   options.result = result
@@ -527,9 +528,7 @@ renderReadme = (result, genopts) ->
 
 renderGuides = (result, genopts) ->
   return if result.guides.length is 0
-  try
-    fs.mkdirSync "#{genopts.doc_dir}/guides"
-  catch e
+  try fs.mkdirSync "#{genopts.doc_dir}/guides"
   result.guides.forEach (guide) ->
     content = guide.content
     if content
@@ -559,9 +558,7 @@ renderRESTApis = (result, genopts) ->
 
 renderClasses = (result, genopts) ->
   return if result.classes.length is 0
-  try
-    fs.mkdirSync "#{genopts.doc_dir}/classes"
-  catch e
+  try fs.mkdirSync "#{genopts.doc_dir}/classes"
   result.classes.forEach (klass) ->
     properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
@@ -576,9 +573,7 @@ renderClasses = (result, genopts) ->
 
 renderModules = (result, genopts) ->
   return if result.modules.length is 0
-  try
-    fs.mkdirSync "#{genopts.doc_dir}/modules"
-  catch e
+  try fs.mkdirSync "#{genopts.doc_dir}/modules"
   result.modules.forEach (module) ->
     properties = module.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
     options =
@@ -591,9 +586,7 @@ renderModules = (result, genopts) ->
 
 renderFeatures = (result, genopts) ->
   return if result.features.length is 0
-  try
-    fs.mkdirSync "#{genopts.doc_dir}/features"
-  catch e
+  try fs.mkdirSync "#{genopts.doc_dir}/features"
   result.features.forEach (feature) ->
     options =
       rel_path: '../'
@@ -604,9 +597,7 @@ renderFeatures = (result, genopts) ->
 
 renderFiles = (result, genopts) ->
   return if result.files.length is 0
-  try
-    fs.mkdirSync "#{genopts.doc_dir}/files"
-  catch e
+  try fs.mkdirSync "#{genopts.doc_dir}/files"
   result.files.forEach (file) ->
     options =
       rel_path: '../'
@@ -673,14 +664,14 @@ generate = (paths, genopts) ->
     result.files = []
   refineResult result
 
-  copyResources __dirname, genopts.doc_dir
-  renderReadme result, genopts
-  renderGuides result, genopts
-  renderPages result, genopts
-  renderRESTApis result, genopts
-  renderClasses result, genopts
-  renderModules result, genopts
-  renderFeatures result, genopts
-  renderFiles result, genopts
+  copyResources __dirname, genopts.doc_dir, ->
+    renderReadme result, genopts
+    renderGuides result, genopts
+    renderPages result, genopts
+    renderRESTApis result, genopts
+    renderClasses result, genopts
+    renderModules result, genopts
+    renderFeatures result, genopts
+    renderFiles result, genopts
 
 module.exports = generate
