@@ -498,7 +498,7 @@ refineResult = (result) ->
 
 copyResources = (source, target) ->
   exec = require('child_process').exec
-  exec "mkdir #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
+  exec "mkdir -p #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}"
 
 render = (result, genopts, options, template, output) ->
   options.result = result
