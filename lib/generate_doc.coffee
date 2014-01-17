@@ -584,7 +584,7 @@ renderModules = (result, genopts) ->
     options =
       rel_path: '../'
       name: module.ctx.name
-      module: module
+      module_data: module
       properties: properties
       type: 'modules'
     render result, genopts, options, 'module', module.filename

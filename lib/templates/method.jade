@@ -105,20 +105,20 @@ if method.throws.length
   ul
     each tag in method.throws
       li
-        {
+        |{
         span= tag.message
-        } 
+        |} 
         span!= convertLink(rel_path, tag.description)
 if method.resterrors.length
   h3 Rest Errors:
   ul
     each tag in method.resterrors
       li
-        {
+        |{
         span= tag.code
-        /
+        |/
         span= tag.message
-        } 
+        |} 
         span!= convertLink(rel_path, tag.description)
 if method.sees.length
   h3 See Also:

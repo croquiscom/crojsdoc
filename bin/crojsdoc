@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var coffee = require('coffee-script');
+var fs = require('fs');
 var generate_doc = require('../lib/generate_doc');
 var path = require('path');
 var yaml = require('js-yaml');
@@ -24,7 +25,7 @@ parser.on('*', function (opt, value) {
 argv = parser.parse(process.argv.slice(2));
 
 try {
-  var config = require(path.join(process.cwd(), 'crojsdoc.yaml'));
+  var config = yaml.safeLoad(fs.readFileSync(path.join(process.cwd(), 'crojsdoc.yaml'), 'utf-8'));
   if (config.hasOwnProperty('output')) {
     options.output = config.output;
   }

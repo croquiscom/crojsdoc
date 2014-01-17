@@ -1,15 +1,15 @@
 div.page-header
-  section(id=module.html_id)
-    h1.class_title= name.substr(module.namespace.length)
+  section(id=module_data.html_id)
+    h1.class_title= name.substr(module_data.namespace.length)
     div
       | (defined in 
       if genopts && genopts.github && genopts.github.sourcelink
-        a(href='#{genopts.github.repository}/blob/#{genopts.github.branch}/#{module.defined_in}') #{module.defined_in.replace(/index.(coffee|js)$/, '')}
+        a(href='#{genopts.github.repository}/blob/#{genopts.github.branch}/#{module_data.defined_in}') #{module_data.defined_in.replace(/index.(coffee|js)$/, '')}
       else
-        | #{module.defined_in.replace(/index.(coffee|js)$/, '')}
+        | #{module_data.defined_in.replace(/index.(coffee|js)$/, '')}
       |)
-    div!= convertLink(rel_path, module.description.summary)
-    div!= convertLink(rel_path, module.description.body)
+    div!= convertLink(rel_path, module_data.description.summary)
+    div!= convertLink(rel_path, module_data.description.body)
 each item in properties
   section(id=item.html_id, class=item.isPrivate ? 'private' : '')
     - var display_name = item.ctx.name

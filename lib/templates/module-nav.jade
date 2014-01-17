@@ -7,7 +7,7 @@ ul.nav.nav-list.cormo-sidenav
     - var display_name = item.ctx.name.substr(current_namespace.length)
     if item.ctx.name===name
       li.active
-        a(href='#'+module.html_id)= display_name
+        a(href='#'+module_data.html_id)= display_name
       each property in properties
         li.cormo-class-property(class=property.isPrivate ? 'private' : '')
           a(href='#'+property.html_id)= property.ctx.name

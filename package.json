@@ -22,13 +22,13 @@
     "url": "https://github.com/croquiscom/crojsdoc.git"
   },
   "dependencies": {
-    "coffee-script": "",
-    "glob": "",
-    "jade": "",
-    "js-yaml": "",
-    "marked": "",
-    "optparse": "",
-    "walkdir": ""
+    "coffee-script": "~1.6.3",
+    "glob": "~3.2.8",
+    "jade": "~1.1.4",
+    "js-yaml": "~3.0.1",
+    "marked": "~0.3.0",
+    "optparse": "~1.0.5",
+    "walkdir": "~0.0.7"
   },
   "devDependencies": {}
 }
