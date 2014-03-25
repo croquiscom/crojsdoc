@@ -3,7 +3,7 @@ title: CroJSDoc
 quite: true
 files: true
 sources:
-  - lib
+  - src
   - examples
   - guides
 github:
