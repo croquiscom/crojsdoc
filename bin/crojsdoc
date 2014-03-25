@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-require('coffee-script/register');
-
 var fs = require('fs');
 var generate_doc = require('../lib/generate_doc');
 var path = require('path');
