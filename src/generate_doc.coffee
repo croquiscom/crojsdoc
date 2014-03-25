@@ -498,7 +498,7 @@ refineResult = (result) ->
 
 copyResources = (source, target, callback) ->
   exec = require('child_process').exec
-  exec "rm -rf #{target}/* ; mkdir -p #{target} ; cp -a #{source}/bootstrap #{source}/google-code-prettify #{source}/tocify #{source}/style.css #{target}", ->
+  exec "rm -rf #{target}/* ; mkdir -p #{target} ; cp -a #{source}/* #{target}", ->
     callback()
 
 render = (result, genopts, options, template, output) ->
@@ -508,7 +508,7 @@ render = (result, genopts, options, template, output) ->
   options.convertLink = convertLink
   options.genopts = genopts
   options.cache = true
-  jade.renderFile "#{genopts.template_dir}/#{template}.jade", options, (error, result) ->
+  jade.renderFile "#{genopts.templates_dir}/#{template}.jade", options, (error, result) ->
     return console.error error.stack if error
     output_file = "#{genopts.doc_dir}/#{output}.html"
     fs.writeFile output_file, result, (error) ->
@@ -632,7 +632,10 @@ generate = (paths, genopts) ->
     genopts.doc_dir = output_dir
   else
     genopts.doc_dir = genopts.project_dir + '/' + output_dir
-  genopts.template_dir = __dirname + '/templates'
+
+  theme = 'default'
+  genopts.resources_dir = resolve __dirname, '../themes', theme, 'resources'
+  genopts.templates_dir = resolve __dirname, '../themes', theme, 'templates'
 
   file_count_read = 0
 
@@ -664,7 +667,7 @@ generate = (paths, genopts) ->
     result.files = []
   refineResult result
 
-  copyResources __dirname, genopts.doc_dir, ->
+  copyResources genopts.resources_dir, genopts.doc_dir, ->
     renderReadme result, genopts
     renderGuides result, genopts
     renderPages result, genopts
