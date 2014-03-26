@@ -2,9 +2,8 @@ extends layout
 
 block content
   div.container-fluid.content
-    div.row-fluid
-      div.span4.visible-desktop
-        div.span4.sidebar(data-spy='affix')
-          include restapis-nav
-      div.span8
+    div.row
+      div.col-sm-4.hidden-xs.sidebar(data-spy='affix')
+        include restapis-nav
+      div.col-sm-8.col-sm-offset-4
         include restapis-body

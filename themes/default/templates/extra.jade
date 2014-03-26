@@ -5,15 +5,15 @@ block style
 
 block content
   div.container-fluid.content.extra
-    div.row-fluid
-      div.span3
+    div.row
+      div.col-sm-3.hidden-xs
         div#toc
-      div.span9
+      div.col-sm-9
         != convertLink(rel_path, content)
 
 block script
   script(src='http://code.jquery.com/ui/1.9.0/jquery-ui.min.js')
-  script(src='#{rel_path}tocify/jquery.tocify.min.js')
+  script(src='#{rel_path}tocify/jquery.tocify.js')
   script.
     $(function() {
       $('#toc').tocify();

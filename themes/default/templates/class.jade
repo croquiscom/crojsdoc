@@ -2,9 +2,8 @@ extends layout
 
 block content
   div.container-fluid.content
-    div.row-fluid
-      div.span3.visible-desktop
-        div.span3.sidebar(data-spy='affix')
-          include class-nav
-      div.span9
+    div.row
+      div.col-sm-3.hidden-xs.sidebar(data-spy='affix')
+        include class-nav
+      div.col-sm-9.col-sm-offset-3
         include class-body

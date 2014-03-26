@@ -1,8 +1,13 @@
-- var current_namespace = ''
-ul.nav.nav-list.cormo-sidenav
-  each item in result.restapis
-    if current_namespace!==item.namespace
-      - current_namespace = item.namespace
-      li.nav-header= current_namespace.replace(/\.$/, '')
-    li(class=item.isPrivate ? 'private' : '')
-      a(href='#'+item.html_id)= item.ctx.name
+div.cormo-sidenav
+  - var current_namespace = null
+  each ns_item in result.restapis
+    if current_namespace!==ns_item.namespace
+      - current_namespace = ns_item.namespace
+      div.panel.panel-default
+        if current_namespace!==''
+          div.panel-heading= current_namespace.replace(/\.$/, '')
+        ul.nav.nav-pills.nav-stacked
+          each item in result.restapis
+            if current_namespace===item.namespace
+              li(class=item.isPrivate ? 'private' : '')
+                a(href='#'+item.html_id)= item.ctx.name

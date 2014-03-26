@@ -1,28 +1,33 @@
-- var current_namespace = ''
-ul.nav.nav-list.cormo-sidenav
-  each item in result.classes
-    if current_namespace!==item.namespace
-      - current_namespace = item.namespace
-      li.nav-header= current_namespace.replace(/\.$/, '')
-    - var display_name = item.ctx.name.substr(current_namespace.length)
-    if item.ctx.name===name
-      li.active
-        a(href='#'+klass.html_id)= display_name
-      each property in properties
-        li.cormo-class-property(class=property.isPrivate ? 'private' : '')
-          a(href='#'+property.html_id)= property.ctx.name
-            if property.isPrivate
-              span.label.label-private private
-            if property.static
-              span.label.label-static static
-            if property.abstract
-              span.label.label-abstract abstract
-            if property.async
-              span.label.label-async async
-            if property.override
-              span.label.label-override override
-            if property.ctx.type==='property'
-              span.label.label-property property
-    else
-      li
-        a(href=rel_path+item.filename+'.html')= display_name
+div.cormo-sidenav
+  - var current_namespace = null
+  each ns_item in result.classes
+    if current_namespace!==ns_item.namespace
+      - current_namespace = ns_item.namespace
+      div.panel.panel-default
+        if current_namespace!==''
+          div.panel-heading= current_namespace.replace(/\.$/, '')
+        ul.nav.nav-pills.nav-stacked
+          each item in result.classes
+            if current_namespace===item.namespace
+              - var display_name = item.ctx.name.substr(current_namespace.length)
+              if item.ctx.name===name
+                li.active
+                  a(href='#'+klass.html_id)= display_name
+                each property in properties
+                  li.cormo-class-property(class=property.isPrivate ? 'private' : '')
+                    a(href='#'+property.html_id)= property.ctx.name
+                      if property.isPrivate
+                        span.label.label-private private
+                      if property.static
+                        span.label.label-static static
+                      if property.abstract
+                        span.label.label-abstract abstract
+                      if property.async
+                        span.label.label-async async
+                      if property.override
+                        span.label.label-override override
+                      if property.ctx.type==='property'
+                        span.label.label-property property
+              else
+                li
+                  a(href=rel_path+item.filename+'.html')= display_name
