@@ -9,8 +9,8 @@ markdown = require 'marked'
 ##
 # Renderer
 class Renderer
-  constructor: (@result, @genopts) ->
-    @output_dir = resolve genopts.project_dir, genopts.output or 'doc'
+  constructor: (@result, @options) ->
+    @output_dir = resolve options.project_dir, options.output or 'doc'
 
     theme = 'default'
     @resources_dir = resolve __dirname, '../themes', theme, 'resources'
@@ -29,7 +29,7 @@ class Renderer
       Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
       undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
 
-    if external_types = genopts['external-types']
+    if external_types = options['external-types']
       if typeof external_types is 'string'
         try
           content = fs.readFileSync(external_types, 'utf-8').trim()
@@ -38,7 +38,7 @@ class Renderer
           catch e
             console.log "external-types: Invalid JSON file"
         catch e
-          console.log "external-types: Cannot open #{genopts['external-types']}"
+          console.log "external-types: Cannot open #{options['external-types']}"
       if typeof external_types is 'object'
         for type, url of external_types
           @types[type] = url
@@ -125,32 +125,32 @@ class Renderer
 
   ##
   # @private
-  renderOne: (options, template, output) ->
-    options.result = @result
-    options.makeTypeLink = @makeTypeLink.bind(@) if not options.makeTypeLink
-    options.makeSeeLink = @makeSeeLink.bind(@)
-    options.convertLink = @convertLink.bind(@)
-    options.genopts = @genopts
-    options.cache = true
-    jade.renderFile "#{@templates_dir}/#{template}.jade", options, (error, result) =>
+  renderOne: (jade_options, template, output) ->
+    jade_options.result = @result
+    jade_options.makeTypeLink = @makeTypeLink.bind(@) if not jade_options.makeTypeLink
+    jade_options.makeSeeLink = @makeSeeLink.bind(@)
+    jade_options.convertLink = @convertLink.bind(@)
+    jade_options.github = @options.github
+    jade_options.cache = true
+    jade.renderFile "#{@templates_dir}/#{template}.jade", jade_options, (error, result) =>
       return console.error error.stack if error
       output_file = "#{@output_dir}/#{output}.html"
       fs.writeFile output_file, result, (error) =>
         return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not @genopts.quite
+        console.log output_file + ' is created' if not @options.quite
 
   ##
   # @private
   renderReadme: ->
-    fs.readFile "#{@genopts.readme or @genopts.project_dir}/README.md", 'utf-8', (error, content) =>
+    fs.readFile "#{@options.readme or @options.project_dir}/README.md", 'utf-8', (error, content) =>
       if content
         content = markdown content
-      options =
+      jade_options =
         rel_path: './'
         name: 'README'
         content: content
         type: 'home'
-      @renderOne options, 'extra', 'index'
+      @renderOne jade_options, 'extra', 'index'
 
   ##
   # @private
@@ -161,32 +161,32 @@ class Renderer
       content = guide.content
       if content
         content = markdown content
-      options =
+      jade_options =
         rel_path: '../'
         name: guide.name
         content: content
         type: 'guides'
-      @renderOne options, 'extra', guide.filename
+      @renderOne jade_options, 'extra', guide.filename
 
   ##
   # @private
   renderPages: ->
     if @result.pages.length > 0
-      options =
+      jade_options =
         rel_path: './'
         name: 'Pages'
         type: 'pages'
-      @renderOne options, 'pages', 'pages'
+      @renderOne jade_options, 'pages', 'pages'
 
   ##
   # @private
   renderRESTApis: ->
     if @result.restapis.length > 0
-      options =
+      jade_options =
         rel_path: './'
         name: 'REST APIs'
         type: 'restapis'
-      @renderOne options, 'restapis', 'restapis'
+      @renderOne jade_options, 'restapis', 'restapis'
 
   ##
   # @private
@@ -195,7 +195,7 @@ class Renderer
     try fs.mkdirSync "#{@output_dir}/classes"
     @result.classes.forEach (klass) =>
       properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
-      options =
+      jade_options =
         rel_path: '../'
         name: klass.ctx.name
         klass: klass
@@ -203,7 +203,7 @@ class Renderer
         type: 'classes'
         makeTypeLink: (path, type) =>
           @makeTypeLink path, type, "(in #{klass.defined_in})"
-      @renderOne options, 'class', klass.filename
+      @renderOne jade_options, 'class', klass.filename
 
   ##
   # @private
@@ -212,13 +212,13 @@ class Renderer
     try fs.mkdirSync "#{@output_dir}/modules"
     @result.modules.forEach (module) =>
       properties = module.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
-      options =
+      jade_options =
         rel_path: '../'
         name: module.ctx.name
         module_data: module
         properties: properties
         type: 'modules'
-      @renderOne options, 'module', module.filename
+      @renderOne jade_options, 'module', module.filename
 
   ##
   # @private
@@ -226,12 +226,12 @@ class Renderer
     return if @result.features.length is 0
     try fs.mkdirSync "#{@output_dir}/features"
     @result.features.forEach (feature) =>
-      options =
+      jade_options =
         rel_path: '../'
         name: feature.name
         feature: feature
         type: 'features'
-      @renderOne options, 'feature', feature.filename
+      @renderOne jade_options, 'feature', feature.filename
 
   ##
   # @private
@@ -239,12 +239,12 @@ class Renderer
     return if @result.files.length is 0
     try fs.mkdirSync "#{@output_dir}/files"
     @result.files.forEach (file) =>
-      options =
+      jade_options =
         rel_path: '../'
         name: file.name
         file: file
         type: 'files'
-      @renderOne options, 'file', file.filename
+      @renderOne jade_options, 'file', file.filename
 
   ##
   # Runs
@@ -262,8 +262,8 @@ class Renderer
 ##
 # Renders
 # @memberOf render
-render = (result, genopts) ->
-  renderer = new Renderer result, genopts
+render = (result, options) ->
+  renderer = new Renderer result, options
   renderer.run()
 
 module.exports = render

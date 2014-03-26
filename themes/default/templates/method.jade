@@ -134,8 +134,8 @@ if item.code
   button.showcode.btn.btn-info Show code
   span
     |  (defined in 
-    if genopts && genopts.github && genopts.github.sourcelink
-      a(href='#{genopts.github.repository}/blob/#{genopts.github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
+    if github && github.sourcelink
+      a(href='#{github.repository}/blob/#{github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
     else
       | #{item.defined_in}:#{item.line_number}
     |)
