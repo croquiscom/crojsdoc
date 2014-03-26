@@ -104,7 +104,7 @@ class Renderer
   # @return {String}
   convertLink: (rel_path, str) ->
     return '' if not str
-    str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) ->
+    str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) =>
       if @result.ids[$1] and @result.ids[$1] isnt 'DUPLICATED ENTRY'
         filename = @result.ids[$1].filename + '.html'
         html_id = @result.ids[$1].html_id
