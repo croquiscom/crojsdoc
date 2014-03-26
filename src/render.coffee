@@ -247,8 +247,8 @@ class Renderer
       @renderOne options, 'file', file.filename
 
   ##
-  # Renders
-  render: ->
+  # Runs
+  run: ->
     @copyResources @resources_dir, @output_dir, =>
       @renderReadme()
       @renderGuides()
@@ -263,6 +263,7 @@ class Renderer
 # Renders
 # @memberOf render
 render = (result, genopts) ->
-  new Renderer(result, genopts).render()
+  renderer = new Renderer result, genopts
+  renderer.run()
 
 module.exports = render

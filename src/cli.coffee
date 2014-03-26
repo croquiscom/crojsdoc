@@ -46,4 +46,5 @@ try
       options.github.branch = 'master'
 catch e
 
-require('./generate') paths, options
+result = require('./collect') paths, options
+require('./render') result, options
