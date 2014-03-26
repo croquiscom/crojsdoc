@@ -3,7 +3,8 @@ optparse = require 'optparse'
 path = require 'path'
 yaml = require 'js-yaml'
 
-options = {}
+options =
+  project_dir: process.cwd()
 
 switches = [
   [ '-o', '--output DIRECTORY', 'Output directory' ]
@@ -18,7 +19,7 @@ parser.on '*', (opt, value) ->
   if value is undefined
     value = true
   options[opt] = value
-argv = parser.parse process.argv.slice 2
+paths = parser.parse process.argv.slice 2
 
 try
   config = yaml.safeLoad fs.readFileSync(path.join(process.cwd(), 'crojsdoc.yaml'), 'utf-8')
@@ -36,14 +37,13 @@ try
     options['external-types'] = config['external-types']
   if config.hasOwnProperty 'sources'
     if Array.isArray config.sources
-      [].push.apply argv, config.sources
+      [].push.apply paths, config.sources
     else
-      argv.push config.sources
+      paths.push config.sources
   if config.hasOwnProperty 'github'
     options.github = config.github
     if options.github.branch is undefined
       options.github.branch = 'master'
 catch e
 
-generate_doc = require './generate_doc'
-generate_doc argv, options
+require('./generate') paths, options
