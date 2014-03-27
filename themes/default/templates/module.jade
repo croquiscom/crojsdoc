@@ -1,9 +1,44 @@
 extends layout
 
-block content
-  div.container-fluid.content
-    div.row
-      div.col-sm-3.hidden-xs.sidebar(data-spy='affix')
-        include module-nav
-      div.col-sm-9.col-sm-offset-3
-        include module-body
+block vars
+  - var body_span = 9
+  - var sidebar_span = 12 - body_span
+  - var use_affix = true
+  - var items = result.modules
+  - var has_namespace = true
+
+block nav-item
+  - var display_name = item.ctx.name.substr(current_namespace.length)
+  if item.ctx.name===name
+    li.active
+      a(href='#'+module_data.html_id)= display_name
+    each property in properties
+      li.cormo-class-property(class=property.isPrivate ? 'private' : '')
+        a(href='#'+property.html_id)= property.ctx.name
+          if property.isPrivate
+            span.label.label-private private
+          if property.ctx.type==='property'
+            span.label.label-property property
+  else
+    li
+      a(href=rel_path+item.filename+'.html')= display_name
+
+block body
+  section(id=module_data.html_id)
+    h1.class_title= name.substr(module_data.namespace.length)
+    div
+      | (defined in 
+      if github && github.sourcelink
+        a(href='#{github.repository}/blob/#{github.branch}/#{module_data.defined_in}') #{module_data.defined_in.replace(/index.(coffee|js)$/, '')}
+      else
+        | #{module_data.defined_in.replace(/index.(coffee|js)$/, '')}
+      |)
+    div!= convertLink(rel_path, module_data.description.summary)
+    div!= convertLink(rel_path, module_data.description.body)
+  each item in properties
+    section(id=item.html_id, class=item.isPrivate ? 'private' : '')
+      - var display_name = item.ctx.name
+      - var is_method_of_class = false
+      - var method = item
+      include method
+      hr.item-seperator

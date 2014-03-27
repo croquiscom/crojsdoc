@@ -1,15 +1,19 @@
 extends layout
 
+block vars
+  - var body_span = 9
+  - var sidebar_span = 12 - body_span
+  - var use_affix = false
+
 block style
   link(href='#{rel_path}tocify/jquery.tocify.css', rel='stylesheet', type='text/css')
 
-block content
-  div.container-fluid.content.extra
-    div.row
-      div.col-sm-3.hidden-xs
-        div#toc
-      div.col-sm-9
-        != convertLink(rel_path, content)
+block nav
+  div#toc
+
+block body
+  div
+    != convertLink(rel_path, content)
 
 block script
   script(src='http://code.jquery.com/ui/1.9.0/jquery-ui.min.js')

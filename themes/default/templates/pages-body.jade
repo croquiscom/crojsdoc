@@ -1,6 +1,0 @@
-each item in result.pages
-  section(id=item.html_id)
-    h2.class_method= item.ctx.name
-    div!= convertLink(rel_path, item.description.summary)
-    div!= convertLink(rel_path, item.description.body)
-    hr.item-seperator

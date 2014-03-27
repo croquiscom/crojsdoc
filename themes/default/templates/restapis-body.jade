@@ -1,7 +1,0 @@
-each item in result.restapis
-  section(id=item.html_id, class=item.isPrivate ? 'private' : '')
-    - var display_name = item.ctx.name
-    - var is_method_of_class = false
-    - var method = item
-    include method
-    hr.item-seperator

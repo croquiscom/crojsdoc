@@ -1,5 +1,6 @@
 doctype html
 html(lang='en')
+  block vars
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
@@ -13,8 +14,33 @@ html(lang='en')
     link(href='#{rel_path}style.css', rel='stylesheet', type='text/css')
     block style
   body(data-spy='scroll', data-target='.sidebar')
-    include nav
-    block content
+    include site-nav
+    div.container-fluid.content
+      div.row
+        if use_affix
+          div.hidden-xs.sidebar(data-spy='affix',class='col-sm-'+sidebar_span)
+            if has_namespace
+              div.cormo-sidenav
+                - var current_namespace = null
+                each ns_item in items
+                  if current_namespace!==ns_item.namespace
+                    - current_namespace = ns_item.namespace
+                    div.panel.panel-default
+                      if current_namespace!==''
+                        div.panel-heading= current_namespace.replace(/\.$/, '')
+                      ul.nav.nav-pills.nav-stacked
+                        each item in items
+                          if current_namespace===item.namespace
+                            block nav-item
+            else
+              block nav
+          div(class='col-sm-'+body_span,class='col-sm-offset-'+sidebar_span)
+            block body
+        else
+          div.hidden-xs(class='col-sm-'+sidebar_span)
+            block nav
+          div(class='col-sm-'+body_span)
+            block body
     script(src='http://code.jquery.com/jquery-1.11.0.min.js')
     script(src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
     script(src='#{rel_path}google-code-prettify/prettify.js')

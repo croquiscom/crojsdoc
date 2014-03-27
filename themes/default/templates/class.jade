@@ -1,9 +1,67 @@
 extends layout
 
-block content
-  div.container-fluid.content
-    div.row
-      div.col-sm-3.hidden-xs.sidebar(data-spy='affix')
-        include class-nav
-      div.col-sm-9.col-sm-offset-3
-        include class-body
+block vars
+  - var body_span = 9
+  - var sidebar_span = 12 - body_span
+  - var use_affix = true
+  - var items = result.classes
+  - var has_namespace = true
+
+block nav-item
+  - var display_name = item.ctx.name.substr(current_namespace.length)
+  if item.ctx.name===name
+    li.active
+      a(href='#'+klass.html_id)= display_name
+    each property in properties
+      li.cormo-class-property(class=property.isPrivate ? 'private' : '')
+        a(href='#'+property.html_id)= property.ctx.name
+          if property.isPrivate
+            span.label.label-private private
+          if property.static
+            span.label.label-static static
+          if property.abstract
+            span.label.label-abstract abstract
+          if property.async
+            span.label.label-async async
+          if property.override
+            span.label.label-override override
+          if property.ctx.type==='property'
+            span.label.label-property property
+  else
+    li
+      a(href=rel_path+item.filename+'.html')= display_name
+
+block body
+  section(id=klass.html_id)
+    h1.class_title= name.substr(klass.namespace.length)
+      if klass.extends.length
+        span.extends!= ' extends ' + klass.extends.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+      if klass.uses.length
+        span.uses!= ' uses ' + klass.uses.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+    div!= klass.description.summary
+    div!= klass.description.body
+    if klass.code
+      button.showcode.btn.btn-info Show code
+      span
+        |  (defined in 
+        if github && github.sourcelink
+          a(href='#{github.repository}/blob/#{github.branch}/#{klass.defined_in}#L#{klass.line_number}') #{klass.defined_in}:#{klass.line_number}
+        else
+          | #{klass.defined_in}:#{klass.line_number}
+        |)
+      pre.sourcecode.prettyprint(class='.linenums:'+klass.line_number)!= klass.code
+    if klass.subclasses.length
+      dl
+        dt Direct known subclasses:
+        dd!= klass.subclasses.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+    if klass.usedbys.length
+      dl
+        dt Used by:
+        dd!= klass.usedbys.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+  each item in properties
+    section(id=item.html_id, class=item.isPrivate ? 'private' : '')
+      - var display_name = item.ctx.fullname
+      - var is_method_of_class = true
+      - var method = item.override || item
+      include method
+      hr.item-seperator

@@ -1,9 +1,21 @@
 extends layout
 
-block content
-  div.container-fluid.content
-    div.row
-      div.col-sm-4.hidden-xs.sidebar(data-spy='affix')
-        include restapis-nav
-      div.col-sm-8.col-sm-offset-4
-        include restapis-body
+block vars
+  - var body_span = 8
+  - var sidebar_span = 12 - body_span
+  - var use_affix = true
+  - var items = result.restapis
+  - var has_namespace = true
+
+block nav
+  li(class=item.isPrivate ? 'private' : '')
+    a(href='#'+item.html_id)= item.ctx.name
+
+block body
+  each item in result.restapis
+    section(id=item.html_id, class=item.isPrivate ? 'private' : '')
+      - var display_name = item.ctx.name
+      - var is_method_of_class = false
+      - var method = item
+      include method
+      hr.item-seperator

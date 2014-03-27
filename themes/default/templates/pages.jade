@@ -1,9 +1,20 @@
 extends layout
 
-block content
-  div.container-fluid.content
-    div.row
-      div.col-sm-3.hidden-xs.sidebar(data-spy='affix')
-        include pages-nav
-      div.col-sm-9.col-sm-offset-3
-        include pages-body
+block vars
+  - var body_span = 9
+  - var sidebar_span = 12 - body_span
+  - var use_affix = true
+  - var items = result.pages
+  - var has_namespace = true
+
+block nav
+  li
+    a(href='#'+item.html_id)= item.ctx.name
+
+block body
+  each item in result.pages
+    section(id=item.html_id)
+      h2.class_method= item.ctx.name
+      div!= convertLink(rel_path, item.description.summary)
+      div!= convertLink(rel_path, item.description.body)
+      hr.item-seperator
