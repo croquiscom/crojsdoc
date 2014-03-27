@@ -7,7 +7,7 @@ block vars
   - var items = result.restapis
   - var has_namespace = true
 
-block nav
+block nav-item
   li(class=item.isPrivate ? 'private' : '')
     a(href='#'+item.html_id)= item.ctx.name
 
