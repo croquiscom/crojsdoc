@@ -10,7 +10,13 @@ $('body').on('click', '.showcode', function () {
 });
 
 var $options_private = $('#options-private');
+if (window.localStorage && window.localStorage.getItem('options-private')==='true') {
+  $options_private.prop('checked', true);
+}
 function updatePrivate() {
+  if (window.localStorage) {
+    window.localStorage.setItem('options-private', $options_private.is(':checked'));
+  }
   if ($options_private.is(':checked')) {
     $('.private').show();
   } else {
