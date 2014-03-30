@@ -46,5 +46,34 @@ try
       options.github.branch = 'master'
 catch e
 
+options.output_dir = path.resolve options.project_dir, options.output or 'doc'
+
+# Links for pre-known types
+options.types =
+  Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
+  Boolean: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'
+  String: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'
+  Array: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'
+  Number: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'
+  Date: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date'
+  Function: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'
+  RegExp: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/RegExp'
+  Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
+  undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
+
+if external_types = options['external-types']
+  if typeof external_types is 'string'
+    try
+      content = fs.readFileSync(external_types, 'utf-8').trim()
+      try
+        external_types = JSON.parse content
+      catch e
+        console.log "external-types: Invalid JSON file"
+    catch e
+      console.log "external-types: Cannot open #{options['external-types']}"
+  if typeof external_types is 'object'
+    for type, url of external_types
+      options.types[type] = url
+
 result = require('./collect') paths, options
 require('./render') result, options

@@ -61,7 +61,7 @@ class Collector
       @result.guides.push
         name: file
         filename: 'guides/' + file
-        content: content
+        content: markdown content
     else if /\.feature$/.test file
       file = file.substr 0, file.length-8
       namespace = ''
@@ -406,6 +406,9 @@ class Collector
       return 1 if a_ns > b_ns
       if a.name<b.name then -1 else 1
 
+    result.classes.forEach (klass) ->
+      klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
+
     result.modules = result.classes.filter (klass) -> klass.is_module
     result.classes = result.classes.filter (klass) -> not klass.is_module
 
@@ -433,6 +436,10 @@ class Collector
           file = file.replace new RegExp("^" + @options.project_dir), ''
           @classifyComments file, comments
           all_comments.push.apply all_comments, comments
+
+    try
+      content = fs.readFileSync "#{@options.readme or @options.project_dir}/README.md", 'utf-8'
+      @result.readme = markdown content
 
     console.log 'Total ' + file_count_read + ' files processed'
 

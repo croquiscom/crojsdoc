@@ -3,45 +3,15 @@
 
 fs = require 'fs'
 jade = require 'jade'
-markdown = require 'marked'
 {resolve} = require 'path'
 
 ##
 # Renderer
 class Renderer
   constructor: (@result, @options) ->
-    @output_dir = resolve options.project_dir, options.output or 'doc'
-
     theme = 'default'
     @resources_dir = resolve __dirname, '../themes', theme, 'resources'
     @templates_dir = resolve __dirname, '../themes', theme, 'templates'
-
-    # Links for pre-known types
-    @types =
-      Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
-      Boolean: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'
-      String: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'
-      Array: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'
-      Number: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'
-      Date: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date'
-      Function: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'
-      RegExp: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/RegExp'
-      Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
-      undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
-
-    if external_types = options['external-types']
-      if typeof external_types is 'string'
-        try
-          content = fs.readFileSync(external_types, 'utf-8').trim()
-          try
-            external_types = JSON.parse content
-          catch e
-            console.log "external-types: Invalid JSON file"
-        catch e
-          console.log "external-types: Cannot open #{options['external-types']}"
-      if typeof external_types is 'object'
-        for type, url of external_types
-          @types[type] = url
 
   ##
   # @private
@@ -67,8 +37,8 @@ class Renderer
   makeTypeLink: (rel_path, type, place = '') ->
     return type if not type
     getlink = (type) =>
-      if @types[type]
-        link = @types[type]
+      if @options.types[type]
+        link = @options.types[type]
       else if @result.ids[type] and @result.ids[type] isnt 'DUPLICATED ENTRY'
         filename = @result.ids[type].filename + '.html'
         html_id = @result.ids[type].html_id
@@ -77,7 +47,7 @@ class Renderer
         return @makeMissingLink type, place
       return "<a href='#{link}'>#{type}</a>"
     if res = type.match(/\[(.*)\]\((.*)\)/)
-      @types[res[1]] = res[2]
+      @options.types[res[1]] = res[2]
       return "<a href='#{res[2]}'>#{res[1]}</a>"
     if res = type.match /(.*?)<(.*)>/
       return "#{@makeTypeLink rel_path, res[1]}&lt;#{@makeTypeLink rel_path, res[2]}&gt;"
@@ -134,7 +104,7 @@ class Renderer
     jade_options.cache = true
     jade.renderFile "#{@templates_dir}/#{template}.jade", jade_options, (error, result) =>
       return console.error error.stack if error
-      output_file = "#{@output_dir}/#{output}.html"
+      output_file = "#{@options.output_dir}/#{output}.html"
       fs.writeFile output_file, result, (error) =>
         return console.error 'failed to create '+output_file if error
         console.log output_file + ' is created' if not @options.quite
@@ -142,29 +112,23 @@ class Renderer
   ##
   # @private
   renderReadme: ->
-    fs.readFile "#{@options.readme or @options.project_dir}/README.md", 'utf-8', (error, content) =>
-      if content
-        content = markdown content
-      jade_options =
-        rel_path: './'
-        name: 'README'
-        content: content
-        type: 'home'
-      @renderOne jade_options, 'extra', 'index'
+    jade_options =
+      rel_path: './'
+      name: 'README'
+      content: @result.readme
+      type: 'home'
+    @renderOne jade_options, 'extra', 'index'
 
   ##
   # @private
   renderGuides: ->
     return if @result.guides.length is 0
-    try fs.mkdirSync "#{@output_dir}/guides"
+    try fs.mkdirSync "#{@options.output_dir}/guides"
     @result.guides.forEach (guide) =>
-      content = guide.content
-      if content
-        content = markdown content
       jade_options =
         rel_path: '../'
         name: guide.name
-        content: content
+        content: guide.content
         type: 'guides'
       @renderOne jade_options, 'extra', guide.filename
 
@@ -192,14 +156,13 @@ class Renderer
   # @private
   renderClasses: ->
     return if @result.classes.length is 0
-    try fs.mkdirSync "#{@output_dir}/classes"
+    try fs.mkdirSync "#{@options.output_dir}/classes"
     @result.classes.forEach (klass) =>
-      properties = klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
       jade_options =
         rel_path: '../'
         name: klass.ctx.name
         klass: klass
-        properties: properties
+        properties: klass.properties
         type: 'classes'
         makeTypeLink: (path, type) =>
           @makeTypeLink path, type, "(in #{klass.defined_in})"
@@ -209,14 +172,13 @@ class Renderer
   # @private
   renderModules: ->
     return if @result.modules.length is 0
-    try fs.mkdirSync "#{@output_dir}/modules"
+    try fs.mkdirSync "#{@options.output_dir}/modules"
     @result.modules.forEach (module) =>
-      properties = module.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
       jade_options =
         rel_path: '../'
         name: module.ctx.name
         module_data: module
-        properties: properties
+        properties: module.properties
         type: 'modules'
       @renderOne jade_options, 'module', module.filename
 
@@ -224,7 +186,7 @@ class Renderer
   # @private
   renderFeatures: ->
     return if @result.features.length is 0
-    try fs.mkdirSync "#{@output_dir}/features"
+    try fs.mkdirSync "#{@options.output_dir}/features"
     @result.features.forEach (feature) =>
       jade_options =
         rel_path: '../'
@@ -237,7 +199,7 @@ class Renderer
   # @private
   renderFiles: ->
     return if @result.files.length is 0
-    try fs.mkdirSync "#{@output_dir}/files"
+    try fs.mkdirSync "#{@options.output_dir}/files"
     @result.files.forEach (file) =>
       jade_options =
         rel_path: '../'
@@ -249,7 +211,7 @@ class Renderer
   ##
   # Runs
   run: ->
-    @copyResources @resources_dir, @output_dir, =>
+    @copyResources @resources_dir, @options.output_dir, =>
       @renderReadme()
       @renderGuides()
       @renderPages()
