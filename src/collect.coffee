@@ -2,16 +2,12 @@
 # @module collect
 
 dox = require './dox'
-fs = require 'fs'
-glob = require 'glob'
 markdown = require 'marked'
-walkdir = require 'walkdir'
-{basename,dirname,resolve} = require 'path'
 
 ##
 # Collector
 class Collector
-  constructor: (@paths, @options) ->
+  constructor: (@contents, @options) ->
     @result =
       project_title: @options.title or 'croquis-jsdoc'
       ids: {}
@@ -22,77 +18,40 @@ class Collector
       features: []
       files: []
 
-  ##
-  # Returns list of comments of the given file
-  # @private
-  # @param {String} file
-  # @return {Array<Comment>}
-  getComments: (file, path) ->
-    return if fs.statSync(file).isDirectory()
-    content = fs.readFileSync(file, 'utf-8').trim()
-    return if not content
+  addGuide: (file, data) ->
+    file = file.substr(0, file.length-8).replace(/\//g, '.')
+    @result.guides.push
+      name: file
+      filename: 'guides/' + file
+      content: markdown data
 
-    file = file.substr(path.length+1)
+  addFeature: (file, data) ->
+    file = file.substr 0, file.length-8
+    namespace = ''
+    file = file.replace /(.*)\//, (_, $1) ->
+      namespace = $1 + '/'
+      return ''
+    feature = ''
+    data = data.replace /Feature: (.*)/, (_, $1) ->
+      feature = $1
+      return ''
+    @result.features.push
+      name: namespace + file
+      namespace: namespace
+      filename: 'features/' + namespace.replace(/\//g, '.') + file
+      feature: feature
+      content: data
 
-    if /\.coffee$/.test file
-      comments = dox.parseCommentsCoffee content, { raw: true }
-      add_to_file = true
-    else if /\.js$/.test file
-      comments = dox.parseComments content, { raw: true }
-      add_to_file = true
-    else if /Page\.md$/.test file
-      namespace = ''
-      file = file.substr(0, file.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
-      file = file.replace /(.*)\//, (_, $1) ->
-        namespace = $1
-        return ''
-      comments = [ {
-        description:
-          summary: ''
-          body: content
-          full: ''
-        tags: [
-          { type: 'page', string: file }
-          { type: 'namespace', string: namespace }
-        ]
-      } ]
-    else if /Guide\.md$/.test file
-      file = file.substr(0, file.length-8).replace(/\//g, '.')
-      @result.guides.push
-        name: file
-        filename: 'guides/' + file
-        content: markdown content
-    else if /\.feature$/.test file
-      file = file.substr 0, file.length-8
-      namespace = ''
-      file = file.replace /(.*)\//, (_, $1) ->
-        namespace = $1 + '/'
-        return ''
-      feature = ''
-      content = content.replace /Feature: (.*)/, (_, $1) ->
-        feature = $1
-        return ''
-      @result.features.push
-        name: namespace + file
-        namespace: namespace
-        filename: 'features/' + namespace.replace(/\//g, '.') + file
-        feature: feature
-        content: content
-
-    if add_to_file
-      namespace = ''
-      file = file.replace /(.*)\//, (_, $1) ->
-        namespace = $1 + '/'
-        return ''
-      @result.files.push
-        name: namespace + file
-        namespace: namespace
-        filename: 'files/' + namespace.replace(/\//g, '.') + file
-        content: content
-
-    # filter out empty comments
-    return comments?.filter (comment) ->
-      return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
+  addFile: (file, data) ->
+    namespace = ''
+    file = file.replace /(.*)\//, (_, $1) ->
+      namespace = $1 + '/'
+      return ''
+    @result.files.push
+      name: namespace + file
+      namespace: namespace
+      filename: 'files/' + namespace.replace(/\//g, '.') + file
+      content: data
 
   ##
   # Checks flags of parameter
@@ -159,12 +118,11 @@ class Collector
   ##
   # Classifies type and collect id
   # @private
-  classifyComments: (file, comments) ->
+  classifyComments: (comments) ->
     current_class = undefined
     current_module = undefined
 
     comments.forEach (comment) =>
-      comment.defined_in = file
       comment.ctx or comment.ctx = {}
       comment.params = []
       comment.returnprops = []
@@ -236,7 +194,7 @@ class Collector
           when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'type', 'api', 'uses', 'override'
           else
-            console.log "Unknown tag : #{tag.type} in #{file}"
+            console.log "Unknown tag : #{tag.type} in #{comment.defined_in}"
 
       if comment.ctx.class_name
         if comment.ctx.type is 'function'
@@ -282,6 +240,46 @@ class Collector
           comment.filename = 'pages'
         when 'restapi'
           comment.filename = 'restapis'
+
+  ##
+  # Returns list of comments of the given file
+  # @private
+  # @param {String} file
+  # @return {Array<Comment>}
+  getComments: (type, path, file, data) ->
+    if type is 'coffeescript'
+      comments = dox.parseCommentsCoffee data, { raw: true }
+    else if type is 'javascript'
+      comments = dox.parseComments data, { raw: true }
+    else if type is 'page'
+      namespace = ''
+      file = file.substr(0, file.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
+      file = file.replace /(.*)\//, (_, $1) ->
+        namespace = $1
+        return ''
+      comments = [ {
+        description:
+          summary: ''
+          body: data
+          full: ''
+        tags: [
+          { type: 'page', string: file }
+          { type: 'namespace', string: namespace }
+        ]
+      } ]
+
+    return if not comments?
+
+    # filter out empty comments
+    comments = comments.filter (comment) ->
+      return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
+
+    comments.forEach (comment) =>
+      comment.defined_in = path
+
+    @classifyComments comments
+
+    return comments
 
   ##
   # Structuralizes comments
@@ -412,34 +410,44 @@ class Collector
     result.modules = result.classes.filter (klass) -> klass.is_module
     result.classes = result.classes.filter (klass) -> not klass.is_module
 
+  getType: (file) ->
+    if /\.coffee$/.test file
+      return 'coffeescript'
+    else if /\.js$/.test file
+      return 'javascript'
+    else if /Page\.md$/.test file
+      return 'page'
+    else if /Guide\.md$/.test file
+      return 'guide'
+    else if /\.feature$/.test file
+      return 'feature'
+    else if file is 'README'
+      return 'readme'
+    else
+      return 'unknown'
+
   ##
   # Runs
   run: ->
-    file_count_read = 0
-
     all_comments = []
-    @paths.forEach (path) =>
-      base_path = path = resolve @options.project_dir, path
-      base_path = dirname base_path while /[*?]/.test basename(base_path)
-      glob.sync(path).forEach (path) =>
-        if fs.statSync(path).isDirectory()
-          list = walkdir.sync path
-        else
-          list = [path]
-        list.forEach (file) =>
-          comments = @getComments file, base_path
-          return if not comments?
-
-          file_count_read++
-          console.log file + ' is processed' if not @options.quite
-
-          file = file.replace new RegExp("^" + @options.project_dir), ''
-          @classifyComments file, comments
-          all_comments.push.apply all_comments, comments
-
-    try
-      content = fs.readFileSync "#{@options.readme or @options.project_dir}/README.md", 'utf-8'
-      @result.readme = markdown content
+    file_count_read = 0
+    for {path, file, data} in @contents
+      type = @getType file
+      switch type
+        when 'guide'
+          @addGuide file, data
+        when 'feature'
+          @addFeature file, data
+        when 'coffeescript', 'javascript', 'page'
+          comments = @getComments type, path, file, data
+          if comments?
+            [].push.apply all_comments, comments
+        when 'readme'
+          @result.readme = markdown data
+      if type is 'coffeescript' or type is 'javascript'
+        @addFile file, data
+      file_count_read++
+      console.log file + ' is processed' if not @options.quite
 
     console.log 'Total ' + file_count_read + ' files processed'
 
@@ -452,8 +460,8 @@ class Collector
 ##
 # Collects
 # @memberOf collect
-collect = (paths, options) ->
-  collector = new Collector paths, options
+collect = (contents, options) ->
+  collector = new Collector contents, options
   collector.run()
   return collector.result
 

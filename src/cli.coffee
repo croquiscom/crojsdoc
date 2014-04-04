@@ -1,10 +1,12 @@
 fs = require 'fs'
-path = require 'path'
+glob = require 'glob'
+walkdir = require 'walkdir'
+{basename,dirname,join,resolve} = require 'path'
 
 readConfig = (options, paths) ->
   {safeLoad} = require 'js-yaml'
   try
-    config = safeLoad fs.readFileSync(path.join(process.cwd(), 'crojsdoc.yaml'), 'utf-8')
+    config = safeLoad fs.readFileSync(join(process.cwd(), 'crojsdoc.yaml'), 'utf-8')
     if config.hasOwnProperty 'output'
       options.output = config.output
     if config.hasOwnProperty 'title'
@@ -82,10 +84,32 @@ getOptionsAndPaths = ->
   parseArguments options, paths
   readExternalTypes options['external-types'], options.types
 
-  options.output_dir = path.resolve options.project_dir, options.output or 'doc'
+  options.output_dir = resolve options.project_dir, options.output or 'doc'
 
   return [options, paths]
 
+readFiles = (paths, options) ->
+  project_dir_re = new RegExp("^" + options.project_dir)
+  contents = []
+  for path in paths
+    base_path = path = resolve options.project_dir, path
+    base_path = dirname base_path while /[*?]/.test basename(base_path)
+    glob.sync(path).forEach (path) =>
+      if fs.statSync(path).isDirectory()
+        list = walkdir.sync path
+      else
+        list = [path]
+      for file in list
+        continue if fs.statSync(file).isDirectory()
+        data = fs.readFileSync(file, 'utf-8').trim()
+        continue if not data
+        contents.push path: file.replace(project_dir_re, ''), file: file.substr(path.length+1), data: data
+  try
+    data = fs.readFileSync "#{options.readme or options.project_dir}/README.md", 'utf-8'
+    contents.push path: '', file: 'README', data: data
+  return contents
+
 [options, paths] = getOptionsAndPaths()
-result = require('./collect') paths, options
+contents = readFiles paths, options
+result = require('./collect') contents, options
 require('./render') result, options
