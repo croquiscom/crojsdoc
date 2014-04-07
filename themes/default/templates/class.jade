@@ -38,8 +38,8 @@ block body
         span.extends!= ' extends ' + klass.extends.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
       if klass.uses.length
         span.uses!= ' uses ' + klass.uses.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
-    div!= klass.description.summary
-    div!= klass.description.body
+    div!= convertLink(rel_path, klass.description.summary)
+    div!= convertLink(rel_path, klass.description.body)
     if klass.code
       button.showcode.btn.btn-info Show code
       span

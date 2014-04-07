@@ -1,4 +1,64 @@
 ##
+# Generating options
+#
+# It is built by a config file(crojsdoc.yaml) or command line arguments
+# @namespace struct
+class Options
+  ##
+  # @property _project_dir
+  # @type String
+  # @private
+
+  ##
+  # @property types
+  # @type Object
+
+  ##
+  # @property _sources
+  # @type Array<String>
+
+  ##
+  # @property output_dir
+  # @type String
+
+  ##
+  # @property title
+  # @type String
+
+  ##
+  # @property quiet
+  # @type Boolean
+
+  ##
+  # @property files
+  # @type Boolean
+
+  ##
+  # @property _readme
+  # @type String
+  # @private
+
+  ##
+  # @property github
+  # @type String
+
+##
+# Input to the [[#Collector]]
+# @namespace struct
+class Content
+  ##
+  # @property path
+  # @type String
+
+  ##
+  # @property file
+  # @type String
+
+  ##
+  # @property data
+  # @type String
+
+##
 # Represents a tag in a comment
 #
 # Data differs by types.
@@ -12,6 +72,7 @@
 # * otherClass for @augments
 # * otherMemberName, thisMemberName for @borrows
 # * string for other types
+# @namespace struct
 class Tag
   ##
   # The type of this tag
@@ -37,6 +98,7 @@ class Tag
 
 ##
 # Represents a code context in a comment
+# @namespace struct
 class CodeContext
   ##
   # the type of the code.
@@ -76,6 +138,7 @@ class CodeContext
 
 ##
 # Represents a comment block
+# @namespace struct
 class Comment
   ##
   # The first paragraph of the description
@@ -111,3 +174,8 @@ class Comment
   # Code context of this comment
   # @property ctx
   # @type CodeContext
+
+##
+# Result of [[#Collector]] and input of [[#Renderer]]
+# @namespace struct
+class Result

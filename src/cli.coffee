@@ -1,9 +1,17 @@
+##
+# @module cli
+
 fs = require 'fs'
 glob = require 'glob'
 walkdir = require 'walkdir'
 {basename,dirname,join,resolve} = require 'path'
 
-readConfig = (options, paths) ->
+##
+# Reads a config file(crojsdoc.yaml) to build options
+# @param {Options} options
+# @memberOf cli
+# @private
+_readConfig = (options) ->
   {safeLoad} = require 'js-yaml'
   try
     config = safeLoad fs.readFileSync(join(process.cwd(), 'crojsdoc.yaml'), 'utf-8')
@@ -16,20 +24,25 @@ readConfig = (options, paths) ->
     if  config.hasOwnProperty 'files'
       options.files = config.files is true
     if config.hasOwnProperty('readme') and typeof config.readme is 'string'
-      options.readme = config.readme
+      options._readme = config.readme
     if config.hasOwnProperty 'external-types'
       options['external-types'] = config['external-types']
     if config.hasOwnProperty 'sources'
       if Array.isArray config.sources
-        [].push.apply paths, config.sources
+        [].push.apply options._sources, config.sources
       else
-        paths.push config.sources
+        options._sources.push config.sources
     if config.hasOwnProperty 'github'
       options.github = config.github
       if options.github.branch is undefined
         options.github.branch = 'master'
 
-parseArguments = (options, paths) ->
+##
+# Parses the command line arguments to build options
+# @param {Options} options
+# @memberOf cli
+# @private
+_parseArguments = (options) ->
   {OptionParser} = require 'optparse'
   switches = [
     [ '-o', '--output DIRECTORY', 'Output directory' ]
@@ -44,9 +57,15 @@ parseArguments = (options, paths) ->
     if value is undefined
       value = true
     options[opt] = value
-  [].push.apply paths, parser.parse process.argv.slice 2
+  [].push.apply options._sources, parser.parse process.argv.slice 2
 
-readExternalTypes = (external_types, types) ->
+##
+# Reads additional type definitions from a file or a object
+# @param {String|Object} external_types
+# @param {Object} types
+# @memberOf cli
+# @private
+_readExternalTypes = (external_types, types) ->
   return if not external_types
 
   if typeof external_types is 'string'
@@ -63,9 +82,14 @@ readExternalTypes = (external_types, types) ->
     for type, url of external_types
       types[type] = url
 
-getOptionsAndPaths = ->
+##
+# Builds options from a config file(crojsdoc.yaml) or command line arguments
+# @return {Options}
+# @memberOf cli
+# @private
+_buildOptions = ->
   options =
-    project_dir: process.cwd()
+    _project_dir: process.cwd()
     types:
       # Links for pre-known types
       Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
@@ -78,21 +102,27 @@ getOptionsAndPaths = ->
       RegExp: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/RegExp'
       Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
       undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
-  paths = []
+    _sources: []
 
-  readConfig options, paths
-  parseArguments options, paths
-  readExternalTypes options['external-types'], options.types
+  _readConfig options
+  _parseArguments options
+  _readExternalTypes options['external-types'], options.types
 
-  options.output_dir = resolve options.project_dir, options.output or 'doc'
+  options.output_dir = resolve options._project_dir, options.output or 'doc'
 
-  return [options, paths]
+  return options
 
-readFiles = (paths, options) ->
-  project_dir_re = new RegExp("^" + options.project_dir)
+##
+# Reads source files
+# @param {Options} options
+# @return {Array<Content>}
+# @memberOf cli
+# @private
+_readSourceFiles = (options) ->
+  project_dir_re = new RegExp("^" + options._project_dir)
   contents = []
-  for path in paths
-    base_path = path = resolve options.project_dir, path
+  for path in options._sources
+    base_path = path = resolve options._project_dir, path
     base_path = dirname base_path while /[*?]/.test basename(base_path)
     glob.sync(path).forEach (path) =>
       if fs.statSync(path).isDirectory()
@@ -105,11 +135,15 @@ readFiles = (paths, options) ->
         continue if not data
         contents.push path: file.replace(project_dir_re, ''), file: file.substr(path.length+1), data: data
   try
-    data = fs.readFileSync "#{options.readme or options.project_dir}/README.md", 'utf-8'
+    data = fs.readFileSync "#{options._readme or options._project_dir}/README.md", 'utf-8'
     contents.push path: '', file: 'README', data: data
   return contents
 
-[options, paths] = getOptionsAndPaths()
-contents = readFiles paths, options
-result = require('./collect') contents, options
-require('./render') result, options
+##
+# Runs CroJSDoc via CLI
+# @memberOf cli
+exports.run = ->
+  options = _buildOptions()
+  contents = _readSourceFiles options
+  result = require('./collect') contents, options
+  require('./render') result, options

@@ -223,6 +223,8 @@ class Renderer
 
 ##
 # Renders
+# @param {Result} result
+# @param {Options} options
 # @memberOf render
 render = (result, options) ->
   renderer = new Renderer result, options

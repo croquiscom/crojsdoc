@@ -459,6 +459,9 @@ class Collector
 
 ##
 # Collects
+# @param {Array<Content>} contents
+# @param {Options} options
+# @return {Result}
 # @memberOf collect
 collect = (contents, options) ->
   collector = new Collector contents, options
