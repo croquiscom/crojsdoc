@@ -4,10 +4,12 @@
 dox = require './dox'
 markdown = require 'marked'
 
+is_test_mode = process.env.NODE_ENV is 'test'
+
 ##
 # Collector
 class Collector
-  constructor: (@contents, @options) ->
+  constructor: (@contents, @options = {}) ->
     @result =
       project_title: @options.title or 'croquis-jsdoc'
       ids: {}
@@ -447,9 +449,9 @@ class Collector
       if type is 'coffeescript' or type is 'javascript'
         @addFile file, data
       file_count_read++
-      console.log file + ' is processed' if not @options.quite
+      console.log file + ' is processed' if not (@options.quite or is_test_mode)
 
-    console.log 'Total ' + file_count_read + ' files processed'
+    console.log 'Total ' + file_count_read + ' files processed' if not is_test_mode
 
     @processComments all_comments
 
