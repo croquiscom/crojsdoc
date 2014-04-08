@@ -9,3 +9,8 @@ describe 'JavaScript', ->
   fs.readdirSync(__dirname + '/js').forEach (filename) ->
     return if not /\.coffee$/.test filename
     require "./js/#{filename}"
+
+describe 'tags', ->
+  fs.readdirSync(__dirname + '/tags').forEach (filename) ->
+    return if not /\.coffee$/.test filename
+    require "./tags/#{filename}"
