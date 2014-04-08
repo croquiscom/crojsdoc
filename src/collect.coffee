@@ -1,6 +1,7 @@
 ##
 # @module collect
 
+_ = require 'lodash'
 dox = require './dox'
 markdown = require 'marked'
 
@@ -408,6 +409,8 @@ class Collector
 
     result.classes.forEach (klass) ->
       klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1
+      for property in klass.properties
+        property.ctx = _.pick property.ctx, 'type', 'name', 'fullname'
 
     result.modules = result.classes.filter (klass) -> klass.is_module
     result.classes = result.classes.filter (klass) -> not klass.is_module
