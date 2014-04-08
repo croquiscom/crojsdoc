@@ -16,7 +16,7 @@ task 'build', 'Builds JavaScript files from source', ->
 task 'test', 'Runs Mocha tests', (options) ->
   process.env.NODE_ENV = 'test'
   command = './node_modules/.bin/mocha'
-  args = ['-R', options.reporter or 'spec', '--compilers', 'coffee:coffee-script', '--recursive', '-r', 'coffee-script/register']
+  args = ['-R', options.reporter or 'spec', '--compilers', 'coffee:coffee-script', '-r', 'coffee-script/register']
   args.push '-g', options.grep if options.grep
   child = spawn command, args, stdio: 'inherit'
 
