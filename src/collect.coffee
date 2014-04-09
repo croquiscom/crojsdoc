@@ -194,6 +194,10 @@ class Collector
             comment.abstract = true
           when 'async'
             comment.async = true
+          when 'promise'
+            comment.return_promise = true
+          when 'nodejscallback'
+            comment.return_nodejscallback = true
           when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'type', 'api', 'uses', 'override'
           else
@@ -353,6 +357,24 @@ class Collector
       # make parameters nested
       @makeNested comment, 'params'
       @makeNested comment, 'returnprops'
+
+      if comment.return_nodejscallback
+        callback_params = [ {
+            name: 'error'
+            types: ['Error']
+            description: 'See throws'
+          } ]
+        if comment.return
+          callback_params.push
+              name: 'result'
+              types: comment.return.types
+              description: 'See returns'
+        comment.params.push
+          name: 'callback'
+          types: ['Function']
+          optional: comment.return_promise
+          description: 'NodeJS style\'s callback'
+          params: callback_params
 
       switch comment.ctx.type
         when 'property', 'method'

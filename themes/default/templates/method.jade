@@ -76,6 +76,13 @@ div.panel.panel-success
               pre.prettyprint!= example.string
       if method.return
         h4 Returns
+          if method.return_promise || method.return_nodejscallback
+            small
+              span  as
+              if method.return_promise
+                span.label.label-info Promise
+              if method.return_nodejscallback
+                span.label.label-info NodeJS callback
         table.table.table-bordered.table-condensed.table-hover
           tr
             th Name
