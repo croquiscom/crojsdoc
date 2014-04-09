@@ -9,6 +9,10 @@ $('body').on('click', '.showcode', function () {
   $('body').scrollspy('refresh');
 });
 
+$('body').on('shown.bs.collapse hidden.bs.collapse', function () {
+  $('body').scrollspy('refresh');
+});
+
 var $options_private = $('#options-private');
 if (window.localStorage && window.localStorage.getItem('options-private')==='true') {
   $options_private.prop('checked', true);

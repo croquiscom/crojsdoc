@@ -16,9 +16,9 @@ block nav-item
       li.cormo-class-property(class=property.isPrivate ? 'private' : '')
         a(href='#'+property.html_id)= property.ctx.name
           if property.isPrivate
-            span.label.label-private private
+            span.pull-right.label.label-private private
           if property.ctx.type==='property'
-            span.label.label-property property
+            span.pull-right.label.label-property property
   else
     li
       a(href=rel_path+item.filename+'.html')= display_name
@@ -41,4 +41,3 @@ block body
       - var is_method_of_class = false
       - var method = item
       include method
-      hr.item-seperator

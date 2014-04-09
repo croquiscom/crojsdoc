@@ -2,141 +2,157 @@
 //- method: comment that includes description
 //- item!=method if overridden method
 
-h2.class_method
-  | #{display_name}
-  if method.ctx.type==='method'
-    | (
-    each param, i in method.params
-      if param.optional
-        | [#{param.name}]
-      else
-        | #{param.name}
-      if i+1 < method.params.length
-        | , 
-    | )
-  if method.types && method.types.length && method.types.join('')
-    |  : 
-    != method.types.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
-  if method.isPrivate
-    span.label.label-private private
-  if is_method_of_class && method.static
-    span.label.label-static static
-  if is_method_of_class && item.abstract
-    span.label.label-abstract abstract
-  if is_method_of_class && item!==method
-    span.label.label-override override
-  if method.ctx.type==='property'
-    span.label.label-property property
-if item!==method
-  div!= 'Overrides ' + makeTypeLink(rel_path, item.override_link)
-  br
-div!= convertLink(rel_path, method.description.summary)
-div!= convertLink(rel_path, method.description.body)
-if method.params.length
-  h3 Parameters:
-  ul
-    each param1 in method.params
-      li 
-        - var param = param1;
-        include method-param
-        if param1.params
-          ul
-            each param2 in param1.params
-              li
-                - var param = param2;
-                include method-param
-                if param2.params
-                  ul
-                    each param3 in param2.params
-                      li
-                        - var param = param3;
-                        include method-param
-                        if param3.params
-                          ul
-                            each param4 in param3.params
-                              li
-                                - var param = param4;
-                                include method-param
-if method.examples.length
-  h3 Examples
-  ul
-    each example, i in method.examples
-      li
-        pre.prettyprint!= example.string
-if method.return
-  h3 Returns:
-  ul
-    li
-      span
-        |  {
-        each type, i in method.return.types
-          != makeTypeLink(rel_path, type)
-          if i+1 < method.return.types.length
+div.panel.panel-success
+  div.panel-heading.collapsed(data-toggle='collapse',data-target='#'+item.html_id+'_body')
+    h3.panel-title
+      | #{display_name}
+      if method.ctx.type==='method'
+        | (
+        each param, i in method.params
+          if param.optional
+            | [#{param.name}]
+          else
+            | #{param.name}
+          if i+1 < method.params.length
             | , 
-        | } 
-      span
-        != convertLink(rel_path, method.return.description)
-      if method.returnprops
-        ul
-          each prop1 in method.returnprops
-            li
-              - var param = prop1;
+        | )
+      if method.types && method.types.length && method.types.join('')
+        |  : 
+        != method.types.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+      if method.isPrivate
+        span.label.label-private private
+      if is_method_of_class && method.static
+        span.label.label-static static
+      if is_method_of_class && item.abstract
+        span.label.label-abstract abstract
+      if is_method_of_class && item!==method
+        span.label.label-override override
+      if method.ctx.type==='property'
+        span.label.label-property property
+      span.pull-right.glyphicon
+    div.method-summary
+      != convertLink(rel_path, method.description.summary)
+  div.panel-collapse.collapse(id=item.html_id+'_body')
+    div.panel-body
+      if item!==method
+        div!= 'Overrides ' + makeTypeLink(rel_path, item.override_link)
+        br
+      div!= convertLink(rel_path, method.description.body)
+      if method.params.length
+        h4 Parameters
+        table.table.table-bordered.table-condensed.table-hover
+          tr
+            th Name
+            th Type
+            th Description
+          each param1 in method.params
+            tr
+              - var param = param1;
+              - var depth = 0
               include method-param
-              if prop1.returnprops
-                ul
-                  each prop2 in prop1.returnprops
-                    li
-                      - var param = prop2;
+            if param1.params
+              each param2 in param1.params
+                tr
+                  - var param = param2;
+                  - var depth = 1
+                  include method-param
+                if param2.params
+                  each param3 in param2.params
+                    tr
+                      - var param = param3;
+                      - var depth = 2
                       include method-param
-                      if prop2.returnprops
-                        ul
-                          each prop3 in prop2.returnprops
-                            li
-                              - var param = prop3;
-                              include method-param
-                              if prop3.returnprops
-                                ul
-                                  each prop4 in prop3.returnprops
-                                    li
-                                      - var param = prop4;
-                                      include method-param
-if method.throws.length
-  h3 Throws:
-  ul
-    each tag in method.throws
-      li
-        |{
-        span= tag.message
-        |} 
-        span!= convertLink(rel_path, tag.description)
-if method.resterrors.length
-  h3 Rest Errors:
-  ul
-    each tag in method.resterrors
-      li
-        |{
-        span= tag.code
-        |/
-        span= tag.message
-        |} 
-        span!= convertLink(rel_path, tag.description)
-if method.sees.length
-  h3 See Also:
-  ul
-    each str in method.sees
-      li!= makeSeeLink(rel_path, str)
-if item.todos.length
-  h3 TODO:
-  ul
-    each tag in item.todos
-      li!= tag
-if item.code
-  button.showcode.btn.btn-info Show code
-  span
-    |  (defined in 
-    if github && github.sourcelink
-      a(href='#{github.repository}/blob/#{github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
-    else
-      | #{item.defined_in}:#{item.line_number}
-    |)
-  pre.sourcecode.prettyprint(class='.linenums:'+item.line_number)!= item.code
+                    if param3.params
+                      each param4 in param3.params
+                        tr
+                          - var param = param4;
+                          - var depth = 3
+                          include method-param
+      if method.examples.length
+        h4 Examples
+        ul
+          each example, i in method.examples
+            li
+              pre.prettyprint!= example.string
+      if method.return
+        h4 Returns
+        table.table.table-bordered.table-condensed.table-hover
+          tr
+            th Name
+            th Type
+            th Description
+          tr
+            td (Returns)
+            td
+              span
+                each type, i in method.return.types
+                  != makeTypeLink(rel_path, type)
+                  if i+1 < method.return.types.length
+                    | , 
+            td
+              span
+                != convertLink(rel_path, method.return.description)
+          if method.returnprops
+            each prop1 in method.returnprops
+              tr
+                - var param = prop1;
+                - var depth = 1
+                include method-param
+              if prop1.returnprops
+                each prop2 in prop1.returnprops
+                  tr
+                    - var param = prop2;
+                    - var depth = 2
+                    include method-param
+                  if prop2.returnprops
+                    each prop3 in prop2.returnprops
+                      tr
+                        - var param = prop3;
+                        - var depth = 3
+                        include method-param
+                      if prop3.returnprops
+                        each prop4 in prop3.returnprops
+                          tr
+                            - var param = prop4;
+                            - var depth = 4
+                            include method-param
+      if method.throws.length
+        h4 Throws:
+        ul
+          each tag in method.throws
+            li
+              |{
+              span= tag.message
+              |} 
+              span!= convertLink(rel_path, tag.description)
+      if method.resterrors.length
+        h4 Rest Errors:
+        ul
+          each tag in method.resterrors
+            li
+              |{
+              span= tag.code
+              |/
+              span= tag.message
+              |} 
+              span!= convertLink(rel_path, tag.description)
+      if method.sees.length
+        h4 See Also:
+        ul
+          each str in method.sees
+            li!= makeSeeLink(rel_path, str)
+      if item.todos.length
+        h4 TODO:
+        ul
+          each tag in item.todos
+            li!= tag
+      if item.code
+        button.showcode.btn.btn-info Show code
+        span
+          |  (defined in 
+          if github && github.sourcelink
+            a(href='#{github.repository}/blob/#{github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
+          else
+            | #{item.defined_in}:#{item.line_number}
+          |)
+        pre.sourcecode.prettyprint(class='.linenums:'+item.line_number)!= item.code

@@ -16,17 +16,17 @@ block nav-item
       li.cormo-class-property(class=property.isPrivate ? 'private' : '')
         a(href='#'+property.html_id)= property.ctx.name
           if property.isPrivate
-            span.label.label-private private
+            span.pull-right.label.label-private private
           if property.static
-            span.label.label-static static
+            span.pull-right.label.label-static static
           if property.abstract
-            span.label.label-abstract abstract
+            span.pull-right.label.label-abstract abstract
           if property.async
-            span.label.label-async async
+            span.pull-right.label.label-async async
           if property.override
-            span.label.label-override override
+            span.pull-right.label.label-override override
           if property.ctx.type==='property'
-            span.label.label-property property
+            span.pull-right.label.label-property property
   else
     li
       a(href=rel_path+item.filename+'.html')= display_name
@@ -64,4 +64,3 @@ block body
       - var is_method_of_class = true
       - var method = item.override || item
       include method
-      hr.item-seperator

@@ -1,24 +1,26 @@
-if param.types && param.types.length && param.types.join('')
+td
+  span(class='method-depth'+depth)
+  code= param.name
+  if param.optional
+    span.pull-right.label.label-optional optional
+  if param.addable
+    span.pull-right.label.label-addable addable
+  if param.excludable
+    span.pull-right.label.label-excludable excludable
+td
+  if param.types && param.types.length && param.types.join('')
+    span
+      each type, i in param.types
+        != makeTypeLink(rel_path, type)
+        if type==='Function'
+          | (
+          if param.params
+            - var funcparams = param.params.map(function (p) { return p.name })
+            | #{funcparams.join(', ')}
+          | )
+        if i+1 < param.types.length
+          | , 
+td
   span
-    | {
-    each type, i in param.types
-      != makeTypeLink(rel_path, type)
-      if type==='Function'
-        | (
-        if param.params
-          - var funcparams = param.params.map(function (p) { return p.name })
-          | #{funcparams.join(', ')}
-        | )
-      if i+1 < param.types.length
-        | , 
-    | } 
-code= param.name
-span
-  | 
-  != convertLink(rel_path, param.description)
-if param.optional
-  span.label.label-optional optional
-if param.addable
-  span.label.label-addable addable
-if param.excludable
-  span.label.label-excludable excludable
+    | 
+    != convertLink(rel_path, param.description)

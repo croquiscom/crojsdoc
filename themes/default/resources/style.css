@@ -33,8 +33,11 @@ body {
 }
 
 .cormo-class-property .label {
-	margin-left: 5px;
 	font-size: 0.7em;
+}
+
+.label {
+	margin-left: 3px;
 }
 
 .label-optional {
@@ -79,11 +82,15 @@ body {
 }
 
 section {
-	padding-top: 10px;
+	margin-bottom: 10px;
 }
 
-section:first-child {
-	padding-top: 0px;
+section .panel {
+	margin-bottom: 0px;
+}
+
+.cormo-sidenav .panel {
+	margin-bottom: 10px;
 }
 
 .extends {
@@ -116,4 +123,46 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 	top: 40px;
 	right: 0;
 	border: 0;
+}
+
+.method-summary p {
+	margin-top: 5px;
+	margin-bottom: 0px;
+}
+
+.panel-heading .glyphicon:before {
+	content: "\e160";
+}
+
+.panel-heading.collapsed .glyphicon:before {
+	content: "\e159";
+}
+
+.panel .panel {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.panel .panel:first-child {
+	margin-top: 10px;
+}
+
+.method-depth0 {
+	margin: 0px;
+}
+
+.method-depth1 {
+	margin: 15px;
+}
+
+.method-depth2 {
+	margin: 30px;
+}
+
+.method-depth3 {
+	margin: 45px;
+}
+
+.method-depth4 {
+	margin: 60px;
 }

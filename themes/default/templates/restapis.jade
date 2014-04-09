@@ -12,10 +12,21 @@ block nav-item
     a(href='#'+item.html_id)= item.ctx.name
 
 block body
-  each item in result.restapis
-    section(id=item.html_id, class=item.isPrivate ? 'private' : '')
-      - var display_name = item.ctx.name
-      - var is_method_of_class = false
-      - var method = item
-      include method
-      hr.item-seperator
+  - var current_namespace = null
+  each ns_item in result.restapis
+    if current_namespace!==ns_item.namespace
+      - current_namespace = ns_item.namespace
+      div.panel.panel-default
+        if current_namespace!==''
+          - var display_name = current_namespace.replace(/\.$/, '')
+          div.panel-heading(data-toggle='collapse',data-target='#'+display_name+'_body_body')
+            = display_name
+            span.pull-right.glyphicon
+        div.panel-collapse.collapse.in(id=display_name+'_body_body')
+          each item in result.restapis
+            if current_namespace===item.namespace
+              section(id=item.html_id, class=item.isPrivate ? 'private' : '')
+                - var display_name = item.ctx.name
+                - var is_method_of_class = false
+                - var method = item
+                include method
