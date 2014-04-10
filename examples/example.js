@@ -2,8 +2,10 @@
  * An example class
  * @class
  * @namespace example
+ * @param {String} a the first parameter
+ * @param {Number} b the second parameter
  */
-function ExampleJS() {
+function ExampleJS(a, b) {
 }
 
 /**

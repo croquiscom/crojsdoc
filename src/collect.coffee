@@ -10,6 +10,8 @@ is_test_mode = process.env.NODE_ENV is 'test'
 ##
 # Collector
 class Collector
+  ##
+  # Create a Collector instance
   constructor: (@contents, @options = {}) ->
     @result =
       project_title: @options.title or 'croquis-jsdoc'
@@ -21,6 +23,9 @@ class Collector
       features: []
       files: []
 
+  ##
+  # Adds a guide file to the result
+  # @private
   addGuide: (file, data) ->
     file = file.substr(0, file.length-8).replace(/\//g, '.')
     @result.guides.push
@@ -28,6 +33,9 @@ class Collector
       filename: 'guides/' + file
       content: markdown data
 
+  ##
+  # Adds a feature file to the result
+  # @private
   addFeature: (file, data) ->
     file = file.substr 0, file.length-8
     namespace = ''
@@ -45,6 +53,9 @@ class Collector
       feature: feature
       content: data
 
+  ##
+  # Adds a source file to the result
+  # @private
   addFile: (file, data) ->
     namespace = ''
     file = file.replace /(.*)\//, (_, $1) ->
@@ -387,9 +398,15 @@ class Collector
         when 'property', 'method'
           class_name = comment.ctx.class_name
           if class_name and class_comment = @result.classes[class_name]
-            class_comment.properties.push comment
-            if class_comment.is_module
-              comment.filename = comment.filename.replace('classes/', 'modules/')
+            if comment.ctx.is_coffeescript_constructor
+              # merge to class comment
+              class_comment.code = comment.code
+              class_comment.line_number = comment.line_number
+              class_comment.params = comment.params
+            else
+              class_comment.properties.push comment
+              if class_comment.is_module
+                comment.filename = comment.filename.replace('classes/', 'modules/')
         when 'page'
           @result.pages[comment.ctx.name] = comment
         when 'restapi'
@@ -400,6 +417,7 @@ class Collector
   #
   # - convert hash to sorted array
   # - classes -> classes & modules
+  # @private
   refineResult: ->
     result = @result
     result.classes = Object.keys(result.classes).sort( (a,b) ->
@@ -444,6 +462,9 @@ class Collector
     result.modules = result.classes.filter (klass) -> klass.is_module
     result.classes = result.classes.filter (klass) -> not klass.is_module
 
+  ##
+  # Returns the type of a file
+  # @private
   getType: (file) ->
     if /\.coffee$/.test file
       return 'coffeescript'

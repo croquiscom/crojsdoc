@@ -40,99 +40,9 @@ div.panel.panel-success
         div!= 'Overrides ' + makeTypeLink(rel_path, item.override_link)
         br
       div!= convertLink(rel_path, method.description.body)
-      h4 Parameters
-      if method.params.length
-        table.table.table-bordered.table-condensed.table-hover
-          tr
-            th Name
-            th Type
-            th Description
-          each param1 in method.params
-            tr
-              - var param = param1;
-              - var depth = 0
-              include method-param
-            if param1.params
-              each param2 in param1.params
-                tr
-                  - var param = param2;
-                  - var depth = 1
-                  include method-param
-                if param2.params
-                  each param3 in param2.params
-                    tr
-                      - var param = param3;
-                      - var depth = 2
-                      include method-param
-                    if param3.params
-                      each param4 in param3.params
-                        tr
-                          - var param = param4;
-                          - var depth = 3
-                          include method-param
-      else
-        table.table.table-bordered.table-condensed.table-hover
-          tr
-            td (None)
-      if method.examples.length
-        h4 Examples
-        ul
-          each example, i in method.examples
-            li
-              pre.prettyprint!= example.string
-      h4 Returns
-        if method.return_promise || method.return_nodejscallback
-          small
-            span  as
-            if method.return_promise
-              span.label.label-info Promise
-            if method.return_nodejscallback
-              span.label.label-info NodeJS callback
-      if method.return
-        table.table.table-bordered.table-condensed.table-hover
-          tr
-            th Name
-            th Type
-            th Description
-          tr
-            td (Returns)
-            td
-              span
-                each type, i in method.return.types
-                  != makeTypeLink(rel_path, type)
-                  if i+1 < method.return.types.length
-                    | , 
-            td
-              span
-                != convertLink(rel_path, method.return.description)
-          if method.returnprops
-            each prop1 in method.returnprops
-              tr
-                - var param = prop1;
-                - var depth = 1
-                include method-param
-              if prop1.returnprops
-                each prop2 in prop1.returnprops
-                  tr
-                    - var param = prop2;
-                    - var depth = 2
-                    include method-param
-                  if prop2.returnprops
-                    each prop3 in prop2.returnprops
-                      tr
-                        - var param = prop3;
-                        - var depth = 3
-                        include method-param
-                      if prop3.returnprops
-                        each prop4 in prop3.returnprops
-                          tr
-                            - var param = prop4;
-                            - var depth = 4
-                            include method-param
-      else
-        table.table.table-bordered.table-condensed.table-hover
-          tr
-            td (Nothing)
+      - var parameters = method.params
+      include method-parameters
+      include method-returns
       if method.throws.length
         h4 Throws:
         ul
@@ -163,14 +73,15 @@ div.panel.panel-success
         ul
           each tag in item.todos
             li!= tag
+      if method.examples.length
+        h4 Examples
+        ul
+          each example, i in method.examples
+            li
+              pre.prettyprint!= example.string
       if item.code
-        div.showcode
-          button.btn.btn-info Show code
-          span
-            |  (defined in 
-            if github && github.sourcelink
-              a(href='#{github.repository}/blob/#{github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
-            else
-              | #{item.defined_in}:#{item.line_number}
-            |)
-        pre.sourcecode.prettyprint(class='.linenums:'+item.line_number)!= item.code
+        - var showcode_label = 'Show code'
+        - var showcode_defined_in = item.defined_in
+        - var showcode_line_number = item.line_number
+        - var showcode_code = item.code
+        include method-showcode

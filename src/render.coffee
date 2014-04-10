@@ -8,6 +8,8 @@ jade = require 'jade'
 ##
 # Renderer
 class Renderer
+  ##
+  # Creates a Renderer instance
   constructor: (@result, @options) ->
     theme = 'default'
     @resources_dir = resolve __dirname, '../themes', theme, 'resources'

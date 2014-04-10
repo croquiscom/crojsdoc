@@ -142,3 +142,24 @@ Simple.default_name = 'default';
       type: 'property'
       name: 'default_name'
       fullname: 'Simple.default_name'
+
+  it 'constructor', ->
+    result = collect [
+      { path: 'simple.js', file: 'simple.js', data: """
+/**
+ * A simple class
+ * @class
+ * @param {String} msg Message
+ */
+function Simple(msg) {
+}
+""" }
+    ]
+    expect(result.classes).to.have.length 1
+    expect(result.classes[0].params).to.have.length 1
+    expect(result.classes[0].params[0]).to.be.eql
+      type: 'param'
+      types: ['String']
+      name: 'msg'
+      description: 'Message'
+    expect(result.classes[0].properties).to.have.length 0

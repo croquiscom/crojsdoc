@@ -3,6 +3,12 @@
 # @namespace example
 class ExampleCoffee
   ##
+  # Constructor
+  # @param {String} a the first parameter
+  # @param {Number} b the second parameter
+  constructor: (a, b) ->
+
+  ##
   # An instance method
   # @param {String} a the first parameter
   # @param {Number} b the second parameter

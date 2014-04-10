@@ -117,3 +117,24 @@ class Simple
       type: 'property'
       name: 'default_name'
       fullname: 'Simple.default_name'
+
+  it 'constructor', ->
+    result = collect [
+      { path: 'simple.coffee', file: 'simple.coffee', data: """
+##
+# A simple class
+class Simple
+  ##
+  # Constructor
+  # @param {String} msg Message
+  constructor: (msg) ->
+""" }
+    ]
+    expect(result.classes).to.have.length 1
+    expect(result.classes[0].params).to.have.length 1
+    expect(result.classes[0].params[0]).to.be.eql
+      type: 'param'
+      types: ['String']
+      name: 'msg'
+      description: 'Message'
+    expect(result.classes[0].properties).to.have.length 0

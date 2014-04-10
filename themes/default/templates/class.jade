@@ -41,16 +41,6 @@ block body
         span.uses!= ' uses ' + klass.uses.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
     div!= convertLink(rel_path, klass.description.summary)
     div!= convertLink(rel_path, klass.description.body)
-    if klass.code
-      button.showcode.btn.btn-info Show code
-      span
-        |  (defined in 
-        if github && github.sourcelink
-          a(href='#{github.repository}/blob/#{github.branch}/#{klass.defined_in}#L#{klass.line_number}') #{klass.defined_in}:#{klass.line_number}
-        else
-          | #{klass.defined_in}:#{klass.line_number}
-        |)
-      pre.sourcecode.prettyprint(class='.linenums:'+klass.line_number)!= klass.code
     if klass.subclasses.length
       dl
         dt Direct known subclasses:
@@ -59,6 +49,27 @@ block body
       dl
         dt Used by:
         dd!= klass.usedbys.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+    if klass.class_code
+      - var showcode_label = 'Show class code'
+      - var showcode_defined_in = klass.defined_in
+      - var showcode_line_number = klass.class_line_number
+      - var showcode_code = klass.class_code
+      include method-showcode
+    if !klass.static
+      div.panel.panel-info
+        div.panel-heading.collapsed(data-toggle='collapse',data-target='#'+klass.html_id+'_ctor_body')
+          h3.panel-title Constructor
+            span.pull-right.glyphicon
+        div.panel-collapse.collapse(id=klass.html_id+'_ctor_body')
+          div.panel-body
+            - var parameters = klass.params
+            include method-parameters
+            if klass.code
+              - var showcode_label = 'Show code'
+              - var showcode_defined_in = klass.defined_in
+              - var showcode_line_number = klass.line_number
+              - var showcode_code = klass.code
+              include method-showcode
   each item in properties
     span.fix-anchor(id=item.html_id)
     section(class=item.isPrivate ? 'private' : '')

@@ -5,7 +5,7 @@ $(function() {
 });
 
 $('body').on('click', '.showcode', function () {
-  $(this).parent().find('pre.sourcecode').toggle();
+  $(this).next().toggle();
   $('body').scrollspy('refresh');
 });
 

@@ -1,0 +1,34 @@
+h4 Parameters
+if parameters.length
+  table.table.table-bordered.table-condensed.table-hover
+    tr
+      th Name
+      th Type
+      th Description
+    each param1 in parameters
+      tr
+        - var param = param1;
+        - var depth = 0
+        include method-one-param
+      if param1.params
+        each param2 in param1.params
+          tr
+            - var param = param2;
+            - var depth = 1
+            include method-one-param
+          if param2.params
+            each param3 in param2.params
+              tr
+                - var param = param3;
+                - var depth = 2
+                include method-one-param
+              if param3.params
+                each param4 in param3.params
+                  tr
+                    - var param = param4;
+                    - var depth = 3
+                    include method-one-param
+else
+  table.table.table-bordered.table-condensed.table-hover
+    tr
+      td (None)
