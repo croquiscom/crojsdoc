@@ -74,15 +74,15 @@ div.panel.panel-success
           each example, i in method.examples
             li
               pre.prettyprint!= example.string
+      h4 Returns
+        if method.return_promise || method.return_nodejscallback
+          small
+            span  as
+            if method.return_promise
+              span.label.label-info Promise
+            if method.return_nodejscallback
+              span.label.label-info NodeJS callback
       if method.return
-        h4 Returns
-          if method.return_promise || method.return_nodejscallback
-            small
-              span  as
-              if method.return_promise
-                span.label.label-info Promise
-              if method.return_nodejscallback
-                span.label.label-info NodeJS callback
         table.table.table-bordered.table-condensed.table-hover
           tr
             th Name
@@ -123,6 +123,10 @@ div.panel.panel-success
                             - var param = prop4;
                             - var depth = 4
                             include method-param
+      else
+        table.table.table-bordered.table-condensed.table-hover
+          tr
+            td (Nothing)
       if method.throws.length
         h4 Throws:
         ul
@@ -154,12 +158,13 @@ div.panel.panel-success
           each tag in item.todos
             li!= tag
       if item.code
-        button.showcode.btn.btn-info Show code
-        span
-          |  (defined in 
-          if github && github.sourcelink
-            a(href='#{github.repository}/blob/#{github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
-          else
-            | #{item.defined_in}:#{item.line_number}
-          |)
+        div.showcode
+          button.btn.btn-info Show code
+          span
+            |  (defined in 
+            if github && github.sourcelink
+              a(href='#{github.repository}/blob/#{github.branch}/#{item.defined_in}#L#{item.line_number}') #{item.defined_in}:#{item.line_number}
+            else
+              | #{item.defined_in}:#{item.line_number}
+            |)
         pre.sourcecode.prettyprint(class='.linenums:'+item.line_number)!= item.code
