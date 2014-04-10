@@ -24,7 +24,8 @@ block nav-item
       a(href=rel_path+item.filename+'.html')= display_name
 
 block body
-  section(id=module_data.html_id)
+  span.fix-anchor(id=module_data.html_id)
+  section
     h1.class_title= name.substr(module_data.namespace.length)
     div
       | (defined in 
@@ -36,7 +37,8 @@ block body
     div!= convertLink(rel_path, module_data.description.summary)
     div!= convertLink(rel_path, module_data.description.body)
   each item in properties
-    section(id=item.html_id, class=item.isPrivate ? 'private' : '')
+    span.fix-anchor(id=item.html_id)
+    section(class=item.isPrivate ? 'private' : '')
       - var display_name = item.ctx.name
       - var is_method_of_class = false
       - var method = item

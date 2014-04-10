@@ -174,3 +174,10 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 .showcode {
 	margin-bottom: 10px;
 }
+
+.fix-anchor {
+	display: block;
+	margin-top: -60px;
+	height: 60px;
+	visibility: hidden;
+}
