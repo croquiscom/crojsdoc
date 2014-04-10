@@ -38,8 +38,8 @@ div.panel.panel-success
         div!= 'Overrides ' + makeTypeLink(rel_path, item.override_link)
         br
       div!= convertLink(rel_path, method.description.body)
+      h4 Parameters
       if method.params.length
-        h4 Parameters
         table.table.table-bordered.table-condensed.table-hover
           tr
             th Name
@@ -68,6 +68,10 @@ div.panel.panel-success
                           - var param = param4;
                           - var depth = 3
                           include method-param
+      else
+        table.table.table-bordered.table-condensed.table-hover
+          tr
+            td (None)
       if method.examples.length
         h4 Examples
         ul
