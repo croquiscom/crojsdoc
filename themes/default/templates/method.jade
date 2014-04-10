@@ -29,6 +29,8 @@ div.panel.panel-success
         span.label.label-override override
       if method.ctx.type==='property'
         span.label.label-property property
+      if is_method_of_class && method.chainable
+        span.label.label-chainable chainable
       span.pull-right.glyphicon
     div.method-summary
       != convertLink(rel_path, method.description.summary)

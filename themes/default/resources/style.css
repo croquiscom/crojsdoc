@@ -57,7 +57,7 @@ body {
 }
 
 .label-async {
-	background-color: #8DAF28;
+	background-color: #8daf28;
 }
 
 .label-property {
@@ -74,6 +74,10 @@ body {
 
 .label-private {
 	background-color: #333333;
+}
+
+.label-chainable {
+	background-color: #44cc3a;
 }
 
 .missing-link {

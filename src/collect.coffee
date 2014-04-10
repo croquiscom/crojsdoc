@@ -198,6 +198,8 @@ class Collector
             comment.return_promise = true
           when 'nodejscallback'
             comment.return_nodejscallback = true
+          when 'chainable'
+            comment.chainable = true
           when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'type', 'api', 'uses', 'override'
           else
@@ -375,6 +377,11 @@ class Collector
           optional: comment.return_promise
           description: 'NodeJS style\'s callback'
           params: callback_params
+
+      if comment.chainable and not comment.return
+        comment.return =
+          types: [comment.ctx.class_name]
+          description: 'this'
 
       switch comment.ctx.type
         when 'property', 'method'
