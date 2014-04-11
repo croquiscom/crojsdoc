@@ -7,4 +7,4 @@ div.showcode
     else
       | #{showcode_defined_in}:#{showcode_line_number}
     |)
-pre.sourcecode.prettyprint(class='.linenums:'+showcode_line_number)!= showcode_code
+pre.sourcecode.prettyprint(class='.linenums:'+showcode_line_number)= showcode_code
