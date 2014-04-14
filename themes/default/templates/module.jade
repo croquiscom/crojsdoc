@@ -36,6 +36,8 @@ block body
       |)
     div!= convertLink(rel_path, module_data.description.summary)
     div!= convertLink(rel_path, module_data.description.body)
+    - var supplement_item = module_data
+    include supplement
   each item in properties
     span.fix-anchor(id=item.html_id)
     section(class=item.isPrivate ? 'private' : '')

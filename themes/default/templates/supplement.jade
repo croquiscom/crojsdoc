@@ -1,0 +1,16 @@
+if supplement_item.sees.length
+  h4 See Also:
+  ul
+    each str in supplement_item.sees
+      li!= makeSeeLink(rel_path, str)
+if supplement_item.todos.length
+  h4 TODO:
+  ul
+    each tag in supplement_item.todos
+      li!= tag
+if supplement_item.examples.length
+  h4 Examples
+  ul
+    each example, i in supplement_item.examples
+      li
+        pre.prettyprint!= example.string

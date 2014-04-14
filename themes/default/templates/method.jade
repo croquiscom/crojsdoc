@@ -64,22 +64,8 @@ div.panel.panel-success
                 span= tag.message
                 |} 
                 span!= convertLink(rel_path, tag.description)
-      if method.sees.length
-        h4 See Also:
-        ul
-          each str in method.sees
-            li!= makeSeeLink(rel_path, str)
-      if item.todos.length
-        h4 TODO:
-        ul
-          each tag in item.todos
-            li!= tag
-      if method.examples.length
-        h4 Examples
-        ul
-          each example, i in method.examples
-            li
-              pre.prettyprint!= example.string
+      - var supplement_item = item
+      include supplement
       if item.code
         - var showcode_label = 'Show code'
         - var showcode_defined_in = item.defined_in

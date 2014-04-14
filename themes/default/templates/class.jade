@@ -49,6 +49,8 @@ block body
       dl
         dt Used by:
         dd!= klass.usedbys.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+    - var supplement_item = klass
+    include supplement
     if klass.class_code
       - var showcode_label = 'Show class code'
       - var showcode_defined_in = klass.defined_in

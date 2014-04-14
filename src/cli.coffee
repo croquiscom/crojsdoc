@@ -1,4 +1,5 @@
 ##
+# Provides CroJSDoc command line interface
 # @module cli
 
 fs = require 'fs'

@@ -1,12 +1,14 @@
 ##
+# Renders documentations from result of collector
 # @module render
+# @see Renderer
 
 fs = require 'fs'
 jade = require 'jade'
 {resolve} = require 'path'
 
 ##
-# Renderer
+# Renders documentations from result of collector
 class Renderer
   ##
   # Creates a Renderer instance

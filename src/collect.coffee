@@ -1,5 +1,7 @@
 ##
+# Collects comments from source files
 # @module collect
+# @see Collector
 
 _ = require 'lodash'
 dox = require './dox'
@@ -8,7 +10,7 @@ markdown = require 'marked'
 is_test_mode = process.env.NODE_ENV is 'test'
 
 ##
-# Collector
+# Collects comments from source files
 class Collector
   ##
   # Create a Collector instance
