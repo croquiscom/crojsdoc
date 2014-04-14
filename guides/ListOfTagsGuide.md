@@ -1,4 +1,4 @@
-# Commands for functions
+# Tags for functions
 
 ## @param
 
@@ -24,7 +24,25 @@
 @throws {error object} description
 ```
 
-# Commands for classes
+## @async
+
+```
+@async
+```
+
+## @promise
+
+```
+@promise
+```
+
+## @nodejscallback
+
+```
+@nodejscallback
+```
+
+# Tags for classes
 
 ## @class
 
@@ -50,7 +68,7 @@
 @abstract
 ```
 
-# Commands for methods and properties
+# Tags for methods and properties
 
 ## @memberOf
 
@@ -88,7 +106,13 @@
 @type type
 ```
 
-# Commands for REST APIs
+## @chainable
+
+```
+@chainable
+```
+
+# Tags for REST APIs
 
 ## @restapi
 
@@ -102,18 +126,12 @@
 @resterror {code/message} description
 ```
 
-# Other commands
+# Other tags
 
 ## @private
 
 ```
 @private
-```
-
-## @async
-
-```
-@async
 ```
 
 ## @api
