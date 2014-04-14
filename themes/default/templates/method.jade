@@ -41,28 +41,29 @@ div.panel.panel-success
         br
       div!= convertLink(rel_path, method.description.body)
       - var parameters = method.params
-      include method-parameters
-      include method-returns
-      if method.throws.length
-        h4 Throws:
-        ul
-          each tag in method.throws
-            li
-              |{
-              span= tag.message
-              |} 
-              span!= convertLink(rel_path, tag.description)
-      if method.resterrors.length
-        h4 Rest Errors:
-        ul
-          each tag in method.resterrors
-            li
-              |{
-              span= tag.code
-              |/
-              span= tag.message
-              |} 
-              span!= convertLink(rel_path, tag.description)
+      if method.ctx.type!=='property'
+        include method-parameters
+        include method-returns
+        if method.throws.length
+          h4 Throws:
+          ul
+            each tag in method.throws
+              li
+                |{
+                span= tag.message
+                |} 
+                span!= convertLink(rel_path, tag.description)
+        if method.resterrors.length
+          h4 Rest Errors:
+          ul
+            each tag in method.resterrors
+              li
+                |{
+                span= tag.code
+                |/
+                span= tag.message
+                |} 
+                span!= convertLink(rel_path, tag.description)
       if method.sees.length
         h4 See Also:
         ul
