@@ -159,6 +159,10 @@ class Renderer
   renderClasses: ->
     return if @result.classes.length is 0
     try fs.mkdirSync "#{@options.output_dir}/classes"
+    jade_options =
+      rel_path: '../'
+      type: 'classes'
+    @renderOne jade_options, 'class-toc', 'classes/index'
     @result.classes.forEach (klass) =>
       jade_options =
         rel_path: '../'
@@ -175,6 +179,10 @@ class Renderer
   renderModules: ->
     return if @result.modules.length is 0
     try fs.mkdirSync "#{@options.output_dir}/modules"
+    jade_options =
+      rel_path: '../'
+      type: 'modules'
+    @renderOne jade_options, 'module-toc', 'modules/index'
     @result.modules.forEach (module) =>
       jade_options =
         rel_path: '../'
