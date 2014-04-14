@@ -198,7 +198,8 @@ class Collector
             comment.namespace = if tag.string then tag.string + '.' else ''
           when 'property', 'method'
             comment.ctx.type = tag.type
-            comment.ctx.name = tag.string
+            if tag.string
+              comment.ctx.name = tag.string
           when 'static'
             comment.static = true
           when 'private'
