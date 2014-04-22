@@ -241,11 +241,14 @@ class Collector
           comment.ctx.class_name = current_module.ctx.name
 
       if id
-        comment.id = comment.namespace+id
+        comment.id = id
         if @result.ids.hasOwnProperty id
           @result.ids[id] = 'DUPLICATED ENTRY'
         else
           @result.ids[id] = comment
+        if @result.ids.hasOwnProperty comment.namespace+id
+          @result.ids[comment.namespace+id] = 'DUPLICATED ENTRY'
+        else
           @result.ids[comment.namespace+id] = comment
         comment.html_id = (comment.namespace+id).replace(/[^A-Za-z0-9_]/g, '_')
 
@@ -493,7 +496,11 @@ class Collector
       for see in comment.sees
         other = @result.ids[see]
         if other and other isnt 'DUPLICATED ENTRY'
-          other.reverse_sees.push comment.id
+          me = @result.ids[comment.id]
+          if me and me is 'DUPLICATED ENTRY'
+            other.reverse_sees.push comment.namespace+comment.id
+          else
+            other.reverse_sees.push comment.id
     return
 
   ##
