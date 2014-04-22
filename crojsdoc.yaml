@@ -10,3 +10,4 @@ github:
   repository: https://github.com/croquiscom/crojsdoc
   ribbon: true
   sourcelink: true
+reverse_see_also: true

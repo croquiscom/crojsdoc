@@ -145,6 +145,7 @@ class Collector
       comment.throws = []
       comment.resterrors = []
       comment.sees = []
+      comment.reverse_sees = []
       comment.todos = []
       comment.extends = []
       comment.subclasses = []
@@ -240,6 +241,7 @@ class Collector
           comment.ctx.class_name = current_module.ctx.name
 
       if id
+        comment.id = comment.namespace+id
         if @result.ids.hasOwnProperty id
           @result.ids[id] = 'DUPLICATED ENTRY'
         else
@@ -485,6 +487,16 @@ class Collector
       return 'unknown'
 
   ##
+  # Makes reverse see alsos
+  makeReverseSeeAlso: (comments) ->
+    for comment in comments
+      for see in comment.sees
+        other = @result.ids[see]
+        if other and other isnt 'DUPLICATED ENTRY'
+          other.reverse_sees.push comment.id
+    return
+
+  ##
   # Runs
   run: ->
     all_comments = []
@@ -510,6 +522,9 @@ class Collector
     console.log 'Total ' + file_count_read + ' files processed' if not is_test_mode
 
     @processComments all_comments
+
+    if @options.reverse_see_also
+      @makeReverseSeeAlso all_comments
 
     if not @options.files
       @result.files = []

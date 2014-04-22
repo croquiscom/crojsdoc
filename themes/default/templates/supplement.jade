@@ -1,8 +1,12 @@
-if supplement_item.sees.length
+if supplement_item.sees.length || supplement_item.reverse_sees.length
   h4 See Also:
   ul
-    each str in supplement_item.sees
-      li!= makeSeeLink(rel_path, str)
+    if supplement_item.sees.length
+      each str in supplement_item.sees
+        li!= makeSeeLink(rel_path, str)
+    if supplement_item.reverse_sees.length
+      each str in supplement_item.reverse_sees
+        li!= makeSeeLink(rel_path, str)
 if supplement_item.todos.length
   h4 TODO:
   ul

@@ -37,6 +37,9 @@ _readConfig = (options) ->
       options.github = config.github
       if options.github.branch is undefined
         options.github.branch = 'master'
+    if config.hasOwnProperty 'reverse_see_also'
+      options.reverse_see_also = config.reverse_see_also is true
+    return
 
 ##
 # Parses the command line arguments to build options
