@@ -188,7 +188,7 @@ class Collector
               comment.ctx.name = tag.string
               comment.ctx.fullname = id = comment.ctx.name
             comment.code = null
-          when 'memberOf'
+          when 'memberof'
             if /(::|#|prototype)$/.test tag.parent
               comment.static = false
               comment.ctx.class_name = tag.parent.replace /(::|#|prototype)$/, ''
