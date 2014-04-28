@@ -246,7 +246,7 @@ class Collector
           @result.ids[id] = 'DUPLICATED ENTRY'
         else
           @result.ids[id] = comment
-        if @result.ids.hasOwnProperty comment.namespace+id
+        if comment.namespace and @result.ids.hasOwnProperty comment.namespace+id
           @result.ids[comment.namespace+id] = 'DUPLICATED ENTRY'
         else
           @result.ids[comment.namespace+id] = comment
