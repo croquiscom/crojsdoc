@@ -12,6 +12,7 @@ task 'build', 'Builds JavaScript files from source', ->
     args = [ '-c', '-o', dir.replace('src', 'lib') ].concat files
     spawn command, args, stdio: 'inherit'
   compileFiles 'src'
+  compileFiles 'src/dox'
 
 task 'test', 'Runs Mocha tests', (options) ->
   process.env.NODE_ENV = 'test'
