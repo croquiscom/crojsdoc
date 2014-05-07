@@ -251,3 +251,18 @@ exports.parseCodeContext = (str) ->
       value: RegExp.$2
       string: RegExp.$1
     }
+  # method
+  else if /^(\w+) *: *function/.exec(str)
+    return {
+      type: 'method'
+      name: RegExp.$1
+      string: RegExp.$1 + '()'
+    }
+  # property
+  else if /^(\w+) *: *([^\n;]+)/.exec(str)
+    return {
+      type: 'property'
+      name: RegExp.$1
+      value: RegExp.$2
+      string: RegExp.$1
+    }

@@ -51,6 +51,11 @@ exports.parseCommentsCoffee = (coffee, options = {}) ->
           break
         i--
       comment.ctx = exports.parseCodeContextCoffee code, if i>=0 then comments[i] else null
+      comment.tags.forEach (tag) ->
+        if tag.type is 'class'
+          comment.ctx or= {}
+          comment.ctx.type = 'class'
+        return
       if comment.ctx and comment.ctx.type is 'class'
         comment.class_code = code
         comment.class_line_number = buf_line_number
@@ -235,27 +240,42 @@ exports.parseCodeContextCoffee = (str, parent) ->
       name: RegExp.$1
       string: 'class ' + RegExp.$1
     }
-  else if not class_name
   # prototype method
   else if /^(\w+) *: *(\(.*\)|) *[-=]>/.exec(str)
-    return {
-      type: 'method'
-      constructor: class_name
-      cons: class_name
-      name: RegExp.$1
-      string: class_name + '::' + RegExp.$1 + '()'
-      is_coffeescript_constructor: RegExp.$1 is 'constructor'
-    }
+    if class_name
+      return {
+        type: 'method'
+        constructor: class_name
+        cons: class_name
+        name: RegExp.$1
+        string: class_name + '::' + RegExp.$1 + '()'
+        is_coffeescript_constructor: RegExp.$1 is 'constructor'
+      }
+    else
+      return {
+        type: 'method'
+        name: RegExp.$1
+        string: RegExp.$1 + '()'
+      }
   # prototype property
   else if /^(\w+) *: *([^\n]+)/.exec(str)
-    return {
-      type: 'property'
-      constructor: class_name
-      cons: class_name
-      name: RegExp.$1
-      value: RegExp.$2
-      string: class_name + '::' + RegExp.$1
-    }
+    if class_name
+      return {
+        type: 'property'
+        constructor: class_name
+        cons: class_name
+        name: RegExp.$1
+        value: RegExp.$2
+        string: class_name + '::' + RegExp.$1
+      }
+    else
+      return {
+        type: 'property'
+        name: RegExp.$1
+        value: RegExp.$2
+        string: RegExp.$1
+      }
+  else if not class_name
   # method
   else if /^@(\w+) *: *(\(.*\)|) *[-=]>/.exec(str)
     return {

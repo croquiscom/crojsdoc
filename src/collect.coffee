@@ -189,9 +189,9 @@ class Collector
               comment.ctx.fullname = id = comment.ctx.name
             comment.code = null
           when 'memberof'
-            if /(::|#|prototype)$/.test tag.parent
+            if /(::|#|\.prototype)$/.test tag.parent
               comment.static = false
-              comment.ctx.class_name = tag.parent.replace /(::|#|prototype)$/, ''
+              comment.ctx.class_name = tag.parent.replace /(::|#|\.prototype)$/, ''
             else
               comment.static = true
               comment.ctx.class_name = tag.parent
