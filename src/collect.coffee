@@ -5,6 +5,7 @@
 
 _ = require 'lodash'
 dox = require './dox'
+inflect = require 'inflect'
 markdown = require 'marked'
 
 is_test_mode = process.env.NODE_ENV is 'test'
@@ -31,7 +32,7 @@ class Collector
   addGuide: (file, data) ->
     file = file.substr(0, file.length-8).replace(/\//g, '.')
     @result.guides.push
-      name: file
+      name: inflect.humanize inflect.underscore file
       filename: 'guides/' + file
       content: markdown data
 
