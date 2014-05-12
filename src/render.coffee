@@ -221,8 +221,31 @@ class Renderer
       @renderOne jade_options, 'file', file.filename
 
   ##
+  # @private
+  groupByNamespaces: (items) ->
+    if items.length is 0
+      return []
+    current_group = []
+    grouped_items = [current_group]
+    current_namespace = items[0].namespace
+    items.forEach (item) ->
+      if current_namespace isnt item.namespace
+        current_group = []
+        grouped_items.push current_group
+        current_namespace = item.namespace
+      current_group.push item
+    return grouped_items
+
+  ##
   # Runs
   run: ->
+    @result.ns_pages = @groupByNamespaces @result.pages
+    @result.ns_restapis = @groupByNamespaces @result.restapis
+    @result.ns_classes = @groupByNamespaces @result.classes
+    @result.ns_modules = @groupByNamespaces @result.modules
+    @result.ns_features = @groupByNamespaces @result.features
+    @result.ns_files = @groupByNamespaces @result.files
+
     @copyResources @resources_dir, @options.output_dir, =>
       @renderReadme()
       @renderGuides()

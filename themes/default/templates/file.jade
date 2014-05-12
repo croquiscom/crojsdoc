@@ -4,11 +4,11 @@ block vars
   - var body_span = 9
   - var sidebar_span = 12 - body_span
   - var use_affix = true
-  - var items = result.files
+  - var items = result.ns_files
   - var has_namespace = true
 
 block nav-item
-  - var display_name = item.name.substr(current_namespace.length)
+  - var display_name = item.name.substr(item.namespace.length)
   if item.name===name
     li.active
       a(href=rel_path+item.filename+'.html')= display_name

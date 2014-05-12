@@ -4,7 +4,7 @@ block vars
   - var body_span = 8
   - var sidebar_span = 12 - body_span
   - var use_affix = true
-  - var items = result.restapis
+  - var items = result.ns_restapis
   - var has_namespace = true
 
 block nav-item
@@ -12,22 +12,18 @@ block nav-item
     a(href='#'+item.html_id)= item.ctx.name
 
 block body
-  - var current_namespace = null
-  each ns_item in result.restapis
-    if current_namespace!==ns_item.namespace
-      - current_namespace = ns_item.namespace
-      div.panel.panel-default
-        if current_namespace!==''
-          - var display_name = current_namespace.replace(/\.$/, '')
-          div.panel-heading(data-toggle='collapse',data-target='#'+display_name+'_body_body')
-            = display_name
-            span.pull-right.glyphicon
-        div.panel-collapse.collapse.in(id=display_name+'_body_body')
-          each item in result.restapis
-            if current_namespace===item.namespace
-              span.fix-anchor(id=item.html_id)
-              section(class=item.isPrivate ? 'private' : '')
-                - var display_name = item.ctx.name
-                - var is_method_of_class = false
-                - var method = item
-                include method
+  each ns_items in items
+    div.panel.panel-default
+      if ns_items[0].namespace!==''
+        - var display_name = ns_items[0].namespace.replace(/\.$/, '')
+        div.panel-heading(data-toggle='collapse',data-target='#'+display_name+'_body_body')
+          = display_name
+          span.pull-right.glyphicon
+      div.panel-collapse.collapse.in(id=display_name+'_body_body')
+        each item in ns_items
+          span.fix-anchor(id=item.html_id)
+          section(class=item.isPrivate ? 'private' : '')
+            - var display_name = item.ctx.name
+            - var is_method_of_class = false
+            - var method = item
+            include method

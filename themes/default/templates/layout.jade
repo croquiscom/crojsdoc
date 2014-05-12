@@ -21,21 +21,17 @@ html(lang='en')
           div.hidden-xs.sidebar(data-spy='affix',class='col-sm-'+sidebar_span)
             if has_namespace
               div.cormo-sidenav
-                - var current_namespace = null
-                each ns_item in items
-                  if current_namespace!==ns_item.namespace
-                    - current_namespace = ns_item.namespace
-                    div.panel.panel-default
-                      if current_namespace!==''
-                        - var display_name = current_namespace.replace(/\.$/, '')
-                        div.panel-heading(data-toggle='collapse',data-target='#'+display_name+'_body')
-                          = display_name
-                          span.pull-right.glyphicon
-                      div.panel-collapse.collapse.in(id=display_name+'_body')
-                        ul.nav.nav-pills.nav-stacked
-                          each item in items
-                            if current_namespace===item.namespace
-                              block nav-item
+                each ns_items in items
+                  div.panel.panel-default
+                    if ns_items[0].namespace!==''
+                      - var display_name = ns_items[0].namespace.replace(/\.$/, '')
+                      div.panel-heading(data-toggle='collapse',data-target='#'+display_name+'_body')
+                        = display_name
+                        span.pull-right.glyphicon
+                    div.panel-collapse.collapse.in(id=display_name+'_body')
+                      ul.nav.nav-pills.nav-stacked
+                        each item in ns_items
+                          block nav-item
             else
               block nav
           div(class='col-sm-'+body_span,class='col-sm-offset-'+sidebar_span)
