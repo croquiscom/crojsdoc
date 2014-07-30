@@ -19,7 +19,7 @@ function groupExamplesPerLanguage() {
       $tabs.append($li);
     });
     var $panes = $codes.wrap("<div class='tab-pane'></div>").parent().wrapAll("<div class='tab-content'></div>");
-    $panes.first().addClass('active').parent().wrapAll("<div class='examples-group'></div>").parent().prepend($tabs);
+    $panes.first().addClass('active').parent().wrapAll("<div class='examples-group panel panel-default'><div class='panel-body'></div></div>").parent().prepend($tabs);
   });
 }
 
