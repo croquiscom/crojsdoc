@@ -4,6 +4,26 @@ JavaScript has the asynchronous nature, and CroJSDoc provides some tags for docu
 
 Use @nodejscallback.
 
+```javascript
+// (Borrowed from Node.js Manual)
+
+/**
+ * Asynchronously reads the entire contents of a file.
+ * @param {String} filename
+ * @param {Object} [options]
+ * @param {String} [options.encoding=null]
+ * @param {String} [options.flag='r']
+ * @return {String}
+ * @nodejscallback
+ */
+function readFile(filename, options, callback) {
+  require('fs').readFile(filename, options, callback);
+}
+
+readFile('test', { encoding: 'utf-8' }, function (error, content) {
+  console.log(content);
+});
+```
 ```coffeescript
 # (Borrowed from Node.js Manual)
 
@@ -33,6 +53,25 @@ The result of the above comment:
 
 Use @promise.
 
+```javascript
+/**
+ * Asynchronously reads the entire contents of a file.
+ * @param {String} filename
+ * @param {Object} [options]
+ * @param {String} [options.encoding=null]
+ * @param {String} [options.flag='r']
+ * @return {String}
+ * @promise
+ */
+function readFile(filename, options) {
+  return Promise.promisify(require('fs').readFile)(filename, options);
+}
+
+readFile('test', { encoding: 'utf-8' })
+.then(function (content) {
+  console.log(content);
+});
+```
 ```coffeescript
 ##
 # Asynchronously reads the entire contents of a file.
@@ -61,6 +100,31 @@ The result of the above comment:
 
 @nodejscallback and @promise can be used together.
 
+```javascript
+/**
+ * Asynchronously reads the entire contents of a file.
+ * @param {String} filename
+ * @param {Object} [options]
+ * @param {String} [options.encoding=null]
+ * @param {String} [options.flag='r']
+ * @return {String}
+ * @nodejscallback
+ * @promise
+ */
+function readFile(filename, options, callback) {
+  return Promise.promisify(require('fs').readFile)(filename, options)
+  .nodeify(callback);
+}
+
+readFile('test', { encoding: 'utf-8' }, function (error, content) {
+  console.log(content);
+});
+// or
+readFile('test', { encoding: 'utf-8' })
+.then(function (content) {
+  console.log(content);
+});
+```
 ```coffeescript
 ##
 # Asynchronously reads the entire contents of a file.
@@ -95,6 +159,22 @@ The result of the above comment:
 If you don't use NodeJS style's callback or the function returns an other value immediately,
 you can use ordinary tags.
 
+```javascript
+// (Borrowed from CORMO)
+
+/**
+ * Finds a record by id.
+ *
+ * If a callback is given, it returns the record in the callback.
+ * Otherwise, it returns an Query object for chaining.
+ * @param {RecordID} id
+ * @param {Function} [callback]
+ * @param {Error} callback.error
+ * @param {Model} callback.record
+ * @return {Query}
+ */
+find = function (id, callback) {}
+```
 ```coffeescript
 # (Borrowed from CORMO)
 

@@ -2,6 +2,14 @@
 
 You can specify the type of a parameter like following:
 
+```javascript
+/**
+ * Adds a user
+ * @param {String} name the name of the user
+ * @param {Number} age the age of the user
+ * @return {Boolean} true if successful
+ */
+```
 ```coffeescript
 ##
 # Adds a user
@@ -22,6 +30,16 @@ The result of the above comment:
 Often, JavaScript functions have an options object.
 You can add a comment for this like following:
 
+```javascript
+/**
+ * Defines a new property on an object.
+ * @param {Object} object the object on which to define the property
+ * @param {String} name the name of the property to be defined
+ * @param {Object} descriptor the descriptor for the property
+ * @param {Boolean} [descriptor.configurable=false] true if and only if the type of this property descriptor may be changed
+ * @param [descriptor.value=undefined] the value associated with the property
+ */
+```
 ```coffeescript
 ##
 # Defines a new property on an object.
@@ -46,6 +64,17 @@ Currently, options can be nested at the maximum third levels. (eg. user.name.fir
 Using callback is the common pattern of JavaScript, especially in Node.js.
 You can add a comment for this like following:
 
+```javascript
+/**
+ * Asynchronous file open
+ * @param {String} path the path to open
+ * @param {String} flags flags for opening
+ * @param {Number|String} [mode='0666'] file creation mode
+ * @param {Function} [callback] the callback function
+ * @param {Error} callback.error not null if an error is occurred
+ * @param {Number} callback.fd a file descriptor
+ */
+```
 ```coffeescript
 ##
 # Asynchronous file open
