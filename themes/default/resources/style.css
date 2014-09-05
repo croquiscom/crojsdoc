@@ -1,11 +1,10 @@
 body {
-	padding-top: 60px;
+	padding-top: 70px;
 }
-
 .sidebar {
 	overflow-x: hidden;
 	overflow-y: auto;
-	top: 0;
+	top: 50px;
 	left: 0;
 	bottom: 0;
 	background: white;
@@ -13,7 +12,7 @@ body {
 }
 
 .cormo-sidenav {
-	margin-top: 70px;
+	margin-top: 20px;
 	margin-bottom: 20px;
 }
 
@@ -28,8 +27,10 @@ body {
 
 .options {
 	float: right;
-	margin-right: 20px;
-	margin-top: 10px;
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 6px;
+	
 }
 
 .cormo-class-property .label {
@@ -181,3 +182,4 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 	height: 60px;
 	visibility: hidden;
 }
+
