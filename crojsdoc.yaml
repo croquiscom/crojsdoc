@@ -1,6 +1,6 @@
 output: doc
 title: CroJSDoc
-quite: false
+quite: true
 files: true
 sources:
   - src

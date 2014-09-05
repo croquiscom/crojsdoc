@@ -93,8 +93,14 @@ class Renderer
   # @param {String} target
   # @param {Function} callback
   copyResources: (source, target, callback) ->
-    fs.rmrfSync target
-    fs.mkdirSync target
+    try
+      files = fs.readdirSync target
+    catch
+      files = []
+    for file in files
+      if file[0] isnt '.'
+        fs.rmrfSync resolve target, file
+    try fs.mkdirSync target
     fs.copyRecursive source, target, ->
       callback()
 
@@ -110,7 +116,6 @@ class Renderer
     jade.renderFile "#{@templates_dir}/#{template}.jade", jade_options, (error, result) =>
       return console.error error.stack if error
       output_file = "#{@options.output_dir}/#{output}.html"
-      try fs.mkdirSync dirname output_file
       fs.writeFile output_file, result, (error) =>
         return console.error 'failed to create '+output_file if error
         console.log output_file + ' is created' if not @options.quite
