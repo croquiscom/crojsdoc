@@ -1,4 +1,4 @@
-collect = require '../../lib/collect'
+{collect} = require '../..'
 {expect} = require 'chai'
 
 describe 'chainable', ->
