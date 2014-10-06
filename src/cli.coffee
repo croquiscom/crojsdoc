@@ -7,6 +7,8 @@ glob = require 'glob'
 walkdir = require 'walkdir'
 {basename,dirname,join,resolve} = require 'path'
 
+isWindows = process.platform is 'win32'
+
 ##
 # Reads a config file(crojsdoc.yaml) to build options
 # @param {Options} options
@@ -123,7 +125,10 @@ _buildOptions = ->
 # @memberOf cli
 # @private
 _readSourceFiles = (options) ->
-  project_dir_re = new RegExp("^" + options._project_dir)
+  if isWindows
+    project_dir_re = new RegExp("^" + options._project_dir.replace(/\\/g, '\\\\'))
+  else
+    project_dir_re = new RegExp("^" + options._project_dir)
   contents = []
   for path in options._sources
     base_path = path = resolve options._project_dir, path
@@ -137,7 +142,11 @@ _readSourceFiles = (options) ->
         continue if fs.statSync(file).isDirectory()
         data = fs.readFileSync(file, 'utf-8').trim()
         continue if not data
-        contents.push path: file.replace(project_dir_re, ''), file: file.substr(path.length+1), data: data
+        if isWindows
+          contents.push path: file.replace(project_dir_re, '').replace(/\\/g, '/'), file: file.substr(path.length+1).replace(/\\/g, '/'), data: data
+        else
+          contents.push path: file.replace(project_dir_re, ''), file: file.substr(path.length+1), data: data
+      return
   try
     data = fs.readFileSync "#{options._readme or options._project_dir}/README.md", 'utf-8'
     contents.push path: '', file: 'README', data: data
