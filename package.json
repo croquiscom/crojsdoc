@@ -17,6 +17,10 @@
   "bin": {
     "crojsdoc": "./bin/crojsdoc"
   },
+  "scripts": {
+    "build": "coffee -c -o lib src",
+    "doc": "node bin/crojsdoc"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/croquiscom/crojsdoc.git"
@@ -34,7 +38,7 @@
   },
   "devDependencies": {
     "chai": "~1.9.1",
-    "coffee-script": "~1.7.1",
+    "coffee-script": "~1.8.0",
     "mocha": "~1.18.2"
   }
 }
