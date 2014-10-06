@@ -30,10 +30,11 @@ html(lang='en')
                   div.panel.panel-default
                     if ns_items[0].namespace!==''
                       - var display_name = ns_items[0].namespace.replace(/\.$/, '')
-                      div.panel-heading(data-toggle='collapse',data-target='#'+display_name+'_body')
+                      - var panel_id = display_name.replace(/\//g, '_')
+                      div.panel-heading(data-toggle='collapse',data-target='#'+panel_id+'_body')
                         = display_name
                         span.pull-right.glyphicon
-                    div.panel-collapse.collapse.in(id=display_name+'_body')
+                    div.panel-collapse.collapse.in(id=panel_id+'_body')
                       ul.nav.nav-pills.nav-stacked
                         each item in ns_items
                           block nav-item
