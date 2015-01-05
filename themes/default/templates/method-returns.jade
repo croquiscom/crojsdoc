@@ -17,12 +17,12 @@ if method.return
       td
         span
           each type, i in method.return.types
-            != makeTypeLink(rel_path, type)
+            != self.makeTypeLink(self.rel_path, type)
             if i+1 < method.return.types.length
               | , 
       td
         span
-          != convertLink(rel_path, method.return.description)
+          != self.convertLink(self.rel_path, method.return.description)
     if method.returnprops
       each prop1 in method.returnprops
         tr

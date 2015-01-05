@@ -113,6 +113,7 @@ class Renderer
     jade_options.convertLink = @convertLink.bind(@)
     jade_options.github = @options.github
     jade_options.cache = true
+    jade_options.self = true
     jade.renderFile "#{@templates_dir}/#{template}.jade", jade_options, (error, result) =>
       return console.error error.stack if error
       output_file = "#{@options.output_dir}/#{output}.html"

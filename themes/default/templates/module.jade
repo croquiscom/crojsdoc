@@ -4,15 +4,15 @@ block vars
   - var body_span = 9
   - var sidebar_span = 12 - body_span
   - var use_affix = true
-  - var items = result.ns_modules
+  - var items = self.result.ns_modules
   - var has_namespace = true
 
 block nav-item
   - var display_name = item.ctx.name.substr(item.namespace.length)
-  if item.ctx.name===name
+  if item.ctx.name===self.name
     li.active
-      a(href='#'+module_data.html_id)= display_name
-    each property in properties
+      a(href='#'+self.module_data.html_id)= display_name
+    each property in self.properties
       li.cormo-class-property(class=property.isPrivate ? 'private' : '')
         a(href='#'+property.html_id)= property.ctx.name
           if property.isPrivate
@@ -21,24 +21,24 @@ block nav-item
             span.pull-right.label.label-property property
   else
     li
-      a(href=rel_path+item.filename+'.html')= display_name
+      a(href=self.rel_path+item.filename+'.html')= display_name
 
 block body
-  span.fix-anchor(id=module_data.html_id)
+  span.fix-anchor(id=self.module_data.html_id)
   section
-    h1.class_title= name.substr(module_data.namespace.length)
+    h1.class_title= self.name.substr(self.module_data.namespace.length)
     div
       | (defined in 
-      if github && github.sourcelink
-        a(href='#{github.repository}/blob/#{github.branch}/#{module_data.defined_in}') #{module_data.defined_in.replace(/index.(coffee|js)$/, '')}
+      if self.github && self.github.sourcelink
+        a(href='#{self.github.repository}/blob/#{self.github.branch}/#{self.module_data.defined_in}') #{self.module_data.defined_in.replace(/index.(coffee|js)$/, '')}
       else
-        | #{module_data.defined_in.replace(/index.(coffee|js)$/, '')}
+        | #{self.module_data.defined_in.replace(/index.(coffee|js)$/, '')}
       |)
-    div!= convertLink(rel_path, module_data.description.summary)
-    div!= convertLink(rel_path, module_data.description.body)
-    - var supplement_item = module_data
+    div!= self.convertLink(self.rel_path, self.module_data.description.summary)
+    div!= self.convertLink(self.rel_path, self.module_data.description.body)
+    - var supplement_item = self.module_data
     include supplement
-  each item in properties
+  each item in self.properties
     span.fix-anchor(id=item.html_id)
     section(class=item.isPrivate ? 'private' : '')
       - var display_name = item.ctx.name

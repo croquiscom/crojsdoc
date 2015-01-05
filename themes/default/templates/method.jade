@@ -18,7 +18,7 @@ div.panel.panel-success
         | )
       if method.types && method.types.length && method.types.join('')
         |  : 
-        != method.types.map(function (t) { return makeTypeLink(rel_path, t); }).join(', ')
+        != method.types.map(function (t) { return self.makeTypeLink(self.rel_path, t); }).join(', ')
       if method.isPrivate
         span.label.label-private private
       if is_method_of_class && method.static
@@ -33,13 +33,13 @@ div.panel.panel-success
         span.label.label-chainable chainable
       span.pull-right.glyphicon
     div.method-summary
-      != convertLink(rel_path, method.description.summary)
+      != self.convertLink(self.rel_path, method.description.summary)
   div.panel-collapse.collapse(id=item.html_id+'_body')
     div.panel-body
       if item!==method
-        div!= 'Overrides ' + makeTypeLink(rel_path, item.override_link)
+        div!= 'Overrides ' + self.makeTypeLink(self.rel_path, item.override_link)
         br
-      div!= convertLink(rel_path, method.description.body)
+      div!= self.convertLink(self.rel_path, method.description.body)
       - var parameters = method.params
       if method.ctx.type!=='property'
         include method-parameters
@@ -52,7 +52,7 @@ div.panel.panel-success
                 |{
                 span= tag.message
                 |} 
-                span!= convertLink(rel_path, tag.description)
+                span!= self.convertLink(self.rel_path, tag.description)
         if method.resterrors.length
           h4 Rest Errors:
           ul
@@ -63,7 +63,7 @@ div.panel.panel-success
                 |/
                 span= tag.message
                 |} 
-                span!= convertLink(rel_path, tag.description)
+                span!= self.convertLink(self.rel_path, tag.description)
       - var supplement_item = item
       include supplement
       if item.code

@@ -4,13 +4,13 @@ block vars
   - var body_span = 9
   - var sidebar_span = 12 - body_span
   - var use_affix = true
-  - var items = result.ns_modules
+  - var items = self.result.ns_modules
   - var has_namespace = true
 
 block nav-item
   - var display_name = item.ctx.name.substr(item.namespace.length)
   li
-    a(href=rel_path+item.filename+'.html')= display_name
+    a(href=self.rel_path+item.filename+'.html')= display_name
 
 block body
   each ns_items in items
@@ -22,5 +22,5 @@ block body
         - var display_name = item.ctx.name.substr(item.namespace.length)
         tr
           td
-            a(href=rel_path+item.filename+'.html')= display_name
-          td!= convertLink(rel_path, item.description.summary)
+            a(href=self.rel_path+item.filename+'.html')= display_name
+          td!= self.convertLink(self.rel_path, item.description.summary)

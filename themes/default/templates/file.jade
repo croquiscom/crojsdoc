@@ -4,19 +4,19 @@ block vars
   - var body_span = 9
   - var sidebar_span = 12 - body_span
   - var use_affix = true
-  - var items = result.ns_files
+  - var items = self.result.ns_files
   - var has_namespace = true
 
 block nav-item
   - var display_name = item.name.substr(item.namespace.length)
-  if item.name===name
+  if item.name===self.name
     li.active
-      a(href=rel_path+item.filename+'.html')= display_name
+      a(href=self.rel_path+item.filename+'.html')= display_name
   else
     li
-      a(href=rel_path+item.filename+'.html')= display_name
+      a(href=self.rel_path+item.filename+'.html')= display_name
 
 block body
   section
-    h1= file.name
-  pre.prettyprint= file.content
+    h1= self.file.name
+  pre.prettyprint= self.file.content

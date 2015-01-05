@@ -7,60 +7,60 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
       span.icon-bar
     div.collapse.navbar-collapse(id="top-navigation-collapse")
       ul.nav.navbar-nav
-        li(class=(type=='home'?'active':''))
-          a(href='#{rel_path}index.html') Home
-        if result.guides.length > 0
-          li.dropdown(class=(type=='guides'?'active':''))
+        li(class=(self.type=='home'?'active':''))
+          a(href='#{self.rel_path}index.html') Home
+        if self.result.guides.length > 0
+          li.dropdown(class=(self.type=='guides'?'active':''))
             a.dropdown-toggle(data-toggle='dropdown',href='#')
               = 'Guides'
-              if type=='guides'
-                = ' - ' + name
+              if self.type=='guides'
+                = ' - ' + self.name
               = ' '
               span.caret
             ul.dropdown-menu
-              each item in result.guides
+              each item in self.result.guides
                 li
-                  a(href=rel_path+item.filename+'.html')= item.name
-        if result.modules.length > 0
-          li(class=(type=='modules'?'active':''))
-            a(href='#{rel_path}modules/index.html') Modules
-              if type=='modules' && name
-                = ' - ' + name
-        if result.classes.length > 0
-          li(class=(type=='classes'?'active':''))
-            a(href='#{rel_path}classes/index.html') Classes
-              if type=='classes' && name
-                = ' - ' + name
-        if result.pages.length > 0
-          li(class=(type=='pages'?'active':''))
-            a(href='#{rel_path}pages.html') Pages
-        if result.restapis.length > 0
-          li(class=(type=='restapis'?'active':''))
-            a(href='#{rel_path}restapis.html') REST APIs
-        if result.features.length > 0
-          li.dropdown(class=(type=='features'?'active':''))
+                  a(href=self.rel_path+item.filename+'.html')= item.name
+        if self.result.modules.length > 0
+          li(class=(self.type=='modules'?'active':''))
+            a(href='#{self.rel_path}modules/index.html') Modules
+              if self.type=='modules' && self.name
+                = ' - ' + self.name
+        if self.result.classes.length > 0
+          li(class=(self.type=='classes'?'active':''))
+            a(href='#{self.rel_path}classes/index.html') Classes
+              if self.type=='classes' && self.name
+                = ' - ' + self.name
+        if self.result.pages.length > 0
+          li(class=(self.type=='pages'?'active':''))
+            a(href='#{self.rel_path}pages.html') Pages
+        if self.result.restapis.length > 0
+          li(class=(self.type=='restapis'?'active':''))
+            a(href='#{self.rel_path}restapis.html') REST APIs
+        if self.result.features.length > 0
+          li.dropdown(class=(self.type=='features'?'active':''))
             a.dropdown-toggle(data-toggle='dropdown',href='#')
               = 'Features'
-              if type=='features'
-                = ' - ' + name
+              if self.type=='features'
+                = ' - ' + self.name
               = ' '
               span.caret
             ul.dropdown-menu
-              each item in result.features
+              each item in self.result.features
                 li
-                  a(href=rel_path+item.filename+'.html')= item.name
-        if result.files.length > 0
-          li.dropdown(class=(type=='files'?'active':''))
+                  a(href=self.rel_path+item.filename+'.html')= item.name
+        if self.result.files.length > 0
+          li.dropdown(class=(self.type=='files'?'active':''))
             a.dropdown-toggle(data-toggle='dropdown',href='#')
               = 'Files'
-              if type=='files'
-                = ' - ' + name
+              if self.type=='files'
+                = ' - ' + self.name
               = ' '
               span.caret
             ul.dropdown-menu
-              each item in result.files
+              each item in self.result.files
                 li
-                  a(href=rel_path+item.filename+'.html')= item.name
+                  a(href=self.rel_path+item.filename+'.html')= item.name
       div.options
         label(class='checkbox')
           input#options-private(type='checkbox')

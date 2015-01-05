@@ -11,7 +11,7 @@ td
   if param.types && param.types.length && param.types.join('')
     span
       each type, i in param.types
-        != makeTypeLink(rel_path, type)
+        != self.makeTypeLink(self.rel_path, type)
         if type==='Function'
           | (
           if param.params
@@ -23,4 +23,4 @@ td
 td
   span
     | 
-    != convertLink(rel_path, param.description)
+    != self.convertLink(self.rel_path, param.description)
