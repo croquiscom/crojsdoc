@@ -45,7 +45,7 @@ class Renderer
         link = @options.types[type]
       else if @result.ids[type] and @result.ids[type] isnt 'DUPLICATED ENTRY'
         filename = @result.ids[type].filename + '.html'
-        html_id = @result.ids[type].html_id
+        html_id = @result.ids[type].html_id or ''
         link = "#{rel_path}#{filename}##{html_id}"
       else
         return @makeMissingLink type, place
@@ -66,7 +66,7 @@ class Renderer
   makeSeeLink: (rel_path, str) ->
     if @result.ids[str]
       filename = @result.ids[str].filename + '.html'
-      html_id = @result.ids[str].html_id
+      html_id = @result.ids[str].html_id or ''
       str = "<a href='#{rel_path}#{filename}##{html_id}'>#{str}</a>"
     return str
 
@@ -81,7 +81,7 @@ class Renderer
     str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) =>
       if @result.ids[$1] and @result.ids[$1] isnt 'DUPLICATED ENTRY'
         filename = @result.ids[$1].filename + '.html'
-        html_id = @result.ids[$1].html_id
+        html_id = @result.ids[$1].html_id or ''
         return "<a href='#{rel_path}#{filename}##{html_id}'>#{$1}</a>"
       else
         return @makeMissingLink $1

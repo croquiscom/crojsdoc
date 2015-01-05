@@ -30,11 +30,14 @@ class Collector
   # Adds a guide file to the result
   # @private
   addGuide: (file, data) ->
+    id = file.substr(0, file.length-3)
     file = file.substr(0, file.length-8).replace(/\//g, '.')
-    @result.guides.push
+    item =
       name: inflect.humanize inflect.underscore file
       filename: 'guides/' + file
       content: markdown data
+    @result.guides.push item
+    @result.ids[id] = item
 
   ##
   # Adds a feature file to the result
@@ -499,9 +502,9 @@ class Collector
         if other and other isnt 'DUPLICATED ENTRY'
           me = @result.ids[comment.id]
           if me and me is 'DUPLICATED ENTRY'
-            other.reverse_sees.push comment.namespace+comment.id
+            other.reverse_sees?.push comment.namespace+comment.id
           else
-            other.reverse_sees.push comment.id
+            other.reverse_sees?.push comment.id
     return
 
   ##
