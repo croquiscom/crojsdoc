@@ -4,6 +4,9 @@ spawn = require('child_process').spawn
 option '', '--reporter [name]', 'specify the reporter for Mocha to use'
 option '', '--grep [pattern]', 'only run tests matching pattern'
 
+task 'build', 'Builds JavaScript files from source', ->
+  spawn 'npm', ['run', 'build'], stdio: 'inherit'
+
 task 'test', 'Runs Mocha tests', (options) ->
   process.env.NODE_ENV = 'test'
   command = './node_modules/.bin/mocha'
@@ -22,3 +25,6 @@ task 'test:cov', 'Gets tests coverage', (options) ->
     cov_html.write data
   child.on 'exit', ->
     cov_html.end()
+
+task 'doc', 'Make documents', ->
+  spawn 'npm', ['run', 'doc'], stdio: 'inherit'
