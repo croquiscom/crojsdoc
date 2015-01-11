@@ -85,8 +85,8 @@ class Collector
   # @return {Object} given tag
   processParamFlags: (tag) ->
     # is optional parameter?
-    if /\[([^\[\]]+)\]/.exec tag.name
-      tag.name = RegExp.$1
+    if tag.name[0] is '[' and tag.name[tag.name.length-1] is ']'
+      tag.name = tag.name.substr 1, tag.name.length-2
       tag.optional = true
     if tag.name.substr(0, 1) is '+'
       tag.name = tag.name.substr(1)
