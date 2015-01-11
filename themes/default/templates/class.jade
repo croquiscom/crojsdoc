@@ -39,6 +39,8 @@ block body
         span.extends!= ' extends ' + self.klass.extends.map(function (t) { return self.makeTypeLink(self.rel_path, t); }).join(', ')
       if self.klass.uses.length
         span.uses!= ' uses ' + self.klass.uses.map(function (t) { return self.makeTypeLink(self.rel_path, t); }).join(', ')
+      if self.klass.abstract
+        span.label.label-abstract abstract
     div!= self.convertLink(self.rel_path, self.klass.description.summary)
     div!= self.convertLink(self.rel_path, self.klass.description.body)
     if self.klass.subclasses.length
