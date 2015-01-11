@@ -1,6 +1,10 @@
 td
   span(class='method-depth'+depth)
-  code= param.name
+  code
+    if param.default_value
+      | #{param.name}=#{param.default_value}
+    else
+      | #{param.name}
   if param.optional
     span.pull-right.label.label-optional optional
   if param.addable

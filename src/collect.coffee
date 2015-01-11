@@ -87,6 +87,9 @@ class Collector
     # is optional parameter?
     if tag.name[0] is '[' and tag.name[tag.name.length-1] is ']'
       tag.name = tag.name.substr 1, tag.name.length-2
+      if (pos = tag.name.indexOf '=')>=0
+        tag.default_value = tag.name.substr pos+1
+        tag.name = tag.name.substr 0, pos
       tag.optional = true
     if tag.name.substr(0, 1) is '+'
       tag.name = tag.name.substr(1)

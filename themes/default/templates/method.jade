@@ -10,7 +10,10 @@ div.panel.panel-success
         | (
         each param, i in method.params
           if param.optional
-            | [#{param.name}]
+            if param.default_value
+              | [#{param.name}=#{param.default_value}]
+            else
+              | [#{param.name}]
           else
             | #{param.name}
           if i+1 < method.params.length

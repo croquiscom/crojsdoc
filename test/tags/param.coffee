@@ -54,18 +54,21 @@ do = (a, b, c) ->
     expect(params[0]).to.be.eql
       type: 'param'
       types: ['Number']
-      name: 'a=10'
+      name: 'a'
+      default_value: '10'
       optional: true
       description: 'the first parameter'
     expect(params[1]).to.be.eql
       type: 'param'
       types: ['String']
-      name: "b='hello'"
+      name: 'b'
+      default_value: "'hello'"
       optional: true
       description: 'the second parameter'
     expect(params[2]).to.be.eql
       type: 'param'
       types: ['Array']
-      name: 'c=[1,2]'
+      name: 'c'
+      default_value: "[1,2]"
       optional: true
       description: 'the third parameter'
