@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/crojsdoc.svg)](http://badge.fury.io/js/crojsdoc)
 [![Build Status](https://travis-ci.org/croquiscom/crojsdoc.svg?branch=master)](https://travis-ci.org/croquiscom/crojsdoc)
 
 CroJSDoc is a documentation generator for JavaScript and CoffeeScript.
