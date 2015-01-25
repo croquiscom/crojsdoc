@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/croquiscom/crojsdoc.svg?branch=master)](https://travis-ci.org/croquiscom/crojsdoc)
+
 CroJSDoc is a documentation generator for JavaScript and CoffeeScript.
 This works best with CoffeeScript.
 
