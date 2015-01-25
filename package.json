@@ -19,7 +19,8 @@
   },
   "scripts": {
     "build": "coffee -c -o lib src",
-    "doc": "node bin/crojsdoc"
+    "doc": "node bin/crojsdoc",
+    "test": "NODE_ENV=test mocha --compilers coffee:coffee-script/register"
   },
   "repository": {
     "type": "git",
