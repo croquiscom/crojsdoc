@@ -1,7 +1,7 @@
 {collect} = require '../..'
 {expect} = require 'chai'
 
-describe 'chainable', ->
+describe '@chainable', ->
   it 'basic', ->
     result = collect [
       { path: 'sample.coffee', file: 'sample.coffee', data: """

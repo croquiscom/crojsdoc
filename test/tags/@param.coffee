@@ -1,7 +1,7 @@
 {collect} = require '../..'
 {expect} = require 'chai'
 
-describe 'param', ->
+describe '@param', ->
   it 'basic', ->
     result = collect [
       { path: 'test.coffee', file: 'test.coffee', data: """
