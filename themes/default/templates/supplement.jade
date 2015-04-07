@@ -14,7 +14,5 @@ if supplement_item.todos.length
       li!= tag
 if supplement_item.examples.length
   h4 Examples
-  ul
-    each example, i in supplement_item.examples
-      li
-        pre.prettyprint!= example.string
+  each example, i in supplement_item.examples
+    pre.prettyprint!= example.string

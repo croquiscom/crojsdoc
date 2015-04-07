@@ -131,7 +131,7 @@ exports.parseCommentsCoffee = (coffee, options = {}) ->
             break
           j++
         if '#' isnt coffee[j]
-          buf = buf.replace /^[ \t]*#{1,2} {0,2}/gm, ''
+          buf = buf.replace /^[ \t]*#{1,2} {0,1}/gm, ''
           addComment()
           pos--
           break

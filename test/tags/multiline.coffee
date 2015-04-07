@@ -53,3 +53,28 @@ doSomething = -> 'something'
       type: 'return'
       types: ['String']
       description: 'This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
+
+  it '@example', ->
+    result = collect [
+      { path: 'test.coffee', file: 'test.coffee', data: """
+##
+# @module test
+
+##
+# Do something
+# @example
+#   # do something after a while
+#   setTimeout ->
+#     doSomething()
+#   , 500
+# @memberOf test
+doSomething = ->
+""" }
+    ]
+    expect(result.modules).to.have.length 1
+    expect(result.modules[0].properties).to.have.length 1
+    examples = result.modules[0].properties[0].examples
+    expect(examples).to.have.length 1
+    expect(examples[0]).to.be.eql
+      type: 'example'
+      string: '  # do something after a while\n  setTimeout ->\n    doSomething()\n  , 500'

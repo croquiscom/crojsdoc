@@ -226,7 +226,7 @@ class Collector
           when 'chainable'
             comment.chainable = true
           when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
-            , 'extends', 'todo', 'type', 'api', 'uses', 'override'
+            , 'extends', 'todo', 'type', 'api', 'uses', 'override', 'example'
           else
             console.log "Unknown tag : #{tag.type} in #{comment.defined_in}"
 
