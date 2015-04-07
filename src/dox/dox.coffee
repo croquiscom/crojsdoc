@@ -150,17 +150,22 @@ exports.parseTag = (str) ->
   parts = lines[0].split /\ +/
   type = tag.type = parts.shift().replace('@', '').toLowerCase()
 
-  if lines.length > 1
-    parts.push(lines.slice(1).join('\n'))
+  getMultilineDescription = ->
+    description = parts.join ' '
+    if lines.length > 1
+      if description
+        description += '\n'
+      description += lines.slice(1).join('\n')
+    description
 
   switch type
     when 'property', 'template', 'param'
       tag.types = if /{.*}/.test(parts[0]) then exports.parseTagTypes(parts.shift()) else []
       tag.name = parts.shift() or ''
-      tag.description = parts.join(' ')
+      tag.description = getMultilineDescription()
     when 'define', 'return'
       tag.types = if /{.*}/.test(parts[0]) then exports.parseTagTypes(parts.shift()) else []
-      tag.description = parts.join(' ')
+      tag.description = getMultilineDescription()
     when 'see'
       if ~str.indexOf('http')
         tag.title = if parts.length > 1 then parts.shift() else ''
@@ -188,7 +193,7 @@ exports.parseTag = (str) ->
         tag.message = ''
         tag.description = str
     else
-      tag.string = parts.join(' ')
+      tag.string = getMultilineDescription()
 
   return tag
 
