@@ -204,7 +204,10 @@ class Collector
               comment.ctx.class_name = tag.parent
           when 'namespace'
             comment.namespace = if tag.string then tag.string + '.' else ''
-          when 'property', 'method'
+          when 'property'
+            comment.ctx.type = tag.type
+            comment.ctx.name = tag.name
+          when 'method'
             comment.ctx.type = tag.type
             if tag.string
               comment.ctx.name = tag.string
@@ -348,10 +351,7 @@ class Collector
             tag.description = tag.description
             comment.returnprops.push tag
           when 'throws'
-            if /{([^}]+)}\s*(.*)/.exec tag.string
-              comment.throws.push message: RegExp.$1, description: RegExp.$2
-            else
-              comment.throws.push message: tag.string, description: ''
+            comment.throws.push message: tag.message, description: tag.description
           when 'resterror'
             if /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
               comment.resterrors.push code: RegExp.$1, message: RegExp.$2, description: RegExp.$3

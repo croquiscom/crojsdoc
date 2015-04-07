@@ -3,6 +3,27 @@
 markdown = require 'marked'
 {escape} = require './utils'
 
+renderer = new markdown.Renderer()
+
+#renderer.heading = (text, level) ->
+#  '<h' + level + '>' + text + '</h' + level + '>\n'
+
+#renderer.paragraph = (text) ->
+#  '<p>' + text + '</p>'
+
+#renderer.br = () ->
+#  '<br />'
+
+markdown.setOptions
+  renderer: renderer
+  gfm: true
+  tables: true
+#  breaks: true
+  pedantic: false
+  sanitize: false
+  smartLists: true
+  smartypants: false
+
 ##
 # Parse comments in the given string of `js`.
 #
@@ -89,26 +110,25 @@ exports.parseComments = (js, options = {}) ->
 # @api public
 exports.parseComment = (str, options = {}) ->
   str = str.trim()
+  if str[0] is '@'
+    str = '\n' + str
 
   comment = tags: []
   raw = options.raw
   description = {}
-
-  if str[0] is '@'
-    str = '\n' + str
+  tags = str.split('\n@')
 
   # parse comment body
-  description.full = str.split('\n@')[0]
+  description.full = tags[0]
   description.summary = description.full.split('\n\n')[0]
   description.body = description.full.split('\n\n').slice(1).join('\n\n')
   comment.description = description
 
   # parse tags
-  if ~str.indexOf('\n@')
-    tags = '@' + str.split('\n@').slice(1).join('\n@')
-    comment.tags = tags.split('\n').map(exports.parseTag)
+  if tags.length
+    comment.tags = tags.slice(1).map(exports.parseTag)
     comment.isPrivate = comment.tags.some (tag) ->
-      return 'api' is tag.type and 'private' is tag.visibility
+      return 'private' is tag.visibility
 
   # markdown
   if not raw
@@ -126,15 +146,19 @@ exports.parseComment = (str, options = {}) ->
 # @api public
 exports.parseTag = (str) ->
   tag = {}
-  parts = str.split /\ +/
+  lines = str.split('\n')
+  parts = lines[0].split /\ +/
   type = tag.type = parts.shift().replace('@', '').toLowerCase()
 
+  if lines.length > 1
+    parts.push(lines.slice(1).join('\n'))
+
   switch type
-    when 'param'
+    when 'property', 'template', 'param'
       tag.types = if /{.*}/.test(parts[0]) then exports.parseTagTypes(parts.shift()) else []
       tag.name = parts.shift() or ''
       tag.description = parts.join(' ')
-    when 'return'
+    when 'define', 'return'
       tag.types = if /{.*}/.test(parts[0]) then exports.parseTagTypes(parts.shift()) else []
       tag.description = parts.join(' ')
     when 'see'
@@ -145,17 +169,24 @@ exports.parseTag = (str) ->
         tag.local = parts.join(' ')
     when 'api'
       tag.visibility = parts.shift()
-    when 'type'
+    when 'public', 'private', 'protected'
+      tag.visibility = type
+    when 'enum', 'typedef', 'type'
       tag.types = exports.parseTagTypes(parts.shift())
-    when 'memberof'
+    when 'lends', 'memberof'
       tag.parent = parts.shift()
-    when 'augments'
+    when 'extends', 'implements', 'augments'
       tag.otherClass = parts.shift()
     when 'borrows'
       tag.otherMemberName = parts.join(' ').split(' as ')[0]
       tag.thisMemberName = parts.join(' ').split(' as ')[1]
     when 'throws'
-      tag.string = parts.join(' ')
+      if /{([^}]+)}\s*(.*)/.exec str
+        tag.message = RegExp.$1
+        tag.description = RegExp.$2
+      else
+        tag.message = ''
+        tag.description = str
     else
       tag.string = parts.join(' ')
 
@@ -194,21 +225,21 @@ exports.parseCodeContext = (str) ->
   str = str.split('\n')[0]
 
   # function statement
-  if /^function (\w+) *\(/.exec(str)
+  if /^function ([\w$]+) *\(/.exec(str)
     return {
       type: 'function'
       name: RegExp.$1
       string: RegExp.$1 + '()'
     }
   # function expression
-  else if /^var *(\w+)[ \t]*=[ \t]*function/.exec(str)
+  else if /^var *([\w$]+)[ \t]*=[ \t]*function/.exec(str)
     return {
       type: 'function'
       name: RegExp.$1
       string: RegExp.$1 + '()'
     }
   # prototype method
-  else if /^(\w+)\.prototype\.(\w+)[ \t]*=[ \t]*function/.exec(str)
+  else if /^([\w$]+)\.prototype\.([\w$]+)[ \t]*=[ \t]*function/.exec(str)
     return {
       type: 'method'
       constructor: RegExp.$1
@@ -217,7 +248,7 @@ exports.parseCodeContext = (str) ->
       string: RegExp.$1 + '.prototype.' + RegExp.$2 + '()'
     }
   # prototype property
-  else if /^(\w+)\.prototype\.(\w+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
+  else if /^([\w$]+)\.prototype\.([\w$]+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
     return {
       type: 'property'
       constructor: RegExp.$1
@@ -227,7 +258,7 @@ exports.parseCodeContext = (str) ->
       string: RegExp.$1 + '.prototype.' + RegExp.$2
     }
   # method
-  else if /^([\w.]+)\.(\w+)[ \t]*=[ \t]*function/.exec(str)
+  else if /^([\w$.]+)\.([\w$]+)[ \t]*=[ \t]*function/.exec(str)
     return {
       type: 'method'
       receiver: RegExp.$1
@@ -235,7 +266,7 @@ exports.parseCodeContext = (str) ->
       string: RegExp.$1 + '.' + RegExp.$2 + '()'
     }
   # property
-  else if /^(\w+)\.(\w+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
+  else if /^([\w$]+)\.([\w$]+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
     return {
       type: 'property'
       receiver: RegExp.$1
@@ -244,7 +275,7 @@ exports.parseCodeContext = (str) ->
       string: RegExp.$1 + '.' + RegExp.$2
     }
   # declaration
-  else if /^var +(\w+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
+  else if /^var +([\w$]+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
     return {
       type: 'declaration'
       name: RegExp.$1
@@ -252,14 +283,14 @@ exports.parseCodeContext = (str) ->
       string: RegExp.$1
     }
   # method
-  else if /^(\w+) *: *function/.exec(str)
+  else if /^([\w$]+) *: *function/.exec(str)
     return {
       type: 'method'
       name: RegExp.$1
       string: RegExp.$1 + '()'
     }
   # property
-  else if /^(\w+) *: *([^\n;]+)/.exec(str)
+  else if /^([\w$]+) *: *([^\n;]+)/.exec(str)
     return {
       type: 'property'
       name: RegExp.$1
