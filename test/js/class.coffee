@@ -162,4 +162,5 @@ function Simple(msg) {
       types: ['String']
       name: 'msg'
       description: 'Message'
+      optional: false
     expect(result.classes[0].properties).to.have.length 0

@@ -1,7 +1,6 @@
 ##
 # Module dependencies.
 markdown = require 'marked'
-{escape} = require './utils'
 
 renderer = new markdown.Renderer()
 
@@ -14,7 +13,7 @@ renderer = new markdown.Renderer()
 #renderer.br = () ->
 #  '<br />'
 
-markdown.setOptions
+markedOptions =
   renderer: renderer
   gfm: true
   tables: true
@@ -23,6 +22,8 @@ markdown.setOptions
   sanitize: false
   smartLists: true
   smartypants: false
+
+markdown.setOptions markedOptions
 
 ##
 # Parse comments in the given string of `js`.
@@ -36,44 +37,77 @@ exports.parseComments = (js, options = {}) ->
   js = js.replace /\r\n/gm, '\n'
 
   comments = []
-  raw = options.raw
+  skipSingleStar = options.skipSingleStar
   buf = ''
   withinMultiline = false
   withinSingle = false
+  withinString = false
+  linterPrefixes = options.skipPrefixes or ['jslint', 'jshint', 'eshint']
+  skipPattern = new RegExp('^' + (options.raw ? '' : '<p>') + '('+ linterPrefixes.join('|') + ')')
+  lineNum = 1
+  lineNumStarting = 1
 
   i = 0
   len = js.length
   while i < len
     # start comment
-    if not withinMultiline and not withinSingle and '/' is js[i] and '*' is js[i+1]
-      # code following previous comment
+    if not withinMultiline and not withinSingle and not withinString and '/' is js[i] and '*' is js[i+1] and (not skipSingleStar or js[i+2] is '*')
+      lineNumStarting = lineNum
+      # code following the last comment
       if buf.trim().length
         comment = comments[comments.length - 1]
         if comment
-          comment.code = code = buf.trim()
-          comment.ctx = exports.parseCodeContext code
+          # Adjust codeStart for any vertical space between comment and code
+          comment.codeStart += buf.match(/^(\s*)/)[0].split('\n').length - 1
+          comment.code = code = exports.trimIndentation(buf).trim()
+          comment.ctx = exports.parseCodeContext code, parentContext
+
+          if comment.isConstructor and comment.ctx
+              comment.ctx.type = 'constructor'
+
+          # starting a new namespace
+          if comment.ctx and (comment.ctx.type is 'prototype' or comment.ctx.type is 'class')
+            parentContext = comment.ctx
+          # reasons to clear the namespace
+          # new property/method in a different constructor
+          else if not parentContext or not comment.ctx or not comment.ctx.constructor or not parentContext.constructor or parentContext.constructor isnt comment.ctx.constructor
+            parentContext = null
         buf = ''
       i += 2
       withinMultiline = true
       ignore = '!' is js[i]
+
+      # if the current character isn't whitespace and isn't an ignored comment,
+      # back up one character so we don't clip the contents
+      if ' ' isnt js[i] and '\n' isnt js[i] and '\t' isnt js[i] and '!' isnt js[i]
+        i--
+
     # end comment
     else if withinMultiline and not withinSingle and '*' is js[i] and '/' is js[i+1]
       i += 2
       buf = buf.replace /^[ \t]*\* ?/gm, ''
       comment = exports.parseComment buf, options
       comment.ignore = ignore
-      comments.push comment
+      comment.line = lineNumStarting
+      comment.codeStart = lineNum + 1
+      if not comment.description.full.match(skipPattern)
+        comments.push comment
       withinMultiline = ignore = false
       buf = ''
-    else if not withinSingle and not withinMultiline and '/' is js[i] and '/' is js[i+1]
+    else if not withinSingle and not withinMultiline and not withinString and '/' is js[i] and '/' is js[i+1]
       withinSingle = true
       buf += js[i]
-    else if withinSingle and not withinMultiline and '\n' is js[i]
+     else if withinSingle and not withinMultiline and '\n' is js[i]
       withinSingle = false
       buf += js[i]
-    # buffer comment or code
+    else if not withinSingle and not withinMultiline and ('\'' is js[i] or '"' is js[i])
+      withinString = not withinString
+      buf += js[i]
     else
       buf += js[i]
+
+    if '\n' is js[i]
+      lineNum++
 
     i++
 
@@ -82,15 +116,32 @@ exports.parseComments = (js, options = {}) ->
       tags: []
       description: full: '', summary: '', body: ''
       isPrivate: false
+      isConstructor: false
+      line: lineNumStarting
 
   # trailing code
   if buf.trim().length
     comment = comments[comments.length - 1]
-    code = buf.trim()
-    comment.code = code
-    comment.ctx = exports.parseCodeContext code
+    # Adjust codeStart for any vertical space between comment and code
+    comment.codeStart += buf.match(/^(\s*)/)[0].split('\n').length - 1
+    comment.code = code = exports.trimIndentation(buf).trim()
+    comment.ctx = exports.parseCodeContext code, parentContext
 
-  return comments
+  comments
+
+##
+# Removes excess indentation from string of code.
+#
+# @param {String} str
+# @return {String}
+# @api public
+exports.trimIndentation = (str) ->
+  # Find indentation from first line of code.
+  indent = str.match(/(?:^|\n)([ \t]*)[^\s]/)
+  if indent
+    # Replace indentation on all lines.
+    str = str.replace(new RegExp('(^|\n)' + indent[1], 'g'), '$1')
+  str
 
 ##
 # Parse the given comment `str`.
@@ -110,13 +161,15 @@ exports.parseComments = (js, options = {}) ->
 # @api public
 exports.parseComment = (str, options = {}) ->
   str = str.trim()
-  if str[0] is '@'
-    str = '\n' + str
 
   comment = tags: []
   raw = options.raw
   description = {}
   tags = str.split('\n@')
+
+  # A comment has no description
+  if tags[0].charAt(0) is '@'
+    tags.unshift ''
 
   # parse comment body
   description.full = tags[0]
@@ -128,15 +181,63 @@ exports.parseComment = (str, options = {}) ->
   if tags.length
     comment.tags = tags.slice(1).map(exports.parseTag)
     comment.isPrivate = comment.tags.some (tag) ->
-      return 'private' is tag.visibility
+      'private' is tag.visibility
+    comment.isConstructor = comment.tags.some (tag) ->
+      'constructor' is tag.type or 'augments' is tag.type
+    comment.isClass = comment.tags.some (tag) ->
+      'class' is tag.type
+    comment.isEvent = comment.tags.some (tag) ->
+      'event' is tag.type
+
+    if not description.full or not description.full.trim()
+      comment.tags.some (tag) ->
+        if 'description' is tag.type
+          description.full = tag.full
+          description.summary = tag.summary
+          description.body = tag.body
+          true
 
   # markdown
   if not raw
     description.full = markdown description.full
     description.summary = markdown description.summary
     description.body = markdown description.body
+    comment.tags.forEach (tag) ->
+      if tag.description
+        tag.description = markdown tag.description
+      else
+        tag.html = markdown tag.string
 
-  return comment
+  comment
+
+#TODO: Find a smarter way to do this
+##
+# Extracts different parts of a tag by splitting string into pieces separated by whitespace. If the white spaces are
+# somewhere between curly braces (which is used to indicate param/return type in JSDoc) they will not be used to split
+# the string. This allows to specify jsdoc tags without the need to eliminate all white spaces i.e. {number | string}
+#
+# @param str The tag line as a string that needs to be split into parts
+# @returns {Array.<string>} An array of strings containing the parts
+exports.extractTagParts = (str) ->
+  level = 0
+  extract = ''
+  split = []
+
+  str.split('').forEach (c) ->
+    if c.match(/\s/) and level is 0
+      split.push extract
+      extract = ''
+    else
+      if c is '{'
+        level++
+      else if c is '}'
+        level--
+
+      extract += c
+
+  split.push extract
+  split.filter (str) ->
+    str.length > 0
 
 ##
 # Parse tag string "@param {Array} name description" etc.
@@ -147,8 +248,11 @@ exports.parseComment = (str, options = {}) ->
 exports.parseTag = (str) ->
   tag = {}
   lines = str.split('\n')
-  parts = lines[0].split /\ +/
+  parts = exports.extractTagParts(lines[0])
   type = tag.type = parts.shift().replace('@', '').toLowerCase()
+  #matchType = new RegExp('^@?' + type + ' *')
+
+  #tag.string = str.replace(matchType, '')
 
   getMultilineDescription = ->
     description = parts.join ' '
@@ -160,11 +264,12 @@ exports.parseTag = (str) ->
 
   switch type
     when 'property', 'template', 'param'
-      tag.types = if /{.*}/.test(parts[0]) then exports.parseTagTypes(parts.shift()) else []
+      typeString = if /{.*}/.test(parts[0]) then parts.shift() else ''
       tag.name = parts.shift() or ''
       tag.description = getMultilineDescription()
-    when 'define', 'return'
-      tag.types = if /{.*}/.test(parts[0]) then exports.parseTagTypes(parts.shift()) else []
+      exports.parseTagTypes typeString, tag
+    when 'define', 'return', 'returns'
+      if /{.*}/.test(parts[0]) then exports.parseTagTypes parts.shift(), tag
       tag.description = getMultilineDescription()
     when 'see'
       if ~str.indexOf('http')
@@ -177,7 +282,10 @@ exports.parseTag = (str) ->
     when 'public', 'private', 'protected'
       tag.visibility = type
     when 'enum', 'typedef', 'type'
-      tag.types = exports.parseTagTypes(parts.shift())
+      typeString = parts.shift()
+      if not /{.*}/.test typeString
+        typeString = '{' + typeString + '}'
+      exports.parseTagTypes typeString, tag
     when 'lends', 'memberof'
       tag.parent = parts.shift()
     when 'extends', 'implements', 'augments'
@@ -192,21 +300,76 @@ exports.parseTag = (str) ->
       else
         tag.message = ''
         tag.description = str
+    when 'description'
+      tag.full = parts.join(' ').trim()
+      tag.summary = tag.full.split('\n\n')[0]
+      tag.body = tag.full.split('\n\n').slice(1).join('\n\n')
     else
       tag.string = getMultilineDescription()
 
-  return tag
+  tag
 
 ##
 # Parse tag type string "{Array|Object}" etc.
+# This function also supports complex type descriptors like in jsDoc or even the enhanced syntax used by the
+# [google closure compiler](https://developers.google.com/closure/compiler/docs/js-for-compiler#types)
+#
+# The resulting array from the type descriptor `{number|string|{name:string,age:number|date}}` would look like this:
+#
+#     [
+#       'number',
+#       'string',
+#       {
+#         age: ['number', 'date'],
+#         name: ['string']
+#       }
+#     ]
 #
 # @param {String} str
 # @return {Array}
 # @api public
-exports.parseTagTypes = (str) ->
-  return str
-    .replace /[{}]/g, ''
-    .split /\ *[|,\/] */
+exports.parseTagTypes = (str, tag) ->
+  {Parser, Builder} = require 'jsdoctypeparser'
+  result = new Parser().parse str.substr(1, str.length - 2)
+
+  transform = (type) ->
+    if type instanceof Builder.TypeUnion
+      type.types.map transform
+    else if type instanceof Builder.TypeName
+      type.name
+    else if type instanceof Builder.RecordType
+      type.entries.reduce (obj, entry) ->
+        obj[entry.name] = transform(entry.typeUnion)
+        obj
+      , {}
+    else
+      type.toString()
+  types = transform result
+
+  if tag
+    tag.types = types
+    #tag.typesDescription = result.toHtml()
+    tag.optional = (tag.name and tag.name.slice(0,1) is '[') or result.optional
+    #tag.nullable = result.nullable
+    #tag.nonNullable = result.nonNullable
+    #tag.variable = result.variable
+
+  types
+
+##
+# Determine if a parameter is optional.
+#
+# Examples:
+# JSDoc: {Type} [name]
+# Google: {Type=} name
+# TypeScript: {Type?} name
+#
+# @param {Object} tag
+# @return {Boolean}
+# @api public
+exports.parseParamOptional = (tag) ->
+  lastTypeChar = tag.types.slice(-1)[0].slice(-1)
+  tag.name.slice(0,1) is '[' or lastTypeChar is '=' or lastTypeChar is '?'
 
 ##
 # Parse the context from the given `str` of js.
@@ -215,6 +378,9 @@ exports.parseTagTypes = (str) ->
 # for the comment based on it's code. Currently
 # supports:
 #
+#   - classes
+#   - class constructors
+#   - class methods
 #   - function statements
 #   - function expressions
 #   - prototype methods
@@ -224,81 +390,181 @@ exports.parseTagTypes = (str) ->
 #   - declarations
 #
 # @param {String} str
+# @param {Object=} parentContext An indication if we are already in something. Like a namespace or an inline declaration.
 # @return {Object}
 # @api public
-exports.parseCodeContext = (str) ->
-  str = str.split('\n')[0]
+exports.parseCodeContext = (str, parentContext = {}) ->
+  ctx = undefined
+  # loop through all context matchers, returning the first successful match
+  exports.contextPatternMatchers.some((matcher) ->
+    ctx = matcher(str, parentContext)
+  ) and ctx
 
-  # function statement
-  if /^function ([\w$]+) *\(/.exec(str)
-    return {
-      type: 'function'
-      name: RegExp.$1
-      string: RegExp.$1 + '()'
-    }
+exports.contextPatternMatchers = [
+  # class, possibly exported by name or as a default
+  (str) ->
+    if /^\s*(export(\s+default)?\s+)?class\s+([\w$]+)(\s+extends\s+([\w$.]+(?:\(.*\))?))?\s*{/.exec(str)
+      return {
+        type: 'class'
+        constructor: RegExp.$3
+        cons: RegExp.$3
+        name: RegExp.$3
+        extends: RegExp.$5
+        string: 'new ' + RegExp.$3 + '()'
+      }
+  # class constructor
+  (str, parentContext) ->
+    if /^\s*constructor\s*\(/.exec(str)
+      return {
+        type: 'constructor'
+        constructor: parentContext.name
+        cons: parentContext.name
+        name: 'constructor'
+        string: (if parentContext?.name then parentContext.name + '.prototype.' else '') + 'constructor()'
+      }
+  # class method
+  (str, parentContext) ->
+    if /^\s*(static)?\s*(\*)?\s*([\w$]+|\[.*\])\s*\(/.exec(str)
+      return {
+        type: 'method'
+        constructor: parentContext.name
+        cons: parentContext.name
+        name: RegExp.$2 + RegExp.$3
+        string: (if parentContext?.name then parentContext.name + (if RegExp.$1 then '.' else '.prototype.') else '') + RegExp.$2 + RegExp.$3 + '()'
+      }
+  # named function statementpossibly exported by name or as a default
+  (str) ->
+    if /^\s*(export(\s+default)?\s+)?function\s+([\w$]+)\s*\(/.exec(str)
+      return {
+        type: 'function'
+        name: RegExp.$3
+        string: RegExp.$3 + '()'
+      }
+  # anonymous function expression exported as a default
+  (str) ->
+    if /^\s*export\s+default\s+function\s*\(/.exec(str)
+      return {
+        type: 'function'
+        name: RegExp.$1 # undefined
+        string: RegExp.$1 + '()'
+      }
   # function expression
-  else if /^var *([\w$]+)[ \t]*=[ \t]*function/.exec(str)
-    return {
-      type: 'function'
-      name: RegExp.$1
-      string: RegExp.$1 + '()'
-    }
+  (str) ->
+    if /^return\s+function(?:\s+([\w$]+))?\s*\(/.exec(str)
+      return {
+        type: 'function'
+        name: RegExp.$1
+        string: RegExp.$1 + '()'
+      }
+  # function expression
+  (str) ->
+    if /^\s*(?:const|let|var)\s+([\w$]+)\s*=\s*function/.exec(str)
+      return {
+        type: 'function'
+        name: RegExp.$1
+        string: RegExp.$1 + '()'
+      }
   # prototype method
-  else if /^([\w$]+)\.prototype\.([\w$]+)[ \t]*=[ \t]*function/.exec(str)
-    return {
-      type: 'method'
-      constructor: RegExp.$1
-      cons: RegExp.$1
-      name: RegExp.$2
-      string: RegExp.$1 + '.prototype.' + RegExp.$2 + '()'
-    }
+  (str, parentContext) ->
+    if /^\s*([\w$.]+)\s*\.\s*prototype\s*\.\s*([\w$]+)\s*=\s*function/.exec(str)
+      return {
+        type: 'method'
+        constructor: RegExp.$1
+        cons: RegExp.$1
+        name: RegExp.$2
+        string: RegExp.$1 + '.prototype.' + RegExp.$2 + '()'
+      }
   # prototype property
-  else if /^([\w$]+)\.prototype\.([\w$]+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
-    return {
-      type: 'property'
-      constructor: RegExp.$1
-      cons: RegExp.$1
-      name: RegExp.$2
-      value: RegExp.$3
-      string: RegExp.$1 + '.prototype.' + RegExp.$2
-    }
+  (str) ->
+    if /^\s*([\w$.]+)\s*\.\s*prototype\s*\.\s*([\w$]+)\s*=\s*([^\n;]+)/.exec(str)
+      return {
+        type: 'property'
+        constructor: RegExp.$1
+        cons: RegExp.$1
+        name: RegExp.$2
+        value: RegExp.$3.trim()
+        string: RegExp.$1 + '.prototype.' + RegExp.$2
+      }
+  # prototype property without assignment
+  (str) ->
+    if /^\s*([\w$]+)\s*\.\s*prototype\s*\.\s*([\w$]+)\s*/.exec(str)
+      return {
+        type: 'property'
+        constructor: RegExp.$1
+        cons: RegExp.$1
+        name: RegExp.$2
+        string: RegExp.$1 + '.prototype.' + RegExp.$2
+      }
+  # inline prototype
+  (str) ->
+    if /^\s*([\w$.]+)\s*\.\s*prototype\s*=\s*{/.exec(str)
+      return {
+        type: 'prototype'
+        constructor: RegExp.$1
+        cons: RegExp.$1
+        name: RegExp.$1
+        string: RegExp.$1 + '.prototype'
+      }
+  # inline method
+  (str, parentContext) ->
+    if /^\s*([\w$.]+)\s*:\s*function/.exec(str)
+      return {
+        type: 'method'
+        constructor: parentContext.name
+        cons: parentContext.name
+        name: RegExp.$1
+        string: (if parentContext?.name then parentContext.name + '.prototype.' else '') + RegExp.$1 + '()'
+      }
+  # inline property
+  (str, parentContext) ->
+    if /^\s*([\w$.]+)\s*:\s*([^\n;]+)/.exec(str)
+      return {
+        type: 'property'
+        constructor: parentContext.name
+        cons: parentContext.name
+        name: RegExp.$1
+        value: RegExp.$2.trim()
+        string: (if parentContext?.name then parentContext.name + '.' else '') + RegExp.$1
+      }
+  # inline getter/setter
+  (str, parentContext) ->
+    if /^\s*(get|set)\s*([\w$.]+)\s*\(/.exec(str)
+      return {
+        type: 'property'
+        constructor: parentContext.name
+        cons: parentContext.name
+        name: RegExp.$2
+        string: (if parentContext?.name then parentContext.name + '.prototype.' else '') + RegExp.$2
+      }
   # method
-  else if /^([\w$.]+)\.([\w$]+)[ \t]*=[ \t]*function/.exec(str)
-    return {
-      type: 'method'
-      receiver: RegExp.$1
-      name: RegExp.$2
-      string: RegExp.$1 + '.' + RegExp.$2 + '()'
-    }
+  (str) ->
+    if /^\s*([\w$.]+)\s*\.\s*([\w$]+)\s*=\s*function/.exec(str)
+      return {
+        type: 'method'
+        receiver: RegExp.$1
+        name: RegExp.$2
+        string: RegExp.$1 + '.' + RegExp.$2 + '()'
+      }
   # property
-  else if /^([\w$]+)\.([\w$]+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
-    return {
-      type: 'property'
-      receiver: RegExp.$1
-      name: RegExp.$2
-      value: RegExp.$3
-      string: RegExp.$1 + '.' + RegExp.$2
-    }
+  (str) ->
+    if /^\s*([\w$.]+)\s*\.\s*([\w$]+)\s*=\s*([^\n;]+)/.exec(str)
+      return {
+        type: 'property'
+        receiver: RegExp.$1
+        name: RegExp.$2
+        value: RegExp.$3.trim()
+        string: RegExp.$1 + '.' + RegExp.$2
+      }
   # declaration
-  else if /^var +([\w$]+)[ \t]*=[ \t]*([^\n;]+)/.exec(str)
-    return {
-      type: 'declaration'
-      name: RegExp.$1
-      value: RegExp.$2
-      string: RegExp.$1
-    }
-  # method
-  else if /^([\w$]+) *: *function/.exec(str)
-    return {
-      type: 'method'
-      name: RegExp.$1
-      string: RegExp.$1 + '()'
-    }
-  # property
-  else if /^([\w$]+) *: *([^\n;]+)/.exec(str)
-    return {
-      type: 'property'
-      name: RegExp.$1
-      value: RegExp.$2
-      string: RegExp.$1
-    }
+  (str) ->
+    if /^\s*(?:const|let|var)\s+([\w$]+)\s*=\s*([^\n;]+)/.exec(str)
+      return {
+        type: 'declaration'
+        name: RegExp.$1
+        value: RegExp.$2.trim()
+        string: RegExp.$1
+      }
+]
+
+exports.setMarkedOptions = (opts) ->
+  markdown.setOptions opts

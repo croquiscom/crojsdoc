@@ -28,6 +28,7 @@ doSomething = (p) -> p
       types: ['String']
       name: 'p'
       description: 'This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
+      optional: false
 
   it '@return', ->
     result = collect [
@@ -53,6 +54,7 @@ doSomething = -> 'something'
       type: 'return'
       types: ['String']
       description: 'This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
+      optional: false
 
   it '@example', ->
     result = collect [

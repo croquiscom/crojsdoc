@@ -225,7 +225,7 @@ class Collector
             comment.return_nodejscallback = true
           when 'chainable'
             comment.chainable = true
-          when 'param', 'return', 'returnprop', 'throws', 'resterror', 'see'
+          when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'type', 'api', 'uses', 'override', 'example'
           else
             console.log "Unknown tag : #{tag.type} in #{comment.defined_in}"
@@ -338,7 +338,7 @@ class Collector
               tag.types[i] = type
             tag.description = tag.description
             comment.params.push tag
-          when 'return'
+          when 'return', 'returns'
             for type, i in tag.types
               tag.types[i] = type
             tag.description = tag.description

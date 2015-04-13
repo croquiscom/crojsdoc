@@ -26,11 +26,13 @@ sum = (a, b) -> a + b
       types: ['Number']
       name: 'a'
       description: 'the first value'
+      optional: false
     expect(params[1]).to.be.eql
       type: 'param'
       types: ['Number']
       name: 'b'
       description: 'the second value'
+      optional: false
 
   it 'default value', ->
     result = collect [
