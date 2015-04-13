@@ -56,7 +56,7 @@ block body
     if self.klass.class_code
       - var showcode_label = 'Show class code'
       - var showcode_defined_in = self.klass.defined_in
-      - var showcode_line_number = self.klass.class_line_number
+      - var showcode_line_number = self.klass.class_codeStart
       - var showcode_code = self.klass.class_code
       include method-showcode
     if !self.klass.static
@@ -71,7 +71,7 @@ block body
             if self.klass.code
               - var showcode_label = 'Show code'
               - var showcode_defined_in = self.klass.defined_in
-              - var showcode_line_number = self.klass.line_number
+              - var showcode_line_number = self.klass.codeStart
               - var showcode_code = self.klass.code
               include method-showcode
   each item in self.properties

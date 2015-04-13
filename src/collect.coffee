@@ -416,7 +416,7 @@ class Collector
             if comment.ctx.is_coffeescript_constructor
               # merge to class comment
               class_comment.code = comment.code
-              class_comment.line_number = comment.line_number
+              class_comment.codeStart = comment.codeStart
               class_comment.params = comment.params
             else
               class_comment.properties.push comment

@@ -58,10 +58,10 @@ exports.parseCommentsCoffee = (coffee, options = {}) ->
         return
       if comment.ctx and comment.ctx.type is 'class'
         comment.class_code = code
-        comment.class_line_number = buf_line_number
+        comment.class_codeStart = buf_line_number
       else
         comment.code = code
-        comment.line_number = buf_line_number
+        comment.codeStart = buf_line_number
     buf = ''
 
   addBuf = ->
