@@ -165,7 +165,7 @@ exports.parseComment = (str, options = {}) ->
   comment = tags: []
   raw = options.raw
   description = {}
-  tags = str.split('\n@')
+  tags = str.split(/\n\s*@/)
 
   # A comment has no description
   if tags[0].charAt(0) is '@'
@@ -250,9 +250,10 @@ exports.parseTag = (str) ->
   lines = str.split('\n')
   parts = exports.extractTagParts(lines[0])
   type = tag.type = parts.shift().replace('@', '').toLowerCase()
-  #matchType = new RegExp('^@?' + type + ' *')
+  matchType = new RegExp('^@?' + type + ' *')
+  matchTypeStr = /^\{.+\}$/
 
-  #tag.string = str.replace(matchType, '')
+  tag.string = str.replace(matchType, '')
 
   getMultilineDescription = ->
     description = parts.join ' '
@@ -264,12 +265,13 @@ exports.parseTag = (str) ->
 
   switch type
     when 'property', 'template', 'param'
-      typeString = if /{.*}/.test(parts[0]) then parts.shift() else ''
+      typeString = if matchTypeStr.test(parts[0]) then parts.shift() else ''
       tag.name = parts.shift() or ''
       tag.description = getMultilineDescription()
       exports.parseTagTypes typeString, tag
     when 'define', 'return', 'returns'
-      if /{.*}/.test(parts[0]) then exports.parseTagTypes parts.shift(), tag
+      typeString = if matchTypeStr.test(parts[0]) then parts.shift() else ''
+      exports.parseTagTypes typeString, tag
       tag.description = getMultilineDescription()
     when 'see'
       if ~str.indexOf('http')
@@ -305,7 +307,7 @@ exports.parseTag = (str) ->
       tag.summary = tag.full.split('\n\n')[0]
       tag.body = tag.full.split('\n\n').slice(1).join('\n\n')
     else
-      tag.string = getMultilineDescription()
+      tag.string = getMultilineDescription().replace(/\s+$/, '')
 
   tag
 
@@ -329,6 +331,12 @@ exports.parseTag = (str) ->
 # @return {Array}
 # @api public
 exports.parseTagTypes = (str, tag) ->
+  if not str
+    if tag
+      tag.types = []
+      tag.typesDescription = ''
+      tag.optional = tag.nullable = tag.nonNullable = tag.variable = false
+    return []
   {Parser, Builder} = require 'jsdoctypeparser'
   result = new Parser().parse str.substr(1, str.length - 2)
 

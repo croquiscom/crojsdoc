@@ -25,6 +25,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{String} p This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
       types: ['String']
       name: 'p'
       description: 'This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
@@ -52,6 +53,7 @@ doSomething = -> 'something'
     ret = result.modules[0].properties[0].return
     expect(ret).to.be.eql
       type: 'return'
+      string: '{String} This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
       types: ['String']
       description: 'This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
       optional: false

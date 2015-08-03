@@ -134,6 +134,7 @@ class Simple
     expect(result.classes[0].params).to.have.length 1
     expect(result.classes[0].params[0]).to.be.eql
       type: 'param'
+      string: '{String} msg Message'
       types: ['String']
       name: 'msg'
       description: 'Message'

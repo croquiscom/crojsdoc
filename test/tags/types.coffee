@@ -21,6 +21,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{String} p parameter'
       types: ['String']
       name: 'p'
       description: 'parameter'
@@ -45,6 +46,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{Array.<String>} p parameter'
       types: ['Array.<String>']
       name: 'p'
       description: 'parameter'
@@ -69,6 +71,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{Array<String>} p parameter'
       types: ['Array.<String>']
       name: 'p'
       description: 'parameter'
@@ -93,6 +96,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{StringMap<Array<String>>} p parameter'
       types: ['StringMap.<Array.<String>>']
       name: 'p'
       description: 'parameter'
@@ -117,6 +121,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{String=} p parameter'
       types: ['String']
       name: 'p'
       description: 'parameter'
@@ -141,6 +146,7 @@ doSomething = (p) -> p
     expect(params).to.have.length 1
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{Number|String} p parameter'
       types: ['Number', 'String']
       name: 'p'
       description: 'parameter'

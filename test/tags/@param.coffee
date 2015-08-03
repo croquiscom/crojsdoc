@@ -23,12 +23,14 @@ sum = (a, b) -> a + b
     expect(params).to.have.length 2
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{Number} a the first value'
       types: ['Number']
       name: 'a'
       description: 'the first value'
       optional: false
     expect(params[1]).to.be.eql
       type: 'param'
+      string: '{Number} b the second value'
       types: ['Number']
       name: 'b'
       description: 'the second value'
@@ -55,6 +57,7 @@ do = (a, b, c) ->
     expect(params).to.have.length 3
     expect(params[0]).to.be.eql
       type: 'param'
+      string: '{Number} [a=10] the first parameter'
       types: ['Number']
       name: 'a'
       default_value: '10'
@@ -62,6 +65,7 @@ do = (a, b, c) ->
       description: 'the first parameter'
     expect(params[1]).to.be.eql
       type: 'param'
+      string: '{String} [b=\'hello\'] the second parameter'
       types: ['String']
       name: 'b'
       default_value: "'hello'"
@@ -69,6 +73,7 @@ do = (a, b, c) ->
       description: 'the second parameter'
     expect(params[2]).to.be.eql
       type: 'param'
+      string: '{Array} [c=[1,2]] the third parameter'
       types: ['Array']
       name: 'c'
       default_value: "[1,2]"
