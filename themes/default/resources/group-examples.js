@@ -1,33 +1,39 @@
 (function () {
   var languages = {};
 
-  function groupExamplesPerLanguage() {
+  function buildTab(index) {
+    var lang = $(this).find('code').attr('class')
+    var displayName = lang.replace('lang-', '');
+    if (displayName==='javascript') {
+      displayName = 'JavaScript';
+    } else if (displayName==='coffeescript') {
+      displayName = 'CoffeeScript';
+    } else if (displayName==='typescript') {
+      displayName = 'TypeScript';
+    }
+    languages[displayName] = 1;
+    var $li = $("<li><a data-examples-group='" + lang + "'>" + displayName + "</a></li>");
+    if (index==0) {
+      $li.addClass('active');
+    }
+    return $li;
+  }
+
+  function groupOne() {
+    var $codes = $(this).nextUntil(':not(pre:has(code))').addBack();
+    var $tabs = $("<ul class='nav nav-tabs'></ul>");
+    $codes.map(buildTab).each(function () {
+      $tabs.append(this);
+    });
+    $tabs.append("<li><a data-examples-group='@all'>Show all</a></li>");
+    var $panes = $codes.wrap("<div class='tab-pane'></div>").parent().wrapAll("<div class='tab-content'></div>");
+    $panes.first().addClass('active').parent().wrapAll("<div class='examples-group panel panel-default'><div class='panel-body'></div></div>").parent().prepend($tabs);
+  }
+
+  function groupExamples() {
     $('pre:has(code)').filter(function () {
       return $(this).next('pre:has(code)').length > 0;
-    }).each(function () {
-      var $codes = $(this).nextUntil(':not(pre:has(code))').addBack();
-      var $tabs = $("<ul class='nav nav-tabs'></ul>");
-      $codes.each(function (index) {
-        var lang = $(this).find('code').attr('class')
-        var className = lang.replace('lang-', '');
-        if (className==='javascript') {
-          className = 'JavaScript';
-        } else if (className==='coffeescript') {
-          className = 'CoffeeScript';
-        } else if (className==='typescript') {
-          className = 'TypeScript';
-        }
-        languages[className] = 1;
-        var $li = $("<li><a data-examples-group='" + lang + "'>" + className + "</a></li>");
-        if (index==0) {
-          $li.addClass('active');
-        }
-        $tabs.append($li);
-      });
-      $tabs.append("<li><a data-examples-group='@all'>Show all</a></li>");
-      var $panes = $codes.wrap("<div class='tab-pane'></div>").parent().wrapAll("<div class='tab-content'></div>");
-      $panes.first().addClass('active').parent().wrapAll("<div class='examples-group panel panel-default'><div class='panel-body'></div></div>").parent().prepend($tabs);
-    });
+    }).each(groupOne);
   }
 
   function selectLanguage(lang) {
@@ -48,7 +54,7 @@
     }
   }
 
-  groupExamplesPerLanguage();
+  groupExamples();
   selectLanguage(localStorage.getItem('lastLang'));
   $('[data-examples-group]').click(function (event) {
     event.preventDefault();
