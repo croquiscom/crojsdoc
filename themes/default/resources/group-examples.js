@@ -30,10 +30,12 @@
     $panes.first().addClass('active').parent().wrapAll("<div class='examples-group panel panel-default'><div class='panel-body'></div></div>").parent().prepend($tabs);
   }
 
+  function isFirstOfConsecutiveCodes() {
+    return $(this).next('pre:has(code)').length > 0 && $(this).prev('pre:has(code)').length===0;
+  }
+
   function groupExamples() {
-    $('pre:has(code)').filter(function () {
-      return $(this).next('pre:has(code)').length > 0;
-    }).each(groupOne);
+    $('pre:has(code)').filter(isFirstOfConsecutiveCodes).each(groupOne);
   }
 
   function selectLanguage(lang) {
