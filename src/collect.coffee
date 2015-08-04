@@ -313,7 +313,7 @@ class Collector
       return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
 
     comments.forEach (comment) =>
-      comment.defined_in = path
+      comment.definedIn = path
 
     @classifyComments comments
 

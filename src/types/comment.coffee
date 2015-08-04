@@ -58,11 +58,21 @@ class Comment
   # @type Boolean
 
   ##
-  # Code block follows the code
+  # The code following the comment block
   # @property code
   # @type String
 
   ##
-  # Code context of this comment
+  # Line number where the code starts
+  # @property codeStart
+  # @type Number
+
+  ##
+  # The file path that contains this comment block
+  # @property definedIn
+  # @type String
+
+  ##
+  # The context of the code block
   # @property ctx
   # @type CodeContext

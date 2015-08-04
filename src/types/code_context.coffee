@@ -1,10 +1,10 @@
 ##
-# Represents a code context in a comment
+# Represents a context of a code block
 # @namespace types
 class CodeContext
   ##
   # the type of the code.
-  # One of 'function', 'declaration', 'method', 'property', or 'class'
+  # One of 'function', 'declaration', 'method', 'property', 'constructor' or 'class'
   # @property type
   # @type String
 
@@ -16,6 +16,11 @@ class CodeContext
   ##
   # the name of the class that has this instance property
   # @property constructor
+  # @type String
+
+  ##
+  # alias of constructor
+  # @property cons
   # @type String
 
   ##
