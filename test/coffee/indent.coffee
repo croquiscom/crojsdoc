@@ -15,7 +15,7 @@ class Simple
     ]
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
-    expect(result.classes[0].properties[0].description).to.be.eql
+    expect(result.classes[0].properties[0].description).to.eql
       summary: '<p>Create an instance</p>\n'
       body: ''
       full: '<p>Create an instance</p>\n'
@@ -35,7 +35,7 @@ class Simple
     ]
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
-    expect(result.classes[0].properties[0].description).to.be.eql
+    expect(result.classes[0].properties[0].description).to.eql
       summary: '<p>Create an instance</p>\n'
       body: ''
       full: '<p>Create an instance</p>\n'
@@ -53,7 +53,7 @@ class Simple
     ]
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
-    expect(result.classes[0].properties[0].description).to.be.eql
+    expect(result.classes[0].properties[0].description).to.eql
       summary: '<p>Create an instance</p>\n'
       body: ''
       full: '<p>Create an instance</p>\n'
@@ -73,7 +73,7 @@ class Simple
     ]
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
-    expect(result.classes[0].properties[0].description).to.be.eql
+    expect(result.classes[0].properties[0].description).to.eql
       summary: '<p>Create an instance</p>\n'
       body: ''
       full: '<p>Create an instance</p>\n'
@@ -91,7 +91,7 @@ class Simple
     ]
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
-    expect(result.classes[0].properties[0].description).to.be.eql
+    expect(result.classes[0].properties[0].description).to.eql
       summary: '<p>Create an instance</p>\n'
       body: ''
       full: '<p>Create an instance</p>\n'
@@ -111,7 +111,7 @@ class Simple
     ]
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
-    expect(result.classes[0].properties[0].description).to.be.eql
+    expect(result.classes[0].properties[0].description).to.eql
       summary: '<p>Create an instance</p>\n'
       body: ''
       full: '<p>Create an instance</p>\n'

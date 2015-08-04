@@ -23,7 +23,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{String} p This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
       types: ['String']
@@ -51,7 +51,7 @@ doSomething = -> 'something'
     expect(result.modules).to.have.length 1
     expect(result.modules[0].properties).to.have.length 1
     ret = result.modules[0].properties[0].return
-    expect(ret).to.be.eql
+    expect(ret).to.eql
       type: 'return'
       string: '{String} This is a long description\non multilines.\nThis is the third line.\n\nAnd blank line.'
       types: ['String']
@@ -79,6 +79,6 @@ doSomething = ->
     expect(result.modules[0].properties).to.have.length 1
     examples = result.modules[0].properties[0].examples
     expect(examples).to.have.length 1
-    expect(examples[0]).to.be.eql
+    expect(examples[0]).to.eql
       type: 'example'
       string: '  # do something after a while\n  setTimeout ->\n    doSomething()\n  , 500'

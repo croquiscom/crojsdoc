@@ -19,7 +19,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{String} p parameter'
       types: ['String']
@@ -44,7 +44,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{Array.<String>} p parameter'
       types: ['Array.<String>']
@@ -69,7 +69,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{Array<String>} p parameter'
       types: ['Array.<String>']
@@ -94,7 +94,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{StringMap<Array<String>>} p parameter'
       types: ['StringMap.<Array.<String>>']
@@ -119,7 +119,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{String=} p parameter'
       types: ['String']
@@ -144,7 +144,7 @@ doSomething = (p) -> p
     expect(result.modules[0].properties).to.have.length 1
     params = result.modules[0].properties[0].params
     expect(params).to.have.length 1
-    expect(params[0]).to.be.eql
+    expect(params[0]).to.eql
       type: 'param'
       string: '{Number|String} p parameter'
       types: ['Number', 'String']
