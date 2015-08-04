@@ -20,6 +20,7 @@ class Sample
     expect(result.classes).to.have.length 1
     expect(result.classes[0].properties).to.have.length 1
     property = result.classes[0].properties[0]
+    expect(property.isChainable).to.eql true
     expect(property.return).to.be.eql
       types: ['Sample']
       description: 'this'

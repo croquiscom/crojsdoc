@@ -23,8 +23,38 @@ class Comment
   # @type Array<Tag>
 
   ##
-  # true if there is a tag '@api private'
+  # true if there is a tag '@api private' or '@private'
   # @property isPrivate
+  # @type Boolean
+
+  ##
+  # true if there is a tag '@static'
+  # @property isStatic
+  # @type Boolean
+
+  ##
+  # true if there is a tag '@abstract'
+  # @property isAbstract
+  # @type Boolean
+
+  ##
+  # true if there is a tag '@async'
+  # @property isAsync
+  # @type Boolean
+
+  ##
+  # true if there is a tag '@chainable'
+  # @property isChainable
+  # @type Boolean
+
+  ##
+  # true if there is a tag '@promise'
+  # @property doesReturnPromise
+  # @type Boolean
+
+  ##
+  # true if there is a tag '@nodejscallback'
+  # @property doesReturnNodejscallback
   # @type Boolean
 
   ##

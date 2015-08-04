@@ -24,15 +24,15 @@ div.panel.panel-success
         != method.types.map(function (t) { return self.makeTypeLink(self.rel_path, t); }).join(', ')
       if method.isPrivate
         span.label.label-private private
-      if is_method_of_class && method.static
+      if is_method_of_class && method.isStatic
         span.label.label-static static
-      if is_method_of_class && item.abstract
+      if is_method_of_class && item.isAbstract
         span.label.label-abstract abstract
       if is_method_of_class && item!==method
         span.label.label-override override
       if method.ctx.type==='property'
         span.label.label-property property
-      if is_method_of_class && method.chainable
+      if is_method_of_class && method.isChainable
         span.label.label-chainable chainable
       span.pull-right.glyphicon
     div.method-summary

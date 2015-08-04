@@ -1,10 +1,10 @@
 h4 Returns
-  if method.return_promise || method.return_nodejscallback
+  if method.doesReturnPromise || method.doesReturnNodejscallback
     small
       span  as
-      if method.return_promise
+      if method.doesReturnPromise
         span.label.label-info Promise
-      if method.return_nodejscallback
+      if method.doesReturnNodejscallback
         span.label.label-info NodeJS callback
 if method.return
   table.table.table-bordered.table-condensed.table-hover

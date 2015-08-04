@@ -170,10 +170,10 @@ class Collector
 
       if comment.ctx.type is 'property' or comment.ctx.type is 'method'
         if comment.ctx.cons?
-          comment.static = false
+          comment.isStatic = false
           comment.ctx.class_name = comment.ctx.cons
         else if comment.ctx.receiver?
-          comment.static = true
+          comment.isStatic = true
           comment.ctx.class_name = comment.ctx.receiver
 
       last = 0
@@ -197,10 +197,10 @@ class Collector
             comment.code = null
           when 'memberof'
             if /(::|#|\.prototype)$/.test tag.parent
-              comment.static = false
+              comment.isStatic = false
               comment.ctx.class_name = tag.parent.replace /(::|#|\.prototype)$/, ''
             else
-              comment.static = true
+              comment.isStatic = true
               comment.ctx.class_name = tag.parent
           when 'namespace'
             comment.namespace = if tag.string then tag.string + '.' else ''
@@ -212,19 +212,19 @@ class Collector
             if tag.string
               comment.ctx.name = tag.string
           when 'static'
-            comment.static = true
+            comment.isStatic = true
           when 'private'
             comment.isPrivate = true
           when 'abstract'
-            comment.abstract = true
+            comment.isAbstract = true
           when 'async'
-            comment.async = true
+            comment.isAsync = true
           when 'promise'
-            comment.return_promise = true
+            comment.doesReturnPromise = true
           when 'nodejscallback'
-            comment.return_nodejscallback = true
+            comment.doesReturnNodejscallback = true
           when 'chainable'
-            comment.chainable = true
+            comment.isChainable = true
           when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'type', 'api', 'uses', 'override', 'example'
           else
@@ -235,7 +235,7 @@ class Collector
           comment.ctx.type = 'method'
         else if comment.ctx.type is 'declaration'
           comment.ctx.type = 'property'
-        seperator = if comment.static then '.' else '::'
+        seperator = if comment.isStatic then '.' else '::'
         id = comment.ctx.class_name + seperator + comment.ctx.name
         comment.ctx.fullname = comment.ctx.class_name.replace(/.*[\./](\w+)/, '$1') + seperator + comment.ctx.name
 
@@ -386,7 +386,7 @@ class Collector
       @makeNested comment, 'params'
       @makeNested comment, 'returnprops'
 
-      if comment.return_nodejscallback
+      if comment.doesReturnNodejscallback
         callback_params = [ {
             name: 'error'
             types: ['Error']
@@ -400,11 +400,11 @@ class Collector
         comment.params.push
           name: 'callback'
           types: ['Function']
-          optional: comment.return_promise
+          optional: comment.doesReturnPromise
           description: 'NodeJS style\'s callback'
           params: callback_params
 
-      if comment.chainable and not comment.return
+      if comment.isChainable and not comment.return
         comment.return =
           types: [comment.ctx.class_name]
           description: 'this'

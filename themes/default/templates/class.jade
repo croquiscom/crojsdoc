@@ -17,11 +17,11 @@ block nav-item
         a(href='#'+property.html_id)= property.ctx.name
           if property.isPrivate
             span.pull-right.label.label-private private
-          if property.static
+          if property.isStatic
             span.pull-right.label.label-static static
-          if property.abstract
+          if property.isAbstract
             span.pull-right.label.label-abstract abstract
-          if property.async
+          if property.isAsync
             span.pull-right.label.label-async async
           if property.override
             span.pull-right.label.label-override override
@@ -39,7 +39,7 @@ block body
         span.extends!= ' extends ' + self.klass.extends.map(function (t) { return self.makeTypeLink(self.rel_path, t); }).join(', ')
       if self.klass.uses.length
         span.uses!= ' uses ' + self.klass.uses.map(function (t) { return self.makeTypeLink(self.rel_path, t); }).join(', ')
-      if self.klass.abstract
+      if self.klass.isAbstract
         span.label.label-abstract abstract
     div!= self.convertLink(self.rel_path, self.klass.description.summary)
     div!= self.convertLink(self.rel_path, self.klass.description.body)
@@ -59,7 +59,7 @@ block body
       - var showcode_line_number = self.klass.class_codeStart
       - var showcode_code = self.klass.class_code
       include method-showcode
-    if !self.klass.static
+    if !self.klass.isStatic
       div.panel.panel-info
         div.panel-heading.collapsed(data-toggle='collapse',data-target='#'+self.klass.html_id+'_ctor_body')
           h3.panel-title Constructor

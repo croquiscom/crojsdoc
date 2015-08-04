@@ -9,7 +9,7 @@ describe 'support various class system', ->
       summary: '<p>Create an instance</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Create an instance</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[0].static).to.be.eql true
+    expect(result.classes[0].properties[0].isStatic).to.be.eql true
     expect(result.classes[0].properties[0].ctx).to.be.eql
       type: 'method'
       name: 'createInstance'
@@ -18,7 +18,7 @@ describe 'support various class system', ->
       summary: '<p>Default name</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Default name</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[1].static).to.be.eql true
+    expect(result.classes[0].properties[1].isStatic).to.be.eql true
     expect(result.classes[0].properties[1].ctx).to.be.eql
       type: 'property'
       name: 'default_name'
@@ -27,7 +27,7 @@ describe 'support various class system', ->
       summary: '<p>Say hello</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Say hello</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[2].static).to.be.eql false
+    expect(result.classes[0].properties[2].isStatic).to.be.eql false
     expect(result.classes[0].properties[2].ctx).to.be.eql
       type: 'method'
       name: 'hello'
@@ -36,7 +36,7 @@ describe 'support various class system', ->
       summary: '<p>Module name</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Module name</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[3].static).to.be.eql false
+    expect(result.classes[0].properties[3].isStatic).to.be.eql false
     expect(result.classes[0].properties[3].ctx).to.be.eql
       type: 'property'
       name: 'name'

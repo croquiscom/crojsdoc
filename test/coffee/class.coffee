@@ -37,7 +37,7 @@ class Simple
       summary: '<p>Say hello</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Say hello</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[0].static).to.be.eql false
+    expect(result.classes[0].properties[0].isStatic).to.be.eql false
     expect(result.classes[0].properties[0].ctx).to.be.eql
       type: 'method'
       name: 'hello'
@@ -62,7 +62,7 @@ class Simple
       summary: '<p>Module name</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Module name</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[0].static).to.be.eql false
+    expect(result.classes[0].properties[0].isStatic).to.be.eql false
     expect(result.classes[0].properties[0].ctx).to.be.eql
       type: 'property'
       name: 'name'
@@ -87,7 +87,7 @@ class Simple
       summary: '<p>Create an instance</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Create an instance</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[0].static).to.be.eql true
+    expect(result.classes[0].properties[0].isStatic).to.be.eql true
     expect(result.classes[0].properties[0].ctx).to.be.eql
       type: 'method'
       name: 'create'
@@ -112,7 +112,7 @@ class Simple
       summary: '<p>Default name</p>\n'
       body: '<p>Lorem ipsum dolor sit amet</p>\n'
       full: '<p>Default name</p>\n<p>Lorem ipsum dolor sit amet</p>\n'
-    expect(result.classes[0].properties[0].static).to.be.eql true
+    expect(result.classes[0].properties[0].isStatic).to.be.eql true
     expect(result.classes[0].properties[0].ctx).to.be.eql
       type: 'property'
       name: 'default_name'
