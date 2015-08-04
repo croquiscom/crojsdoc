@@ -13,6 +13,8 @@ function groupExamplesPerLanguage() {
         className = 'JavaScript';
       } else if (className==='coffeescript') {
         className = 'CoffeeScript';
+      } else if (className==='typescript') {
+        className = 'TypeScript';
       }
       languages[className] = 1;
       var $li = $("<li><a data-examples-group='" + lang + "'>" + className + "</a></li>");
