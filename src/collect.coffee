@@ -312,8 +312,16 @@ class Collector
     comments = comments.filter (comment) ->
       return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
 
-    comments.forEach (comment) =>
+    comments.forEach (comment) ->
       comment.definedIn = path
+      return
+
+    if @options.plugins
+      comments.forEach (comment) =>
+        @options.plugins.forEach (plugin) ->
+          plugin.onComment comment
+          return
+        return
 
     @classifyComments comments
 

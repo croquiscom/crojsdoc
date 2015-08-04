@@ -41,6 +41,16 @@ _readConfig = (options) ->
         options.github.branch = 'master'
     if config.hasOwnProperty 'reverse_see_also'
       options.reverse_see_also = config.reverse_see_also is true
+    if config.hasOwnProperty 'plugins'
+      plugins = config.plugins
+      if not Array.isArray plugins
+        plugins = [plugins]
+      options.plugins = plugins.map (plugin) ->
+        try
+          require plugin
+        catch e
+          console.log "Plugin '#{plugin}' not found"
+      .filter (plugin) -> plugin
     return
 
 ##
