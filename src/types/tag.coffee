@@ -34,3 +34,8 @@ class Tag
   ##
   # @property description
   # @type String
+
+  ##
+  # If a typeString is added by plugins, it will be parsed to types.
+  # @property typeString
+  # @type String

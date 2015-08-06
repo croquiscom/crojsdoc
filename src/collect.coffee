@@ -217,8 +217,14 @@ class Collector
             comment.doesReturnNodejscallback = true
           when 'chainable'
             comment.isChainable = true
+          when 'type'
+            if not tag.types and tag.typeString
+              typeString = tag.typeString
+              if not /{.*}/.test typeString
+                typeString = '{' + typeString + '}'
+              dox.parseTagTypes typeString, tag
           when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
-            , 'extends', 'todo', 'type', 'api', 'uses', 'override', 'example'
+            , 'extends', 'todo', 'api', 'uses', 'override', 'example'
           else
             console.log "Unknown tag : #{tag.type} in #{comment.full_path}"
 
