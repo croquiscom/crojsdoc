@@ -1,6 +1,5 @@
 ##
 # Represents a comment block
-# @namespace types
 class Comment
   ##
   # The first paragraph of the description
@@ -68,11 +67,21 @@ class Comment
   # @type Number
 
   ##
-  # The file path that contains this comment block
-  # @property definedIn
+  # The file path that contains this comment block relative to the project directory
+  # @property full_path
+  # @type String
+
+  ##
+  # The path that contains this comment block relative to the source directory
+  # @property path
   # @type String
 
   ##
   # The context of the code block
   # @property ctx
   # @type CodeContext
+
+  ##
+  # The value of a tag '@namespace'
+  # @property namespace
+  # @type String

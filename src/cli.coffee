@@ -148,13 +148,13 @@ _readSourceFiles = (options) ->
         data = fs.readFileSync(file, 'utf-8').trim()
         continue if not data
         if isWindows
-          contents.push path: file.replace(project_dir_re, '').replace(/\\/g, '/'), file: file.substr(base_path.length+1).replace(/\\/g, '/'), data: data
+          contents.push full_path: file.replace(project_dir_re, '').replace(/\\/g, '/'), path: file.substr(base_path.length+1).replace(/\\/g, '/'), data: data
         else
-          contents.push path: file.replace(project_dir_re, ''), file: file.substr(base_path.length+1), data: data
+          contents.push full_path: file.replace(project_dir_re, ''), path: file.substr(base_path.length+1), data: data
       return
   try
     data = fs.readFileSync "#{options._readme or options._project_dir}/README.md", 'utf-8'
-    contents.push path: '', file: 'README', data: data
+    contents.push full_path: '', path: 'README', data: data
   return contents
 
 ##

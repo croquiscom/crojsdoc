@@ -1,6 +1,5 @@
 ##
 # Input to the [[#Collector]]
-# @namespace types
 class Content
   ##
   # @property path

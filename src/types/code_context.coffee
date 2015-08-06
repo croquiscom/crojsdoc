@@ -1,6 +1,5 @@
 ##
 # Represents a context of a code block
-# @namespace types
 class CodeContext
   ##
   # the type of the code.

@@ -176,7 +176,7 @@ class Renderer
         properties: klass.properties
         type: 'classes'
         _makeTypeLink: (path, type) =>
-          @_makeTypeLink path, type, "(in #{klass.defined_in})"
+          @_makeTypeLink path, type, "(in #{klass.full_path})"
       @_renderOne jade_options, 'class', klass.filename
 
   ##

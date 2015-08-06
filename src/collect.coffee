@@ -28,22 +28,22 @@ class Collector
 
   ##
   # Adds a guide file to the result
-  _addGuide: (file, data) ->
-    id = file.substr(0, file.length-3)
-    file = file.substr(0, file.length-8).replace(/\//g, '.')
+  _addGuide: (path, data) ->
+    id = path.substr(0, path.length-3)
+    name = path.substr(0, path.length-8).replace(/\//g, '.')
     item =
-      name: inflect.humanize inflect.underscore file
-      filename: 'guides/' + file
+      name: inflect.humanize inflect.underscore name
+      filename: 'guides/' + name
       content: markdown data
     @result.guides.push item
     @result.ids[id] = item
 
   ##
   # Adds a feature file to the result
-  _addFeature: (file, data) ->
-    file = file.substr 0, file.length-8
+  _addFeature: (path, data) ->
+    name = path.substr 0, path.length-8
     namespace = ''
-    file = file.replace /(.*)\//, (_, $1) ->
+    name = name.replace /(.*)\//, (_, $1) ->
       namespace = $1 + '/'
       return ''
     feature = ''
@@ -51,23 +51,23 @@ class Collector
       feature = $1
       return ''
     @result.features.push
-      name: namespace + file
+      name: namespace + name
       namespace: namespace
-      filename: 'features/' + namespace.replace(/\//g, '.') + file
+      filename: 'features/' + namespace.replace(/\//g, '.') + name
       feature: feature
       content: data
 
   ##
   # Adds a source file to the result
-  _addFile: (file, data) ->
+  _addFile: (path, data) ->
     namespace = ''
-    file = file.replace /(.*)\//, (_, $1) ->
+    name = path.replace /(.*)\//, (_, $1) ->
       namespace = $1 + '/'
       return ''
     @result.files.push
-      name: namespace + file
+      name: namespace + name
       namespace: namespace
-      filename: 'files/' + namespace.replace(/\//g, '.') + file
+      filename: 'files/' + namespace.replace(/\//g, '.') + name
       content: data
 
   ##
@@ -158,7 +158,7 @@ class Collector
       else
         id = comment.ctx.name
       comment.ctx.fullname = id
-      comment.namespace = ''
+      comment.namespace or= ''
 
       if comment.ctx.type is 'property' or comment.ctx.type is 'method'
         if comment.ctx.cons?
@@ -195,7 +195,7 @@ class Collector
               comment.isStatic = true
               comment.ctx.class_name = tag.parent
           when 'namespace'
-            comment.namespace = if tag.string then tag.string + '.' else ''
+            comment.namespace = if tag.string then tag.string else ''
           when 'property'
             comment.ctx.type = tag.type
             comment.ctx.name = tag.name
@@ -220,7 +220,10 @@ class Collector
           when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'type', 'api', 'uses', 'override', 'example'
           else
-            console.log "Unknown tag : #{tag.type} in #{comment.defined_in}"
+            console.log "Unknown tag : #{tag.type} in #{comment.full_path}"
+
+      if comment.namespace
+        comment.namespace += '.'
 
       if comment.ctx.class_name
         if comment.ctx.type is 'function'
@@ -273,17 +276,16 @@ class Collector
 
   ##
   # Returns list of comments of the given file
-  # @param {String} file
   # @return {Array<Comment>}
-  _getComments: (type, path, file, data) ->
+  _getComments: (type, full_path, path, data) ->
     if type is 'coffeescript'
       comments = dox.parseCommentsCoffee data, { raw: true }
     else if type is 'javascript'
       comments = dox.parseComments data, { raw: true }
     else if type is 'page'
       namespace = ''
-      file = file.substr(0, file.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
-      file = file.replace /(.*)\//, (_, $1) ->
+      name = path.substr(0, path.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
+      name = name.replace /(.*)\//, (_, $1) ->
         namespace = $1
         return ''
       comments = [ {
@@ -292,7 +294,7 @@ class Collector
           body: data
           full: ''
         tags: [
-          { type: 'page', string: file }
+          { type: 'page', string: name }
           { type: 'namespace', string: namespace }
         ]
       } ]
@@ -304,7 +306,8 @@ class Collector
       return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length > 0
 
     comments.forEach (comment) ->
-      comment.definedIn = path
+      comment.full_path = full_path
+      comment.path = path
       return
 
     if @options.plugins
@@ -476,18 +479,18 @@ class Collector
 
   ##
   # Returns the type of a file
-  _getType: (file) ->
-    if /\.coffee$/.test file
+  _getType: (path) ->
+    if /\.coffee$/.test path
       return 'coffeescript'
-    else if /\.js$/.test file
+    else if /\.js$/.test path
       return 'javascript'
-    else if /Page\.md$/.test file
+    else if /Page\.md$/.test path
       return 'page'
-    else if /Guide\.md$/.test file
+    else if /Guide\.md$/.test path
       return 'guide'
-    else if /\.feature$/.test file
+    else if /\.feature$/.test path
       return 'feature'
-    else if file is 'README'
+    else if path is 'README'
       return 'readme'
     else
       return 'unknown'
@@ -511,23 +514,23 @@ class Collector
   run: ->
     all_comments = []
     file_count_read = 0
-    for {path, file, data} in @contents
-      type = @_getType file
+    for {full_path, path, data} in @contents
+      type = @_getType path
       switch type
         when 'guide'
-          @_addGuide file, data
+          @_addGuide path, data
         when 'feature'
-          @_addFeature file, data
+          @_addFeature path, data
         when 'coffeescript', 'javascript', 'page'
-          comments = @_getComments type, path, file, data
+          comments = @_getComments type, full_path, path, data
           if comments?
             [].push.apply all_comments, comments
         when 'readme'
           @result.readme = markdown data
       if type is 'coffeescript' or type is 'javascript'
-        @_addFile file, data
+        @_addFile path, data
       file_count_read++
-      console.log file + ' is processed' if not (@options.quite or is_test_mode)
+      console.log path + ' is processed' if not (@options.quite or is_test_mode)
 
     console.log 'Total ' + file_count_read + ' files processed' if not is_test_mode
 

@@ -2,7 +2,6 @@
 # Generating options
 #
 # It is built by a config file(crojsdoc.yaml) or command line arguments
-# @namespace types
 class Options
   ##
   # @property _project_dir

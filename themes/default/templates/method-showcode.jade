@@ -3,8 +3,8 @@ div.showcode
   span
     |  (defined in 
     if self.github && self.github.sourcelink
-      a(href='#{self.github.repository}/blob/#{self.github.branch}/#{showcode_defined_in}#L#{showcode_line_number}') #{showcode_defined_in}:#{showcode_line_number}
+      a(href='#{self.github.repository}/blob/#{self.github.branch}/#{showcode_full_path}#L#{showcode_line_number}') #{showcode_full_path}:#{showcode_line_number}
     else
-      | #{showcode_defined_in}:#{showcode_line_number}
+      | #{showcode_full_path}:#{showcode_line_number}
     |)
 pre.sourcecode.prettyprint(class='.linenums:'+showcode_line_number)= showcode_code

@@ -55,7 +55,7 @@ block body
     include supplement
     if self.klass.class_code
       - var showcode_label = 'Show class code'
-      - var showcode_defined_in = self.klass.definedIn
+      - var showcode_full_path = self.klass.full_path
       - var showcode_line_number = self.klass.class_codeStart
       - var showcode_code = self.klass.class_code
       include method-showcode
@@ -70,7 +70,7 @@ block body
             include method-parameters
             if self.klass.code
               - var showcode_label = 'Show code'
-              - var showcode_defined_in = self.klass.definedIn
+              - var showcode_full_path = self.klass.full_path
               - var showcode_line_number = self.klass.codeStart
               - var showcode_code = self.klass.code
               include method-showcode

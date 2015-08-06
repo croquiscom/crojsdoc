@@ -13,3 +13,4 @@ github:
 reverse_see_also: true
 plugins:
   - crojsdoc-plugin-underscore-private
+  - crojsdoc-plugin-auto-namespace

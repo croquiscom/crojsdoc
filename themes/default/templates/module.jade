@@ -30,9 +30,9 @@ block body
     div
       | (defined in 
       if self.github && self.github.sourcelink
-        a(href='#{self.github.repository}/blob/#{self.github.branch}/#{self.module_data.definedIn}') #{self.module_data.definedIn.replace(/index.(coffee|js)$/, '')}
+        a(href='#{self.github.repository}/blob/#{self.github.branch}/#{self.module_data.full_path}') #{self.module_data.full_path.replace(/index.(coffee|js)$/, '')}
       else
-        | #{self.module_data.definedIn.replace(/index.(coffee|js)$/, '')}
+        | #{self.module_data.full_path.replace(/index.(coffee|js)$/, '')}
       |)
     div!= self.convertLink(self.rel_path, self.module_data.description.summary)
     div!= self.convertLink(self.rel_path, self.module_data.description.body)

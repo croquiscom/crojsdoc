@@ -12,7 +12,6 @@
 # * otherClass for @augments
 # * otherMemberName, thisMemberName for @borrows
 # * string for other types
-# @namespace types
 class Tag
   ##
   # The type of this tag
