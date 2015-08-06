@@ -13,7 +13,6 @@ isWindows = process.platform is 'win32'
 # Reads a config file(crojsdoc.yaml) to build options
 # @param {Options} options
 # @memberOf cli
-# @private
 _readConfig = (options) ->
   {safeLoad} = require 'js-yaml'
   try
@@ -57,7 +56,6 @@ _readConfig = (options) ->
 # Parses the command line arguments to build options
 # @param {Options} options
 # @memberOf cli
-# @private
 _parseArguments = (options) ->
   {OptionParser} = require 'optparse'
   switches = [
@@ -80,7 +78,6 @@ _parseArguments = (options) ->
 # @param {String|Object} external_types
 # @param {Object} types
 # @memberOf cli
-# @private
 _readExternalTypes = (external_types, types) ->
   return if not external_types
 
@@ -102,7 +99,6 @@ _readExternalTypes = (external_types, types) ->
 # Builds options from a config file(crojsdoc.yaml) or command line arguments
 # @return {Options}
 # @memberOf cli
-# @private
 _buildOptions = ->
   options =
     _project_dir: process.cwd()
@@ -133,7 +129,6 @@ _buildOptions = ->
 # @param {Options} options
 # @return {Array<Content>}
 # @memberOf cli
-# @private
 _readSourceFiles = (options) ->
   if isWindows
     project_dir_re = new RegExp("^" + options._project_dir.replace(/\\/g, '\\\\'))

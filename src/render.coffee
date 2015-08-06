@@ -18,10 +18,9 @@ class Renderer
     @templates_dir = resolve __dirname, '../themes', theme, 'templates'
 
   ##
-  # @private
   # @param {String} type
   # @return {String}
-  makeMissingLink: (type, place = '') ->
+  _makeMissingLink: (type, place = '') ->
     txt = if @result.ids[type]
       "'#{type}' link is ambiguous"
     else
@@ -34,11 +33,10 @@ class Renderer
   #
   # * "String" -&gt; "&lt;a href='reference url for String'&gt;String&lt;/a&gt;"
   # * "Array&lt;Model&gt;" -&gt; "&lt;a href='reference url for Array'&gt;Array&lt;/a&gt;&amp;lt;&lt;a href='internal url for Model'&gt;Model&lt;/a&gt;&amp;gt;"
-  # @private
   # @param {String} rel_path
   # @param {String} type
   # @return {String}
-  makeTypeLink: (rel_path, type, place = '') ->
+  _makeTypeLink: (rel_path, type, place = '') ->
     return type if not type
     getlink = (type) =>
       if @options.types[type]
@@ -48,22 +46,21 @@ class Renderer
         html_id = @result.ids[type].html_id or ''
         link = "#{rel_path}#{filename}##{html_id}"
       else
-        return @makeMissingLink type, place
+        return @_makeMissingLink type, place
       return "<a href='#{link}'>#{type}</a>"
     if res = type.match(/\[(.*)\]\((.*)\)/)
       @options.types[res[1]] = res[2]
       return "<a href='#{res[2]}'>#{res[1]}</a>"
     if res = type.match /(.*?)\.<(.*)>/
-      return "#{@makeTypeLink rel_path, res[1]}&lt;#{@makeTypeLink rel_path, res[2]}&gt;"
+      return "#{@_makeTypeLink rel_path, res[1]}&lt;#{@_makeTypeLink rel_path, res[2]}&gt;"
     else
       return getlink type
 
   ##
-  # @private
   # @param {String} rel_path
   # @param {String} str
   # @return {String}
-  makeSeeLink: (rel_path, str) ->
+  _makeSeeLink: (rel_path, str) ->
     if @result.ids[str]
       filename = @result.ids[str].filename + '.html'
       html_id = @result.ids[str].html_id or ''
@@ -72,11 +69,10 @@ class Renderer
 
   ##
   # Converts link markups to HTML links in the description
-  # @private
   # @param {String} rel_path
   # @param {String} str
   # @return {String}
-  convertLink: (rel_path, str) ->
+  _convertLink: (rel_path, str) ->
     return '' if not str
     str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) =>
       if @result.ids[$1] and @result.ids[$1] isnt 'DUPLICATED ENTRY'
@@ -84,15 +80,14 @@ class Renderer
         html_id = @result.ids[$1].html_id or ''
         return "<a href='#{rel_path}#{filename}##{html_id}'>#{$1}</a>"
       else
-        return @makeMissingLink $1
+        return @_makeMissingLink $1
     return str
 
   ##
-  # @private
   # @param {String} source
   # @param {String} target
   # @param {Function} callback
-  copyResources: (source, target, callback) ->
+  _copyResources: (source, target, callback) ->
     try
       files = fs.readdirSync target
     catch
@@ -105,12 +100,12 @@ class Renderer
       callback()
 
   ##
-  # @private
-  renderOne: (jade_options, template, output) ->
+  # Renders one template
+  _renderOne: (jade_options, template, output) ->
     jade_options.result = @result
-    jade_options.makeTypeLink = @makeTypeLink.bind(@) if not jade_options.makeTypeLink
-    jade_options.makeSeeLink = @makeSeeLink.bind(@)
-    jade_options.convertLink = @convertLink.bind(@)
+    jade_options.makeTypeLink = @_makeTypeLink.bind(@) if not jade_options.makeTypeLink
+    jade_options.makeSeeLink = @_makeSeeLink.bind(@)
+    jade_options.convertLink = @_convertLink.bind(@)
     jade_options.github = @options.github
     jade_options.cache = true
     jade_options.self = true
@@ -122,18 +117,18 @@ class Renderer
         console.log output_file + ' is created' if not @options.quite
 
   ##
-  # @private
-  renderReadme: ->
+  # Renders the README
+  _renderReadme: ->
     jade_options =
       rel_path: './'
       name: 'README'
       content: @result.readme
       type: 'home'
-    @renderOne jade_options, 'extra', 'index'
+    @_renderOne jade_options, 'extra', 'index'
 
   ##
-  # @private
-  renderGuides: ->
+  # Renders guides
+  _renderGuides: ->
     return if @result.guides.length is 0
     try fs.mkdirSync "#{@options.output_dir}/guides"
     @result.guides.forEach (guide) =>
@@ -142,37 +137,37 @@ class Renderer
         name: guide.name
         content: guide.content
         type: 'guides'
-      @renderOne jade_options, 'extra', guide.filename
+      @_renderOne jade_options, 'extra', guide.filename
 
   ##
-  # @private
-  renderPages: ->
+  # Renders pages
+  _renderPages: ->
     if @result.pages.length > 0
       jade_options =
         rel_path: './'
         name: 'Pages'
         type: 'pages'
-      @renderOne jade_options, 'pages', 'pages'
+      @_renderOne jade_options, 'pages', 'pages'
 
   ##
-  # @private
-  renderRESTApis: ->
+  # Renders REST apis
+  _renderRESTApis: ->
     if @result.restapis.length > 0
       jade_options =
         rel_path: './'
         name: 'REST APIs'
         type: 'restapis'
-      @renderOne jade_options, 'restapis', 'restapis'
+      @_renderOne jade_options, 'restapis', 'restapis'
 
   ##
-  # @private
-  renderClasses: ->
+  # Renders classes
+  _renderClasses: ->
     return if @result.classes.length is 0
     try fs.mkdirSync "#{@options.output_dir}/classes"
     jade_options =
       rel_path: '../'
       type: 'classes'
-    @renderOne jade_options, 'class-toc', 'classes/index'
+    @_renderOne jade_options, 'class-toc', 'classes/index'
     @result.classes.forEach (klass) =>
       jade_options =
         rel_path: '../'
@@ -180,19 +175,19 @@ class Renderer
         klass: klass
         properties: klass.properties
         type: 'classes'
-        makeTypeLink: (path, type) =>
-          @makeTypeLink path, type, "(in #{klass.defined_in})"
-      @renderOne jade_options, 'class', klass.filename
+        _makeTypeLink: (path, type) =>
+          @_makeTypeLink path, type, "(in #{klass.defined_in})"
+      @_renderOne jade_options, 'class', klass.filename
 
   ##
-  # @private
-  renderModules: ->
+  # Renders modules
+  _renderModules: ->
     return if @result.modules.length is 0
     try fs.mkdirSync "#{@options.output_dir}/modules"
     jade_options =
       rel_path: '../'
       type: 'modules'
-    @renderOne jade_options, 'module-toc', 'modules/index'
+    @_renderOne jade_options, 'module-toc', 'modules/index'
     @result.modules.forEach (module) =>
       jade_options =
         rel_path: '../'
@@ -200,11 +195,11 @@ class Renderer
         module_data: module
         properties: module.properties
         type: 'modules'
-      @renderOne jade_options, 'module', module.filename
+      @_renderOne jade_options, 'module', module.filename
 
   ##
-  # @private
-  renderFeatures: ->
+  # Renders features
+  _renderFeatures: ->
     return if @result.features.length is 0
     try fs.mkdirSync "#{@options.output_dir}/features"
     @result.features.forEach (feature) =>
@@ -213,11 +208,11 @@ class Renderer
         name: feature.name
         feature: feature
         type: 'features'
-      @renderOne jade_options, 'feature', feature.filename
+      @_renderOne jade_options, 'feature', feature.filename
 
   ##
-  # @private
-  renderFiles: ->
+  # Renders files
+  _renderFiles: ->
     return if @result.files.length is 0
     try fs.mkdirSync "#{@options.output_dir}/files"
     @result.files.forEach (file) =>
@@ -226,11 +221,11 @@ class Renderer
         name: file.name
         file: file
         type: 'files'
-      @renderOne jade_options, 'file', file.filename
+      @_renderOne jade_options, 'file', file.filename
 
   ##
-  # @private
-  groupByNamespaces: (items) ->
+  # Groups items by namespaces
+  _groupByNamespaces: (items) ->
     if items.length is 0
       return []
     current_group = []
@@ -247,22 +242,22 @@ class Renderer
   ##
   # Runs
   run: ->
-    @result.ns_pages = @groupByNamespaces @result.pages
-    @result.ns_restapis = @groupByNamespaces @result.restapis
-    @result.ns_classes = @groupByNamespaces @result.classes
-    @result.ns_modules = @groupByNamespaces @result.modules
-    @result.ns_features = @groupByNamespaces @result.features
-    @result.ns_files = @groupByNamespaces @result.files
+    @result.ns_pages = @_groupByNamespaces @result.pages
+    @result.ns_restapis = @_groupByNamespaces @result.restapis
+    @result.ns_classes = @_groupByNamespaces @result.classes
+    @result.ns_modules = @_groupByNamespaces @result.modules
+    @result.ns_features = @_groupByNamespaces @result.features
+    @result.ns_files = @_groupByNamespaces @result.files
 
-    @copyResources @resources_dir, @options.output_dir, =>
-      @renderReadme()
-      @renderGuides()
-      @renderPages()
-      @renderRESTApis()
-      @renderClasses()
-      @renderModules()
-      @renderFeatures()
-      @renderFiles()
+    @_copyResources @resources_dir, @options.output_dir, =>
+      @_renderReadme()
+      @_renderGuides()
+      @_renderPages()
+      @_renderRESTApis()
+      @_renderClasses()
+      @_renderModules()
+      @_renderFeatures()
+      @_renderFiles()
 
 ##
 # Renders

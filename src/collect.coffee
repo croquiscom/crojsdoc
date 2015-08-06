@@ -28,8 +28,7 @@ class Collector
 
   ##
   # Adds a guide file to the result
-  # @private
-  addGuide: (file, data) ->
+  _addGuide: (file, data) ->
     id = file.substr(0, file.length-3)
     file = file.substr(0, file.length-8).replace(/\//g, '.')
     item =
@@ -41,8 +40,7 @@ class Collector
 
   ##
   # Adds a feature file to the result
-  # @private
-  addFeature: (file, data) ->
+  _addFeature: (file, data) ->
     file = file.substr 0, file.length-8
     namespace = ''
     file = file.replace /(.*)\//, (_, $1) ->
@@ -61,8 +59,7 @@ class Collector
 
   ##
   # Adds a source file to the result
-  # @private
-  addFile: (file, data) ->
+  _addFile: (file, data) ->
     namespace = ''
     file = file.replace /(.*)\//, (_, $1) ->
       namespace = $1 + '/'
@@ -80,10 +77,9 @@ class Collector
   # * name '=' value : default value
   # * '+' name : addable
   # * '-' name : excludable
-  # @private
   # @param {Object} tag
   # @return {Object} given tag
-  processParamFlags: (tag) ->
+  _processParamFlags: (tag) ->
     # is optional parameter?
     if tag.name[0] is '[' and tag.name[tag.name.length-1] is ']'
       tag.name = tag.name.substr 1, tag.name.length-2
@@ -101,28 +97,26 @@ class Collector
 
   ##
   # Finds a parameter in the list
-  # @private
   # @param {Array<Object>} params
   # @param {String} name
   # @return {Object}
-  findParam: (params, name) ->
+  _findParam: (params, name) ->
     for param in params
       if param.name is name
         return param
       if param.params
-        found = @findParam param.params, name
+        found = @_findParam param.params, name
         return found if found
     return
 
   ##
   # Makes parameters(or returnprops) nested
-  # @private
-  makeNested: (comment, targetName) ->
+  _makeNested: (comment, targetName) ->
     i = comment[targetName].length
     while i-->0
       param = comment[targetName][i]
       if match = param.name.match /\[?([^=]*)\.([^\]]*)\]?/
-        parentParam = @findParam comment[targetName], match[1]
+        parentParam = @_findParam comment[targetName], match[1]
         if parentParam
           comment[targetName].splice i, 1
           parentParam[targetName] = parentParam[targetName] or []
@@ -131,8 +125,7 @@ class Collector
 
   ##
   # Apply markdown
-  # @private
-  applyMarkdown: (str) ->
+  _applyMarkdown: (str) ->
     # we cannot use '###' for header level 3 or above in CoffeeScript, instead web use '##\#', ''##\##', ...
     # recover this for markdown
     str = str.replace /#\\#/g, '##'
@@ -140,8 +133,7 @@ class Collector
 
   ##
   # Classifies type and collect id
-  # @private
-  classifyComments: (comments) ->
+  _classifyComments: (comments) ->
     current_class = undefined
     current_module = undefined
 
@@ -281,10 +273,9 @@ class Collector
 
   ##
   # Returns list of comments of the given file
-  # @private
   # @param {String} file
   # @return {Array<Comment>}
-  getComments: (type, path, file, data) ->
+  _getComments: (type, path, file, data) ->
     if type is 'coffeescript'
       comments = dox.parseCommentsCoffee data, { raw: true }
     else if type is 'javascript'
@@ -323,25 +314,24 @@ class Collector
           return
         return
 
-    @classifyComments comments
+    @_classifyComments comments
 
     return comments
 
   ##
   # Structuralizes comments
-  # @private
-  processComments: (comments) ->
+  _processComments: (comments) ->
     comments.forEach (comment) =>
       desc = comment.description
       if desc
-        desc.full = @applyMarkdown desc.full
-        desc.summary = @applyMarkdown desc.summary
-        desc.body = @applyMarkdown desc.body
+        desc.full = @_applyMarkdown desc.full
+        desc.summary = @_applyMarkdown desc.summary
+        desc.body = @_applyMarkdown desc.body
 
       for tag in comment.tags
         switch tag.type
           when 'param'
-            tag = @processParamFlags tag
+            tag = @_processParamFlags tag
             for type, i in tag.types
               tag.types[i] = type
             tag.description = tag.description
@@ -353,7 +343,7 @@ class Collector
             comment.return = tag
           when 'returnprop'
             tag = dox.parseTag '@param ' + tag.string
-            tag = @processParamFlags tag
+            tag = @_processParamFlags tag
             for type, i in tag.types
               tag.types[i] = type
             tag.description = tag.description
@@ -391,8 +381,8 @@ class Collector
           @result.ids[RegExp.$1]?.subclasses.push comment.ctx.name
 
       # make parameters nested
-      @makeNested comment, 'params'
-      @makeNested comment, 'returnprops'
+      @_makeNested comment, 'params'
+      @_makeNested comment, 'returnprops'
 
       if comment.doesReturnNodejscallback
         callback_params = [ {
@@ -440,8 +430,7 @@ class Collector
   #
   # - convert hash to sorted array
   # - classes -> classes & modules
-  # @private
-  refineResult: ->
+  _refineResult: ->
     result = @result
     result.classes = Object.keys(result.classes).sort( (a,b) ->
       a_ns = result.classes[a].namespace
@@ -487,8 +476,7 @@ class Collector
 
   ##
   # Returns the type of a file
-  # @private
-  getType: (file) ->
+  _getType: (file) ->
     if /\.coffee$/.test file
       return 'coffeescript'
     else if /\.js$/.test file
@@ -506,7 +494,7 @@ class Collector
 
   ##
   # Makes reverse see alsos
-  makeReverseSeeAlso: (comments) ->
+  _makeReverseSeeAlso: (comments) ->
     for comment in comments
       for see in comment.sees
         other = @result.ids[see]
@@ -524,33 +512,33 @@ class Collector
     all_comments = []
     file_count_read = 0
     for {path, file, data} in @contents
-      type = @getType file
+      type = @_getType file
       switch type
         when 'guide'
-          @addGuide file, data
+          @_addGuide file, data
         when 'feature'
-          @addFeature file, data
+          @_addFeature file, data
         when 'coffeescript', 'javascript', 'page'
-          comments = @getComments type, path, file, data
+          comments = @_getComments type, path, file, data
           if comments?
             [].push.apply all_comments, comments
         when 'readme'
           @result.readme = markdown data
       if type is 'coffeescript' or type is 'javascript'
-        @addFile file, data
+        @_addFile file, data
       file_count_read++
       console.log file + ' is processed' if not (@options.quite or is_test_mode)
 
     console.log 'Total ' + file_count_read + ' files processed' if not is_test_mode
 
-    @processComments all_comments
+    @_processComments all_comments
 
     if @options.reverse_see_also
-      @makeReverseSeeAlso all_comments
+      @_makeReverseSeeAlso all_comments
 
     if not @options.files
       @result.files = []
-    @refineResult()
+    @_refineResult()
 
 ##
 # Collects

@@ -11,3 +11,5 @@ github:
   ribbon: true
   sourcelink: true
 reverse_see_also: true
+plugins:
+  - crojsdoc-plugin-underscore-private
