@@ -118,6 +118,15 @@ _buildOptions = ->
 
   _readConfig options
   _parseArguments options
+
+  if options.plugins
+    options.plugins.forEach (plugin) ->
+      if plugin.externalTypes
+        _readExternalTypes plugin.externalTypes, options.types
+      return
+
+  # process options.external-types after plugins' externalTypes
+  # for user to override plugins' configurations
   _readExternalTypes options['external-types'], options.types
 
   options.output_dir = resolve options._project_dir, options.output or 'doc'
