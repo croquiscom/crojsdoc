@@ -280,8 +280,12 @@ class Collector
   _getComments: (type, full_path, path, data) ->
     if type is 'coffeescript'
       comments = dox.parseCommentsCoffee data, { raw: true }
+      comments.forEach (comment) ->
+        comment.language = 'coffeescript'
     else if type is 'javascript'
       comments = dox.parseComments data, { raw: true }
+      comments.forEach (comment) ->
+        comment.language = 'javascript'
     else if type is 'page'
       namespace = ''
       name = path.substr(0, path.length-3).replace(/[^A-Za-z0-9]*Page$/, '')

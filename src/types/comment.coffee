@@ -67,6 +67,11 @@ class Comment
   # @type Number
 
   ##
+  # The language of code. one of 'coffeescript', 'javascript' or null
+  # @property language
+  # @type String
+
+  ##
   # The file path that contains this comment block relative to the project directory
   # @property full_path
   # @type String
