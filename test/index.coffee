@@ -14,3 +14,8 @@ describe 'tags', ->
   fs.readdirSync(__dirname + '/tags').forEach (filename) ->
     return if not /\.coffee$/.test filename
     require "./tags/#{filename}"
+
+describe 'unit', ->
+  fs.readdirSync(__dirname + '/unit').forEach (filename) ->
+    return if not /\.coffee$/.test filename
+    require "./unit/#{filename}"
