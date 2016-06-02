@@ -67,7 +67,7 @@ See http://croquiscom.github.io/crojsdoc/guides/ListOfTags.html
 
 The MIT License (MIT)
 
-Copyright (c) 2012-2014 Sangmin Yoon &lt;sangmin.yoon@croquis.com&gt;
+Copyright (c) 2012-2016 Sangmin Yoon &lt;sangmin.yoon@croquis.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
