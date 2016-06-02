@@ -337,27 +337,35 @@ exports.parseTagTypes = (str, tag) ->
       tag.typesDescription = ''
       tag.optional = tag.nullable = tag.nonNullable = tag.variable = false
     return []
-  {Parser, Builder} = require 'jsdoctypeparser'
-  result = new Parser().parse str.substr(1, str.length - 2)
+  {parse, publish, NodeType} = require 'jsdoctypeparser'
+  result = parse str.substr(1, str.length - 2)
+  optional = false
 
-  transform = (type) ->
-    if type instanceof Builder.TypeUnion
-      type.types.map transform
-    else if type instanceof Builder.TypeName
-      type.name
-    else if type instanceof Builder.RecordType
-      type.entries.reduce (obj, entry) ->
-        obj[entry.name] = transform(entry.typeUnion)
+  if result.type is NodeType.OPTIONAL
+    optional = true
+    result = result.value
+
+  transform = (ast) ->
+    if ast.type is NodeType.NAME
+      [ast.name]
+    else if ast.type is NodeType.UNION
+      left = transform ast.left
+      right = transform ast.right
+      [].push.apply left, right
+      left
+    else if ast.type is NodeType.RECORD
+      [ast.entries.reduce (obj, entry) ->
+        obj[entry.key] = transform entry.value
         obj
-      , {}
+      , {}]
     else
-      type.toString()
+      [publish ast]
   types = transform result
 
   if tag
     tag.types = types
     #tag.typesDescription = result.toHtml()
-    tag.optional = (tag.name and tag.name.slice(0,1) is '[') or result.optional
+    tag.optional = (tag.name and tag.name.slice(0,1) is '[') or optional
     #tag.nullable = result.nullable
     #tag.nonNullable = result.nonNullable
     #tag.variable = result.variable

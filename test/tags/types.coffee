@@ -47,7 +47,7 @@ doSomething = (p) -> p
     expect(params[0]).to.eql
       type: 'param'
       string: '{Array.<String>} p parameter'
-      types: ['Array.<String>']
+      types: ['Array<String>']
       name: 'p'
       description: 'parameter'
       optional: false
@@ -72,7 +72,7 @@ doSomething = (p) -> p
     expect(params[0]).to.eql
       type: 'param'
       string: '{Array<String>} p parameter'
-      types: ['Array.<String>']
+      types: ['Array<String>']
       name: 'p'
       description: 'parameter'
       optional: false
@@ -97,7 +97,7 @@ doSomething = (p) -> p
     expect(params[0]).to.eql
       type: 'param'
       string: '{StringMap<Array<String>>} p parameter'
-      types: ['StringMap.<Array.<String>>']
+      types: ['StringMap<Array<String>>']
       name: 'p'
       description: 'parameter'
       optional: false
