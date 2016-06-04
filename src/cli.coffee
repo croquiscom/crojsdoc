@@ -61,12 +61,17 @@ _parseArguments = (options) ->
   switches = [
     [ '-o', '--output DIRECTORY', 'Output directory' ]
     [ '-t', '--title TITLE', 'Document Title' ]
+    [ '-h', '--help', 'show help' ]
     [ '-q', '--quite', 'less output' ]
     [ '-r', '--readme DIRECTORY', 'README.md directory path']
     [ '-f', '--files', 'included source files' ]
     [ '--external-types JSONFILE', 'external type definitions' ]
   ]
   parser = new OptionParser switches
+  parser.banner = 'Usage: crojsdoc [-o DIRECTORY] [-t TITLE] [-q] [options..] SOURCES...'
+  parser.on 'help', ->
+    console.log parser.toString()
+    process.exit(1)
   parser.on '*', (opt, value) ->
     if value is undefined
       value = true
