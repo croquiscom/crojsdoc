@@ -114,7 +114,7 @@ class Renderer
       output_file = "#{@options.output_dir}/#{output}.html"
       fs.writeFile output_file, result, (error) =>
         return console.error 'failed to create '+output_file if error
-        console.log output_file + ' is created' if not @options.quite
+        console.log output_file + ' is created' if not @options.quiet
 
   ##
   # Renders the README
