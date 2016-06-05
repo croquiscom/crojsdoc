@@ -59,6 +59,7 @@ _readConfig = (options) ->
 _parseArguments = (options) ->
   {OptionParser} = require 'optparse'
   switches = [
+    [ '-h', '--help', 'show help' ]
     [ '-o', '--output DIRECTORY', 'Output directory' ]
     [ '-t', '--title TITLE', 'Document Title' ]
     [ '-q', '--quiet', 'less output' ]
@@ -67,6 +68,10 @@ _parseArguments = (options) ->
     [ '--external-types JSONFILE', 'external type definitions' ]
   ]
   parser = new OptionParser switches
+  parser.banner = 'Usage: crojsdoc [-o DIRECTORY] [-t TITLE] [-q] [options..] SOURCES...'
+  parser.on 'help', ->
+    console.log parser.toString()
+    process.exit(1)
   parser.on '*', (opt, value) ->
     if value is undefined
       value = true
