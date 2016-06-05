@@ -25,7 +25,7 @@ Or, you can specify options in crojsdoc.yaml like this:
 ```
 output: doc
 title: Title
-quite: true
+quiet: true
 sources:
   - lib
   - guides

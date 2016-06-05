@@ -540,7 +540,7 @@ class Collector
       if type is 'coffeescript' or type is 'javascript'
         @_addFile path, data
       file_count_read++
-      console.log path + ' is processed' if not (@options.quite or is_test_mode)
+      console.log path + ' is processed' if not (@options.quiet or is_test_mode)
 
     console.log 'Total ' + file_count_read + ' files processed' if not is_test_mode
 

@@ -21,8 +21,8 @@ _readConfig = (options) ->
       options.output = config.output
     if config.hasOwnProperty 'title'
       options.title = config.title
-    if config.hasOwnProperty 'quite'
-      options.quite = config.quite is true
+    if config.hasOwnProperty 'quiet' or config.hasOwnProperty 'quite'
+      options.quiet = config.quiet is true
     if  config.hasOwnProperty 'files'
       options.files = config.files is true
     if config.hasOwnProperty('readme') and typeof config.readme is 'string'
@@ -59,10 +59,10 @@ _readConfig = (options) ->
 _parseArguments = (options) ->
   {OptionParser} = require 'optparse'
   switches = [
+    [ '-h', '--help', 'show help' ]
     [ '-o', '--output DIRECTORY', 'Output directory' ]
     [ '-t', '--title TITLE', 'Document Title' ]
-    [ '-h', '--help', 'show help' ]
-    [ '-q', '--quite', 'less output' ]
+    [ '-q', '--quiet', 'less output' ]
     [ '-r', '--readme DIRECTORY', 'README.md directory path']
     [ '-f', '--files', 'included source files' ]
     [ '--external-types JSONFILE', 'external type definitions' ]
