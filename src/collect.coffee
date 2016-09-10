@@ -225,11 +225,13 @@ class Collector
               dox.parseTagTypes typeString, tag
           when 'apimethod'
             comment.apimethod = tag
-            switch tag.string.toUpperCase()
-              when 'GET'    then return comment.apimethod.style = 'success'
-              when 'POST'   then return comment.apimethod.style = 'info'
-              when 'PUT'    then return comment.apimethod.style = 'warning'
-              when 'DELETE' then return comment.apimethod.style = 'danger'
+            apimethod = tag.string.toUpperCase()
+            id += '_' + apimethod
+            switch apimethod
+              when 'GET'    then comment.apimethod.style = 'success'
+              when 'POST'   then comment.apimethod.style = 'info'
+              when 'PUT'    then comment.apimethod.style = 'warning'
+              when 'DELETE' then comment.apimethod.style = 'danger'
               else comment.apimethod.style = 'default'
           when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'api', 'uses', 'override', 'example'
