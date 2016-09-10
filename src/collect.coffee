@@ -223,6 +223,14 @@ class Collector
               if not /{.*}/.test typeString
                 typeString = '{' + typeString + '}'
               dox.parseTagTypes typeString, tag
+          when 'apimethod'
+            comment.apimethod = tag
+            switch tag.string.toUpperCase()
+              when 'GET'    then return comment.apimethod.style = 'success'
+              when 'POST'   then return comment.apimethod.style = 'info'
+              when 'PUT'    then return comment.apimethod.style = 'warning'
+              when 'DELETE' then return comment.apimethod.style = 'danger'
+              else comment.apimethod.style = 'default'
           when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
             , 'extends', 'todo', 'api', 'uses', 'override', 'example'
           else
