@@ -2,10 +2,14 @@
 //- method: comment that includes description
 //- item!=method if overridden method
 
-div.panel.panel-success
+div.panel(class="#{method.apimethod ? 'panel-' + method.apimethod.style : 'panel-success'}")
   div.panel-heading.collapsed(data-toggle='collapse',data-target='#'+item.html_id+'_body')
     h3.panel-title
-      | #{display_name}
+      if method.apimethod
+        span.label(class="label-#{method.apimethod.style}", style="margin:0 10px 0 0; vertical-align: top") #{method.apimethod.string}
+        span #{display_name}
+      else
+        | #{display_name}
       if method.ctx.type==='method'
         | (
         each param, i in method.params
