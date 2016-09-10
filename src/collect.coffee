@@ -444,6 +444,8 @@ class Collector
         when 'page'
           @result.pages[comment.ctx.name] = comment
         when 'restapi'
+          if comment.apimethod
+            return @result.restapis[comment.ctx.name+comment.apimethod.string] = comment
           @result.restapis[comment.ctx.name] = comment
 
   ##
