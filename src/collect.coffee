@@ -469,15 +469,15 @@ class Collector
       if a<b then -1 else 1
     ).map (name) -> result.restapis[name]
     result.guides = result.guides.sort (a,b) ->
-      if a.name<b.name then -1 else 1
+      if a.name < b.name then -1 else 1
     result.features = result.features.sort (a,b) ->
-      if a.name<b.name then -1 else 1
+      if a.name < b.name then -1 else 1
     result.files = result.files.sort (a,b) ->
       a_ns = a.namespace
       b_ns = b.namespace
       return -1 if a_ns < b_ns
       return 1 if a_ns > b_ns
-      if a.name<b.name then -1 else 1
+      if a.name < b.name then -1 else 1
 
     result.classes.forEach (klass) ->
       klass.properties.sort (a, b) -> if a.ctx.name < b.ctx.name then -1 else 1

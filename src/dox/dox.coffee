@@ -409,7 +409,9 @@ exports.parseParamOptional = (tag) ->
 # @param {Object=} parentContext An indication if we are already in something. Like a namespace or an inline declaration.
 # @return {Object}
 # @api public
-exports.parseCodeContext = (str, parentContext = {}) ->
+exports.parseCodeContext = (str, parentContext) ->
+  if not parentContext
+    parentContext = {}
   ctx = undefined
   # loop through all context matchers, returning the first successful match
   exports.contextPatternMatchers.some((matcher) ->
