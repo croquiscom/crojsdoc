@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - Specifying types</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"><link href="../tocify/jquery.tocify.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides - Specifying types <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../classes/index.html">Classes</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs col-sm-3"><div id="toc"></div></div><div class="col-sm-9"><div><h1 id="basic">Basic</h1>
+<p>You can specify the type of a parameter like following:</p>
+<pre><code class="language-javascript">/**
+ * Adds a user
+ * @param {String} name the name of the user
+ * @param {Number} age the age of the user
+ * @return {Boolean} true if successful
+ */</code></pre>
+<pre><code class="language-coffeescript">##
+# Adds a user
+# @param {String} name the name of the user
+# @param {Number} age the age of the user
+# @return {Boolean} true if successful</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Adds a user</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>name</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> the name of the user</span></td></tr><tr><td><span class="method-depth0"></span><code>age</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'>Number</a></span></td><td><span> the age of the user</span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'>Boolean</a></span></td><td><span>true if successful</span></td></tr></table>
+</div>
+
+<h1 id="specifying-options-object">Specifying options object</h1>
+<p>Often, JavaScript functions have an options object.
+You can add a comment for this like following:</p>
+<pre><code class="language-javascript">/**
+ * Defines a new property on an object.
+ * @param {Object} object the object on which to define the property
+ * @param {String} name the name of the property to be defined
+ * @param {Object} descriptor the descriptor for the property
+ * @param {Boolean} [descriptor.configurable=false] true if and only if the type of this property descriptor may be changed
+ * @param [descriptor.value=undefined] the value associated with the property
+ */</code></pre>
+<pre><code class="language-coffeescript">##
+# Defines a new property on an object.
+# @param {Object} object the object on which to define the property
+# @param {String} name the name of the property to be defined
+# @param {Object} descriptor the descriptor for the property
+# @param {Boolean} [descriptor.configurable=false] true if and only if the type of this property descriptor may be changed
+# @param [descriptor.value=undefined] the value associated with the property</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Defines a new property on an object.</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>object</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> the object on which to define the property</span></td></tr><tr><td><span class="method-depth0"></span><code>name</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> the name of the property to be defined</span></td></tr><tr><td><span class="method-depth0"></span><code>descriptor</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> the descriptor for the property</span></td></tr><tr><td><span class="method-depth1"></span><code>configurable=false</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'>Boolean</a></span></td><td><span> true if and only if the type of this property descriptor may be changed</span></td></tr><tr><td><span class="method-depth1"></span><code>value=undefined</code><span class="pull-right label label-optional">optional</span></td><td></td><td><span> the value associated with the property</span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table>
+</div>
+
+<p>Currently, options can be nested at the maximum third levels. (eg. user.name.first_name)</p>
+<h1 id="specifying-callback-function">Specifying callback function</h1>
+<p>Using callback is the common pattern of JavaScript, especially in Node.js.
+You can add a comment for this like following:</p>
+<pre><code class="language-javascript">/**
+ * Asynchronous file open
+ * @param {String} path the path to open
+ * @param {String} flags flags for opening
+ * @param {Number|String} [mode=&#39;0666&#39;] file creation mode
+ * @param {Function} [callback] the callback function
+ * @param {Error} callback.error not null if an error is occurred
+ * @param {Number} callback.fd a file descriptor
+ */</code></pre>
+<pre><code class="language-coffeescript">##
+# Asynchronous file open
+# @param {String} path the path to open
+# @param {String} flags flags for opening
+# @param {Number|String} [mode=&#39;0666&#39;] file creation mode
+# @param {Function} [callback] the callback function
+# @param {Error} callback.error not null if an error is occurred
+# @param {Number} callback.fd a file descriptor</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Asynchronous file open</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>path</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> the path to open</span></td></tr><tr><td><span class="method-depth0"></span><code>flags</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> flags for opening</span></td></tr><tr><td><span class="method-depth0"></span><code>mode='0666'</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'>Number</a>, <a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> file creation mode</span></td></tr><tr><td><span class="method-depth0"></span><code>callback</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'>Function</a>(error, fd)</span></td><td><span> the callback function</span></td></tr><tr><td><span class="method-depth1"></span><code>error</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'>Error</a></span></td><td><span> not null if an error is occurred</span></td></tr><tr><td><span class="method-depth1"></span><code>fd</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'>Number</a></span></td><td><span> a file descriptor</span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table>
+</div></div></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><script src="http://code.jquery.com/ui/1.9.0/jquery-ui.min.js"></script><script src="../tocify/jquery.tocify.js"></script><script>$(function() {
+  $('#toc').tocify({extendPage:false, scrollTo:60});
+});</script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - Collector</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li><a href="../modules/index.html">Modules</a></li><li class="active"><a href="../classes/index.html">Classes - Collector</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs sidebar col-sm-3" data-spy="affix"><div class="cormo-sidenav"><div class="panel panel-default"><div class="panel-collapse collapse in" id="undefined_body"><ul class="nav nav-pills nav-stacked"><li class="active"><a href="#Collector">Collector</a></li><li class="cormo-class-property private"><a href="#Collector___addFeature">_addFeature<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___addFile">_addFile<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___addGuide">_addGuide<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___applyMarkdown">_applyMarkdown<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___classifyComments">_classifyComments<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___findParam">_findParam<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___getComments">_getComments<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___getType">_getType<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___makeNested">_makeNested<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___makeReverseSeeAlso">_makeReverseSeeAlso<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___processComments">_processComments<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___processParamFlags">_processParamFlags<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Collector___refineResult">_refineResult<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property"><a href="#Collector__run">run</a></li><li><a href="../classes/Plugin.html">Plugin</a></li><li><a href="../classes/Renderer.html">Renderer</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#example_body">example<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="example_body"><ul class="nav nav-pills nav-stacked"><li><a href="../classes/example.ExampleCoffee.html">ExampleCoffee</a></li><li><a href="../classes/example.ExampleJS.html">ExampleJS</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#types_body">types<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="types_body"><ul class="nav nav-pills nav-stacked"><li><a href="../classes/types.CodeContext.html">CodeContext</a></li><li><a href="../classes/types.Comment.html">Comment</a></li><li><a href="../classes/types.Content.html">Content</a></li><li><a href="../classes/types.Options.html">Options</a></li><li><a href="../classes/types.Result.html">Result</a></li><li><a href="../classes/types.Tag.html">Tag</a></li></ul></div></div></div></div><div class="col-sm-9 col-sm-offset-3"><span class="fix-anchor" id="Collector"></span><section><h1 class="class_title">Collector</h1><div><p>Collects comments from source files</p>
+</div><div></div><h4>See Also:</h4><ul><li><a href='../modules/collect.html#collect'>collect</a></li></ul><div class="showcode"><button class="btn btn-info">Show class code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L15">/src/collect.coffee:15</a>)</span></div><pre class="sourcecode prettyprint .linenums:15">class Collector</pre><div class="panel panel-info"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector_ctor_body"><h3 class="panel-title">Constructor<span class="pull-right glyphicon"></span></h3></div><div class="panel-collapse collapse" id="Collector_ctor_body"><div class="panel-body"><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L18">/src/collect.coffee:18</a>)</span></div><pre class="sourcecode prettyprint .linenums:18">constructor: (@contents, @options = {}) -&gt;
+  @result =
+    project_title: @options.title or 'croquis-jsdoc'
+    ids: {}
+    classes: {}
+    guides: []
+    pages: {}
+    restapis: {}
+    features: []
+    files: []</pre></div></div></div></section><span class="fix-anchor" id="Collector___addFeature"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___addFeature_body"><h3 class="panel-title">Collector::_addFeature()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Adds a feature file to the result</p>
+</div></div><div class="panel-collapse collapse" id="Collector___addFeature_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L43">/src/collect.coffee:43</a>)</span></div><pre class="sourcecode prettyprint .linenums:43">_addFeature: (path, data) -&gt;
+  name = path.substr 0, path.length-8
+  namespace = ''
+  name = name.replace /(.*)\//, (_, $1) -&gt;
+    namespace = $1 + '/'
+    return ''
+  feature = ''
+  data = data.replace /Feature: (.*)/, (_, $1) -&gt;
+    feature = $1
+    return ''
+  @result.features.push
+    name: namespace + name
+    namespace: namespace
+    filename: 'features/' + namespace.replace(/\//g, '.') + name
+    feature: feature
+    content: data</pre></div></div></div></section><span class="fix-anchor" id="Collector___addFile"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___addFile_body"><h3 class="panel-title">Collector::_addFile()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Adds a source file to the result</p>
+</div></div><div class="panel-collapse collapse" id="Collector___addFile_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L62">/src/collect.coffee:62</a>)</span></div><pre class="sourcecode prettyprint .linenums:62">_addFile: (path, data) -&gt;
+  namespace = ''
+  name = path.replace /(.*)\//, (_, $1) -&gt;
+    namespace = $1 + '/'
+    return ''
+  @result.files.push
+    name: namespace + name
+    namespace: namespace
+    filename: 'files/' + namespace.replace(/\//g, '.') + name
+    content: data</pre></div></div></div></section><span class="fix-anchor" id="Collector___addGuide"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___addGuide_body"><h3 class="panel-title">Collector::_addGuide()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Adds a guide file to the result</p>
+</div></div><div class="panel-collapse collapse" id="Collector___addGuide_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L31">/src/collect.coffee:31</a>)</span></div><pre class="sourcecode prettyprint .linenums:31">_addGuide: (path, data) -&gt;
+  id = path.substr(0, path.length-3)
+  name = path.substr(0, path.length-8).replace(/\//g, '.')
+  item =
+    name: inflect.humanize inflect.underscore name
+    filename: 'guides/' + name
+    content: markdown data
+  @result.guides.push item
+  @result.ids[id] = item</pre></div></div></div></section><span class="fix-anchor" id="Collector___applyMarkdown"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___applyMarkdown_body"><h3 class="panel-title">Collector::_applyMarkdown()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Apply markdown</p>
+</div></div><div class="panel-collapse collapse" id="Collector___applyMarkdown_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L128">/src/collect.coffee:128</a>)</span></div><pre class="sourcecode prettyprint .linenums:128">_applyMarkdown: (str) -&gt;
+  # we cannot use '###' for header level 3 or above in CoffeeScript, instead web use '##\#', ''##\##', ...
+  # recover this for markdown
+  str = str.replace /#\\#/g, '##'
+  return markdown str</pre></div></div></div></section><span class="fix-anchor" id="Collector___classifyComments"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___classifyComments_body"><h3 class="panel-title">Collector::_classifyComments()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Classifies type and collect id</p>
+</div></div><div class="panel-collapse collapse" id="Collector___classifyComments_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L136">/src/collect.coffee:136</a>)</span></div><pre class="sourcecode prettyprint .linenums:136">_classifyComments: (comments) -&gt;
+  current_class = undefined
+  current_module = undefined
+
+  comments.forEach (comment) =&gt;
+    comment.ctx or comment.ctx = {}
+    comment.params = []
+    comment.returnprops = []
+    comment.throws = []
+    comment.resterrors = []
+    comment.sees = []
+    comment.reverse_sees = []
+    comment.todos = []
+    comment.extends = []
+    comment.subclasses = []
+    comment.uses = []
+    comment.usedbys = []
+    comment.properties = []
+    comment.examples = []
+
+    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
+      id = comment.ctx.string.replace('()', '')
+    else
+      id = comment.ctx.name
+    comment.ctx.fullname = id
+    comment.namespace or= ''
+
+    if comment.ctx.type is 'property' or comment.ctx.type is 'method'
+      if comment.ctx.cons?
+        comment.isStatic = false
+        comment.ctx.class_name = comment.ctx.cons
+      else if comment.ctx.receiver?
+        comment.isStatic = true
+        comment.ctx.class_name = comment.ctx.receiver
+
+    last = 0
+    for tag, i in comment.tags
+      if tag.type is ''
+        comment.tags[last].string += &quot;\n#{tag.string}&quot;
+        continue
+      last = i
+      switch tag.type
+        when 'page', 'restapi', 'class'
+          comment.ctx.type = tag.type
+          if tag.string
+            comment.ctx.name = tag.string
+            comment.ctx.fullname = id = comment.ctx.name
+        when 'module'
+          comment.ctx.type = 'class'
+          comment.is_module = true
+          if tag.string
+            comment.ctx.name = tag.string
+            comment.ctx.fullname = id = comment.ctx.name
+          comment.code = null
+        when 'memberof'
+          if /(::|#|\.prototype)$/.test tag.parent
+            comment.isStatic = false
+            comment.ctx.class_name = tag.parent.replace /(::|#|\.prototype)$/, ''
+          else
+            comment.isStatic = true
+            comment.ctx.class_name = tag.parent
+        when 'namespace'
+          comment.namespace = if tag.string then tag.string else ''
+        when 'property'
+          comment.ctx.type = tag.type
+          comment.ctx.name = tag.name
+        when 'method'
+          comment.ctx.type = tag.type
+          if tag.string
+            comment.ctx.name = tag.string
+        when 'static'
+          comment.isStatic = true
+        when 'private'
+          comment.isPrivate = true
+        when 'abstract'
+          comment.isAbstract = true
+        when 'async'
+          comment.isAsync = true
+        when 'promise'
+          comment.doesReturnPromise = true
+        when 'nodejscallback'
+          comment.doesReturnNodejscallback = true
+        when 'chainable'
+          comment.isChainable = true
+        when 'type'
+          if not tag.types and tag.typeString
+            typeString = tag.typeString
+            if not /{.*}/.test typeString
+              typeString = '{' + typeString + '}'
+            dox.parseTagTypes typeString, tag
+        when 'apimethod'
+          comment.apimethod = tag.string.toUpperCase()
+          id += '_' + comment.apimethod
+        when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
+          , 'extends', 'todo', 'api', 'uses', 'override', 'example'
+        else
+          console.log &quot;Unknown tag : #{tag.type} in #{comment.full_path}&quot;
+
+    if comment.namespace
+      comment.namespace += '.'
+
+    if comment.ctx.class_name
+      if comment.ctx.type is 'function'
+        comment.ctx.type = 'method'
+      else if comment.ctx.type is 'declaration'
+        comment.ctx.type = 'property'
+      seperator = if comment.isStatic then '.' else '::'
+      id = comment.ctx.class_name + seperator + comment.ctx.name
+      comment.ctx.fullname = comment.ctx.class_name.replace(/.*[\./](\w+)/, '$1') + seperator + comment.ctx.name
+
+    if comment.ctx.type is 'class'
+      current_class = comment
+      if comment.is_module
+        current_module = comment
+
+    if (comment.ctx.type is 'property' or comment.ctx.type is 'method') and not comment.namespace
+      if current_class
+        comment.namespace = current_class.namespace
+      if current_module and not comment.ctx.class_name
+        comment.ctx.class_name = current_module.ctx.name
+
+    if id
+      comment.id = id
+      if @result.ids.hasOwnProperty id
+        @result.ids[id] = 'DUPLICATED ENTRY'
+      else
+        @result.ids[id] = comment
+      if comment.namespace and @result.ids.hasOwnProperty comment.namespace+id
+        @result.ids[comment.namespace+id] = 'DUPLICATED ENTRY'
+      else
+        @result.ids[comment.namespace+id] = comment
+      comment.html_id = (comment.namespace+id).replace(/[^A-Za-z0-9_]/g, '_')
+
+    switch comment.ctx.type
+      when 'class'
+        comment.ctx.name = comment.namespace + comment.ctx.name
+        comment.ctx.fullname = comment.namespace + comment.ctx.fullname
+        @result.classes[comment.ctx.name] = comment
+        if comment.is_module
+          comment.filename = 'modules/' + comment.ctx.name.replace(/\//g, '.')
+        else
+          comment.filename = 'classes/' + comment.ctx.name.replace(/\//g, '.')
+      when 'property', 'method'
+        comment.ctx.class_name = comment.namespace + comment.ctx.class_name
+        comment.filename = 'classes/' + comment.ctx.class_name.replace(/\//g, '.')
+      when 'page'
+        comment.filename = 'pages'
+      when 'restapi'
+        comment.filename = 'restapis'</pre></div></div></div></section><span class="fix-anchor" id="Collector___findParam"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___findParam_body"><h3 class="panel-title">Collector::_findParam(params, name)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Finds a parameter in the list</p>
+</div></div><div class="panel-collapse collapse" id="Collector___findParam_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>params</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'>Array</a>&lt;<a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a>&gt;</span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>name</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L103">/src/collect.coffee:103</a>)</span></div><pre class="sourcecode prettyprint .linenums:103">_findParam: (params, name) -&gt;
+  for param in params
+    if param.name is name
+      return param
+    if param.params
+      found = @_findParam param.params, name
+      return found if found
+  return</pre></div></div></div></section><span class="fix-anchor" id="Collector___getComments"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___getComments_body"><h3 class="panel-title">Collector::_getComments()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Returns list of comments of the given file</p>
+</div></div><div class="panel-collapse collapse" id="Collector___getComments_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'>Array</a>&lt;<a href='../classes/types.Comment.html#types_Comment'>Comment</a>&gt;</span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L289">/src/collect.coffee:289</a>)</span></div><pre class="sourcecode prettyprint .linenums:289">_getComments: (type, full_path, path, data) -&gt;
+  if type is 'coffeescript'
+    comments = dox.parseCommentsCoffee data, { raw: true }
+    comments.forEach (comment) -&gt;
+      comment.language = 'coffeescript'
+  else if type is 'javascript'
+    comments = dox.parseComments data, { raw: true }
+    comments.forEach (comment) -&gt;
+      comment.language = 'javascript'
+  else if type is 'page'
+    namespace = ''
+    name = path.substr(0, path.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
+    name = name.replace /(.*)\//, (_, $1) -&gt;
+      namespace = $1
+      return ''
+    comments = [ {
+      description:
+        summary: ''
+        body: data
+        full: ''
+      tags: [
+        { type: 'page', string: name }
+        { type: 'namespace', string: namespace }
+      ]
+    } ]
+
+  return if not comments?
+
+  # filter out empty comments
+  comments = comments.filter (comment) -&gt;
+    return comment.description.full or comment.description.summary or comment.description.body or comment.tags?.length &gt; 0
+
+  comments.forEach (comment) -&gt;
+    comment.full_path = full_path
+    comment.path = path
+    return
+
+  if @options.plugins
+    comments.forEach (comment) =&gt;
+      @options.plugins.forEach (plugin) -&gt;
+        plugin.onComment comment
+        return
+      return
+
+  @_classifyComments comments
+
+  return comments</pre></div></div></div></section><span class="fix-anchor" id="Collector___getType"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___getType_body"><h3 class="panel-title">Collector::_getType()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Returns the type of a file</p>
+</div></div><div class="panel-collapse collapse" id="Collector___getType_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L500">/src/collect.coffee:500</a>)</span></div><pre class="sourcecode prettyprint .linenums:500">_getType: (path) -&gt;
+  if /\.coffee$/.test path
+    return 'coffeescript'
+  else if /\.js$/.test path
+    return 'javascript'
+  else if /Page\.md$/.test path
+    return 'page'
+  else if /Guide\.md$/.test path
+    return 'guide'
+  else if /\.feature$/.test path
+    return 'feature'
+  else if path is 'README'
+    return 'readme'
+  else
+    return 'unknown'</pre></div></div></div></section><span class="fix-anchor" id="Collector___makeNested"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___makeNested_body"><h3 class="panel-title">Collector::_makeNested()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Makes parameters(or returnprops) nested</p>
+</div></div><div class="panel-collapse collapse" id="Collector___makeNested_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L114">/src/collect.coffee:114</a>)</span></div><pre class="sourcecode prettyprint .linenums:114">_makeNested: (comment, targetName) -&gt;
+  i = comment[targetName].length
+  while i--&gt;0
+    param = comment[targetName][i]
+    if match = param.name.match /\[?([^=]*)\.([^\]]*)\]?/
+      parentParam = @_findParam comment[targetName], match[1]
+      if parentParam
+        comment[targetName].splice i, 1
+        parentParam[targetName] = parentParam[targetName] or []
+        param.name = match[2]
+        parentParam[targetName].unshift param</pre></div></div></div></section><span class="fix-anchor" id="Collector___makeReverseSeeAlso"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___makeReverseSeeAlso_body"><h3 class="panel-title">Collector::_makeReverseSeeAlso()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Makes reverse see alsos</p>
+</div></div><div class="panel-collapse collapse" id="Collector___makeReverseSeeAlso_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L518">/src/collect.coffee:518</a>)</span></div><pre class="sourcecode prettyprint .linenums:518">_makeReverseSeeAlso: (comments) -&gt;
+  for comment in comments
+    for see in comment.sees
+      other = @result.ids[see]
+      if other and other isnt 'DUPLICATED ENTRY'
+        me = @result.ids[comment.id]
+        if me and me is 'DUPLICATED ENTRY'
+          other.reverse_sees?.push comment.namespace+comment.id
+        else
+          other.reverse_sees?.push comment.id
+  return</pre></div></div></div></section><span class="fix-anchor" id="Collector___processComments"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___processComments_body"><h3 class="panel-title">Collector::_processComments()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Structuralizes comments</p>
+</div></div><div class="panel-collapse collapse" id="Collector___processComments_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L339">/src/collect.coffee:339</a>)</span></div><pre class="sourcecode prettyprint .linenums:339">_processComments: (comments) -&gt;
+  comments.forEach (comment) =&gt;
+    desc = comment.description
+    if desc
+      desc.full = @_applyMarkdown desc.full
+      desc.summary = @_applyMarkdown desc.summary
+      desc.body = @_applyMarkdown desc.body
+
+    for tag in comment.tags
+      switch tag.type
+        when 'param'
+          tag = @_processParamFlags tag
+          for type, i in tag.types
+            tag.types[i] = type
+          tag.description = tag.description
+          comment.params.push tag
+        when 'return', 'returns'
+          for type, i in tag.types
+            tag.types[i] = type
+          tag.description = tag.description
+          comment.return = tag
+        when 'returnprop'
+          tag = dox.parseTag '@param ' + tag.string
+          tag = @_processParamFlags tag
+          for type, i in tag.types
+            tag.types[i] = type
+          tag.description = tag.description
+          comment.returnprops.push tag
+        when 'throws'
+          comment.throws.push message: tag.message, description: tag.description
+        when 'resterror'
+          if /{(\d+)\/([A-Za-z0-9_ ]+)}\s*(.*)/.exec tag.string
+            comment.resterrors.push code: RegExp.$1, message: RegExp.$2, description: RegExp.$3
+        when 'see'
+          str = tag.local or tag.url
+          comment.sees.push str
+        when 'todo'
+          comment.todos.push tag.string
+        when 'extends'
+          comment.extends.push tag.string
+          @result.ids[tag.string]?.subclasses.push comment.ctx.name
+        when 'uses'
+          comment.uses.push tag.string
+          @result.ids[tag.string]?.usedbys.push comment.ctx.name
+        when 'type'
+          for type, i in tag.types
+            tag.types[i] = type
+          comment.types = tag.types
+        when 'example'
+          comment.examples.push tag
+        when 'override'
+          if @result.ids[tag.string] and @result.ids[tag.string] isnt 'DUPLICATED ENTRY'
+            comment.override = @result.ids[tag.string]
+          comment.override_link = tag.string
+
+    if comment.ctx.type is 'class'
+      if /^class +\w+ +extends +([\w\.]+)/.exec comment.class_code
+        comment.extends.push RegExp.$1
+        @result.ids[RegExp.$1]?.subclasses.push comment.ctx.name
+
+    # make parameters nested
+    @_makeNested comment, 'params'
+    @_makeNested comment, 'returnprops'
+
+    if comment.doesReturnNodejscallback
+      callback_params = [ {
+          name: 'error'
+          types: ['Error']
+          description: 'See throws'
+        } ]
+      if comment.return
+        callback_params.push
+            name: 'result'
+            types: comment.return.types
+            description: 'See returns'
+      comment.params.push
+        name: 'callback'
+        types: ['Function']
+        optional: comment.doesReturnPromise
+        description: 'NodeJS style\'s callback'
+        params: callback_params
+
+    if comment.isChainable and not comment.return
+      comment.return =
+        types: [comment.ctx.class_name]
+        description: 'this'
+
+    switch comment.ctx.type
+      when 'property', 'method'
+        class_name = comment.ctx.class_name
+        if class_name and class_comment = @result.classes[class_name]
+          if comment.ctx.is_coffeescript_constructor
+            # merge to class comment
+            class_comment.code = comment.code
+            class_comment.codeStart = comment.codeStart
+            class_comment.params = comment.params
+          else
+            class_comment.properties.push comment
+            if class_comment.is_module
+              comment.filename = comment.filename.replace('classes/', 'modules/')
+      when 'page'
+        @result.pages[comment.ctx.name] = comment
+      when 'restapi'
+        if comment.apimethod
+          @result.restapis[comment.ctx.name+comment.apimethod] = comment
+          return
+        if /^(GET|POST|PATCH|PUT|DELETE|HEAD)/i.test comment.ctx.name
+          comment.apimethod = RegExp.$1.toUpperCase()
+        @result.restapis[comment.ctx.name] = comment</pre></div></div></div></section><span class="fix-anchor" id="Collector___processParamFlags"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___processParamFlags_body"><h3 class="panel-title">Collector::_processParamFlags(tag)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Checks flags of parameter</p>
+</div></div><div class="panel-collapse collapse" id="Collector___processParamFlags_body"><div class="panel-body"><div><ul>
+<li>&#39;[&#39; name &#39;]&#39; : optional</li>
+<li>name &#39;=&#39; value : default value</li>
+<li>&#39;+&#39; name : addable</li>
+<li>&#39;-&#39; name : excludable</li>
+</ul>
+</div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>tag</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span>given tag</span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L82">/src/collect.coffee:82</a>)</span></div><pre class="sourcecode prettyprint .linenums:82">_processParamFlags: (tag) -&gt;
+  # is optional parameter?
+  if tag.name[0] is '[' and tag.name[tag.name.length-1] is ']'
+    tag.name = tag.name.substr 1, tag.name.length-2
+    if (pos = tag.name.indexOf '=')&gt;=0
+      tag.default_value = tag.name.substr pos+1
+      tag.name = tag.name.substr 0, pos
+    tag.optional = true
+  if tag.name.substr(0, 1) is '+'
+    tag.name = tag.name.substr(1)
+    tag.addable = true
+  if tag.name.substr(0, 1) is '-'
+    tag.name = tag.name.substr(1)
+    tag.excludable = true
+  return tag</pre></div></div></div></section><span class="fix-anchor" id="Collector___refineResult"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector___refineResult_body"><h3 class="panel-title">Collector::_refineResult()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Refines result.</p>
+</div></div><div class="panel-collapse collapse" id="Collector___refineResult_body"><div class="panel-body"><div><ul>
+<li>convert hash to sorted array</li>
+<li>classes -&gt; classes &amp; modules</li>
+</ul>
+</div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L454">/src/collect.coffee:454</a>)</span></div><pre class="sourcecode prettyprint .linenums:454">_refineResult: -&gt;
+  result = @result
+  result.classes = Object.keys(result.classes).sort( (a,b) -&gt;
+    a_ns = result.classes[a].namespace
+    b_ns = result.classes[b].namespace
+    return -1 if a_ns &lt; b_ns
+    return 1 if a_ns &gt; b_ns
+    if a&lt;b then -1 else 1
+  ).map (name) -&gt; result.classes[name]
+  result.pages = Object.keys(result.pages).sort( (a,b) -&gt;
+    a_ns = result.pages[a].namespace
+    b_ns = result.pages[b].namespace
+    return -1 if a_ns &lt; b_ns
+    return 1 if a_ns &gt; b_ns
+    if a&lt;b then -1 else 1
+  ).map (name) -&gt; result.pages[name]
+  result.restapis = Object.keys(result.restapis).sort( (a,b) -&gt;
+    a_ns = result.restapis[a].namespace
+    b_ns = result.restapis[b].namespace
+    return -1 if a_ns &lt; b_ns
+    return 1 if a_ns &gt; b_ns
+    a = a.replace /([A-Z]+) \/(.*)/, '-$2 $1'
+    b = b.replace /([A-Z]+) \/(.*)/, '-$2 $1'
+    if a&lt;b then -1 else 1
+  ).map (name) -&gt; result.restapis[name]
+  result.guides = result.guides.sort (a,b) -&gt;
+    if a.name &lt; b.name then -1 else 1
+  result.features = result.features.sort (a,b) -&gt;
+    if a.name &lt; b.name then -1 else 1
+  result.files = result.files.sort (a,b) -&gt;
+    a_ns = a.namespace
+    b_ns = b.namespace
+    return -1 if a_ns &lt; b_ns
+    return 1 if a_ns &gt; b_ns
+    if a.name &lt; b.name then -1 else 1
+
+  result.classes.forEach (klass) -&gt;
+    klass.properties.sort (a, b) -&gt; if a.ctx.name &lt; b.ctx.name then -1 else 1
+    for property in klass.properties
+      property.ctx = _.pick property.ctx, 'type', 'name', 'fullname'
+
+  result.modules = result.classes.filter (klass) -&gt; klass.is_module
+  result.classes = result.classes.filter (klass) -&gt; not klass.is_module</pre></div></div></div></section><span class="fix-anchor" id="Collector__run"></span><section><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Collector__run_body"><h3 class="panel-title">Collector::run()<span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Runs</p>
+</div></div><div class="panel-collapse collapse" id="Collector__run_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/collect.coffee#L532">/src/collect.coffee:532</a>)</span></div><pre class="sourcecode prettyprint .linenums:532">run: -&gt;
+  all_comments = []
+  file_count_read = 0
+  for {full_path, path, data} in @contents
+    type = @_getType path
+    switch type
+      when 'guide'
+        @_addGuide path, data
+      when 'feature'
+        @_addFeature path, data
+      when 'coffeescript', 'javascript', 'page'
+        comments = @_getComments type, full_path, path, data
+        if comments?
+          [].push.apply all_comments, comments
+      when 'readme'
+        @result.readme = markdown data
+    if type is 'coffeescript' or type is 'javascript'
+      @_addFile path, data
+    file_count_read++
+    console.log path + ' is processed' if not (@options.quiet or is_test_mode)
+
+  console.log 'Total ' + file_count_read + ' files processed' if not is_test_mode
+
+  @_processComments all_comments
+
+  if @options.reverse_see_also
+    @_makeReverseSeeAlso all_comments
+
+  if not @options.files
+    @result.files = []
+  @_refineResult()</pre></div></div></div></section></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - cli</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li class="active"><a href="../modules/index.html">Modules - cli</a></li><li><a href="../classes/index.html">Classes</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs sidebar col-sm-3" data-spy="affix"><div class="cormo-sidenav"><div class="panel panel-default"><div class="panel-collapse collapse in" id="undefined_body"><ul class="nav nav-pills nav-stacked"><li class="active"><a href="#cli">cli</a></li><li class="cormo-class-property private"><a href="#cli__buildOptions">_buildOptions<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#cli__parseArguments">_parseArguments<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#cli__readConfig">_readConfig<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#cli__readExternalTypes">_readExternalTypes<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#cli__readSourceFiles">_readSourceFiles<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property"><a href="#cli_run">run</a></li><li><a href="../modules/collect.html">collect</a></li><li><a href="../modules/render.html">render</a></li></ul></div></div></div></div><div class="col-sm-9 col-sm-offset-3"><span class="fix-anchor" id="cli"></span><section><h1 class="class_title">cli</h1><div>(defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee">/src/cli.coffee</a>)</div><div><p>Provides CroJSDoc command line interface</p>
+</div><div></div></section><span class="fix-anchor" id="cli__buildOptions"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#cli__buildOptions_body"><h3 class="panel-title">_buildOptions()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Builds options from a config file(crojsdoc.yaml) or command line arguments</p>
+</div></div><div class="panel-collapse collapse" id="cli__buildOptions_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='../classes/types.Options.html#types_Options'>Options</a></span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee#L107">/src/cli.coffee:107</a>)</span></div><pre class="sourcecode prettyprint .linenums:107">_buildOptions = -&gt;
+  options =
+    _project_dir: process.cwd()
+    types:
+      # Links for pre-known types
+      Object: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'
+      Boolean: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean'
+      String: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'
+      Array: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'
+      Number: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number'
+      Date: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date'
+      Function: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'
+      RegExp: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/RegExp'
+      Error: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'
+      undefined: 'https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/undefined'
+    _sources: []
+
+  _readConfig options
+  _parseArguments options
+
+  if options.plugins
+    options.plugins.forEach (plugin) -&gt;
+      if plugin.externalTypes
+        _readExternalTypes plugin.externalTypes, options.types
+      return
+
+  # process options.external-types after plugins' externalTypes
+  # for user to override plugins' configurations
+  _readExternalTypes options['external-types'], options.types
+
+  options.output_dir = resolve options._project_dir, options.output or 'doc'
+
+  return options</pre></div></div></div></section><span class="fix-anchor" id="cli__parseArguments"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#cli__parseArguments_body"><h3 class="panel-title">_parseArguments(options)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Parses the command line arguments to build options</p>
+</div></div><div class="panel-collapse collapse" id="cli__parseArguments_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>options</code></td><td><span><a href='../classes/types.Options.html#types_Options'>Options</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee#L59">/src/cli.coffee:59</a>)</span></div><pre class="sourcecode prettyprint .linenums:59">_parseArguments = (options) -&gt;
+  {OptionParser} = require 'optparse'
+  switches = [
+    [ '-h', '--help', 'show help' ]
+    [ '-o', '--output DIRECTORY', 'Output directory' ]
+    [ '-t', '--title TITLE', 'Document Title' ]
+    [ '-q', '--quiet', 'less output' ]
+    [ '-r', '--readme DIRECTORY', 'README.md directory path']
+    [ '-f', '--files', 'included source files' ]
+    [ '--external-types JSONFILE', 'external type definitions' ]
+  ]
+  parser = new OptionParser switches
+  parser.banner = 'Usage: crojsdoc [-o DIRECTORY] [-t TITLE] [-q] [options..] SOURCES...'
+  parser.on 'help', -&gt;
+    console.log parser.toString()
+    process.exit(1)
+  parser.on '*', (opt, value) -&gt;
+    if value is undefined
+      value = true
+    options[opt] = value
+  [].push.apply options._sources, parser.parse process.argv.slice 2</pre></div></div></div></section><span class="fix-anchor" id="cli__readConfig"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#cli__readConfig_body"><h3 class="panel-title">_readConfig(options)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Reads a config file(crojsdoc.yaml) to build options</p>
+</div></div><div class="panel-collapse collapse" id="cli__readConfig_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>options</code></td><td><span><a href='../classes/types.Options.html#types_Options'>Options</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee#L16">/src/cli.coffee:16</a>)</span></div><pre class="sourcecode prettyprint .linenums:16">_readConfig = (options) -&gt;
+  {safeLoad} = require 'js-yaml'
+  try
+    config = safeLoad fs.readFileSync(join(process.cwd(), 'crojsdoc.yaml'), 'utf-8')
+    if config.hasOwnProperty 'output'
+      options.output = config.output
+    if config.hasOwnProperty 'title'
+      options.title = config.title
+    if config.hasOwnProperty 'quiet' or config.hasOwnProperty 'quite'
+      options.quiet = config.quiet is true
+    if  config.hasOwnProperty 'files'
+      options.files = config.files is true
+    if config.hasOwnProperty('readme') and typeof config.readme is 'string'
+      options._readme = config.readme
+    if config.hasOwnProperty 'external-types'
+      options['external-types'] = config['external-types']
+    if config.hasOwnProperty 'sources'
+      if Array.isArray config.sources
+        [].push.apply options._sources, config.sources
+      else
+        options._sources.push config.sources
+    if config.hasOwnProperty 'github'
+      options.github = config.github
+      if options.github.branch is undefined
+        options.github.branch = 'master'
+    if config.hasOwnProperty 'reverse_see_also'
+      options.reverse_see_also = config.reverse_see_also is true
+    if config.hasOwnProperty 'plugins'
+      plugins = config.plugins
+      if not Array.isArray plugins
+        plugins = [plugins]
+      options.plugins = plugins.map (plugin) -&gt;
+        try
+          require plugin
+        catch e
+          console.log &quot;Plugin '#{plugin}' not found&quot;
+      .filter (plugin) -&gt; plugin
+    return</pre></div></div></div></section><span class="fix-anchor" id="cli__readExternalTypes"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#cli__readExternalTypes_body"><h3 class="panel-title">_readExternalTypes(external_types, types)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Reads additional type definitions from a file or a object</p>
+</div></div><div class="panel-collapse collapse" id="cli__readExternalTypes_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>external_types</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a>, <a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>types</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee#L86">/src/cli.coffee:86</a>)</span></div><pre class="sourcecode prettyprint .linenums:86">_readExternalTypes = (external_types, types) -&gt;
+  return if not external_types
+
+  if typeof external_types is 'string'
+    try
+      content = fs.readFileSync(external_types, 'utf-8').trim()
+      try
+        external_types = JSON.parse content
+      catch e
+        console.log &quot;external-types: Invalid JSON file&quot;
+    catch e
+      console.log &quot;external-types: Cannot open #{external_types}&quot;
+
+  if typeof external_types is 'object'
+    for type, url of external_types
+      types[type] = url</pre></div></div></div></section><span class="fix-anchor" id="cli__readSourceFiles"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#cli__readSourceFiles_body"><h3 class="panel-title">_readSourceFiles(options)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Reads source files</p>
+</div></div><div class="panel-collapse collapse" id="cli__readSourceFiles_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>options</code></td><td><span><a href='../classes/types.Options.html#types_Options'>Options</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array'>Array</a>&lt;<a href='../classes/types.Content.html#types_Content'>Content</a>&gt;</span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee#L146">/src/cli.coffee:146</a>)</span></div><pre class="sourcecode prettyprint .linenums:146">_readSourceFiles = (options) -&gt;
+  if isWindows
+    project_dir_re = new RegExp(&quot;^&quot; + options._project_dir.replace(/\\/g, '\\\\'))
+  else
+    project_dir_re = new RegExp(&quot;^&quot; + options._project_dir)
+  contents = []
+  for path in options._sources
+    base_path = path = resolve options._project_dir, path
+    base_path = dirname base_path while /[*?]/.test basename(base_path)
+    glob.sync(path).forEach (path) =&gt;
+      if fs.statSync(path).isDirectory()
+        list = walkdir.sync path
+      else
+        list = [path]
+      for file in list
+        continue if fs.statSync(file).isDirectory()
+        data = fs.readFileSync(file, 'utf-8').trim()
+        continue if not data
+        if isWindows
+          contents.push full_path: file.replace(project_dir_re, '').replace(/\\/g, '/'), path: file.substr(base_path.length+1).replace(/\\/g, '/'), data: data
+        else
+          contents.push full_path: file.replace(project_dir_re, ''), path: file.substr(base_path.length+1), data: data
+      return
+  try
+    data = fs.readFileSync &quot;#{options._readme or options._project_dir}/README.md&quot;, 'utf-8'
+    contents.push full_path: '', path: 'README', data: data
+  return contents</pre></div></div></div></section><span class="fix-anchor" id="cli_run"></span><section><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#cli_run_body"><h3 class="panel-title">run()<span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Runs CroJSDoc via CLI</p>
+</div></div><div class="panel-collapse collapse" id="cli_run_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/cli.coffee#L177">/src/cli.coffee:177</a>)</span></div><pre class="sourcecode prettyprint .linenums:177">exports.run = -&gt;
+  options = _buildOptions()
+  contents = _readSourceFiles options
+  result = require('./collect') contents, options
+  require('./render') result, options</pre></div></div></div></section></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>

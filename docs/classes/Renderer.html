@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - Renderer</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li><a href="../modules/index.html">Modules</a></li><li class="active"><a href="../classes/index.html">Classes - Renderer</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs sidebar col-sm-3" data-spy="affix"><div class="cormo-sidenav"><div class="panel panel-default"><div class="panel-collapse collapse in" id="undefined_body"><ul class="nav nav-pills nav-stacked"><li><a href="../classes/Collector.html">Collector</a></li><li><a href="../classes/Plugin.html">Plugin</a></li><li class="active"><a href="#Renderer">Renderer</a></li><li class="cormo-class-property private"><a href="#Renderer___convertLink">_convertLink<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___copyResources">_copyResources<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___groupByNamespaces">_groupByNamespaces<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___makeMissingLink">_makeMissingLink<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___makeSeeLink">_makeSeeLink<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___makeTypeLink">_makeTypeLink<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderClasses">_renderClasses<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderFeatures">_renderFeatures<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderFiles">_renderFiles<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderGuides">_renderGuides<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderModules">_renderModules<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderOne">_renderOne<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderPages">_renderPages<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderRESTApis">_renderRESTApis<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property private"><a href="#Renderer___renderReadme">_renderReadme<span class="pull-right label label-private">private</span></a></li><li class="cormo-class-property"><a href="#Renderer__run">run</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#example_body">example<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="example_body"><ul class="nav nav-pills nav-stacked"><li><a href="../classes/example.ExampleCoffee.html">ExampleCoffee</a></li><li><a href="../classes/example.ExampleJS.html">ExampleJS</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#types_body">types<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="types_body"><ul class="nav nav-pills nav-stacked"><li><a href="../classes/types.CodeContext.html">CodeContext</a></li><li><a href="../classes/types.Comment.html">Comment</a></li><li><a href="../classes/types.Content.html">Content</a></li><li><a href="../classes/types.Options.html">Options</a></li><li><a href="../classes/types.Result.html">Result</a></li><li><a href="../classes/types.Tag.html">Tag</a></li></ul></div></div></div></div><div class="col-sm-9 col-sm-offset-3"><span class="fix-anchor" id="Renderer"></span><section><h1 class="class_title">Renderer</h1><div><p>Renders documentations from result of collector</p>
+</div><div></div><h4>See Also:</h4><ul><li><a href='../modules/render.html#render'>render</a></li></ul><div class="showcode"><button class="btn btn-info">Show class code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L12">/src/render.coffee:12</a>)</span></div><pre class="sourcecode prettyprint .linenums:12">class Renderer</pre><div class="panel panel-info"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer_ctor_body"><h3 class="panel-title">Constructor<span class="pull-right glyphicon"></span></h3></div><div class="panel-collapse collapse" id="Renderer_ctor_body"><div class="panel-body"><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L15">/src/render.coffee:15</a>)</span></div><pre class="sourcecode prettyprint .linenums:15">constructor: (@result, @options) -&gt;
+  theme = 'default'
+  @resources_dir = resolve __dirname, '../themes', theme, 'resources'
+  @templates_dir = resolve __dirname, '../themes', theme, 'templates'</pre></div></div></div></section><span class="fix-anchor" id="Renderer___convertLink"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___convertLink_body"><h3 class="panel-title">Renderer::_convertLink(rel_path, str)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Converts link markups to HTML links in the description</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___convertLink_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>rel_path</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>str</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L75">/src/render.coffee:75</a>)</span></div><pre class="sourcecode prettyprint .linenums:75">_convertLink: (rel_path, str) -&gt;
+  return '' if not str
+  str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) =&gt;
+    if @result.ids[$1] and @result.ids[$1] isnt 'DUPLICATED ENTRY'
+      filename = @result.ids[$1].filename + '.html'
+      html_id = @result.ids[$1].html_id or ''
+      return &quot;&lt;a href='#{rel_path}#{filename}##{html_id}'&gt;#{$1}&lt;/a&gt;&quot;
+    else
+      return @_makeMissingLink $1
+  return str</pre></div></div></div></section><span class="fix-anchor" id="Renderer___copyResources"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___copyResources_body"><h3 class="panel-title">Renderer::_copyResources(source, target, callback)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"></div></div><div class="panel-collapse collapse" id="Renderer___copyResources_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>source</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>target</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>callback</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'>Function</a>()</span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L90">/src/render.coffee:90</a>)</span></div><pre class="sourcecode prettyprint .linenums:90">_copyResources: (source, target, callback) -&gt;
+  try
+    files = fs.readdirSync target
+  catch
+    files = []
+  for file in files
+    if file[0] isnt '.'
+      fs.rmrfSync resolve target, file
+  try fs.mkdirSync target
+  fs.copyRecursive source, target, -&gt;
+    callback()</pre></div></div></div></section><span class="fix-anchor" id="Renderer___groupByNamespaces"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___groupByNamespaces_body"><h3 class="panel-title">Renderer::_groupByNamespaces()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Groups items by namespaces</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___groupByNamespaces_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L228">/src/render.coffee:228</a>)</span></div><pre class="sourcecode prettyprint .linenums:228">_groupByNamespaces: (items) -&gt;
+  if items.length is 0
+    return []
+  current_group = []
+  grouped_items = [current_group]
+  current_namespace = items[0].namespace
+  items.forEach (item) -&gt;
+    if current_namespace isnt item.namespace
+      current_group = []
+      grouped_items.push current_group
+      current_namespace = item.namespace
+    current_group.push item
+  return grouped_items</pre></div></div></div></section><span class="fix-anchor" id="Renderer___makeMissingLink"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___makeMissingLink_body"><h3 class="panel-title">Renderer::_makeMissingLink(type)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"></div></div><div class="panel-collapse collapse" id="Renderer___makeMissingLink_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>type</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L23">/src/render.coffee:23</a>)</span></div><pre class="sourcecode prettyprint .linenums:23">_makeMissingLink: (type, place = '') -&gt;
+  txt = if @result.ids[type]
+    &quot;'#{type}' link is ambiguous&quot;
+  else
+    &quot;'#{type}' link does not exist&quot;
+  console.log txt + &quot; #{place}&quot;
+  return &quot;&lt;span class='missing-link'&gt;#{type}&lt;/span&gt;&quot;</pre></div></div></div></section><span class="fix-anchor" id="Renderer___makeSeeLink"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___makeSeeLink_body"><h3 class="panel-title">Renderer::_makeSeeLink(rel_path, str)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"></div></div><div class="panel-collapse collapse" id="Renderer___makeSeeLink_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>rel_path</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>str</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L63">/src/render.coffee:63</a>)</span></div><pre class="sourcecode prettyprint .linenums:63">_makeSeeLink: (rel_path, str) -&gt;
+  if @result.ids[str]
+    filename = @result.ids[str].filename + '.html'
+    html_id = @result.ids[str].html_id or ''
+    str = &quot;&lt;a href='#{rel_path}#{filename}##{html_id}'&gt;#{str}&lt;/a&gt;&quot;
+  return str</pre></div></div></div></section><span class="fix-anchor" id="Renderer___makeTypeLink"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___makeTypeLink_body"><h3 class="panel-title">Renderer::_makeTypeLink(rel_path, type)<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Makes links for given type</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___makeTypeLink_body"><div class="panel-body"><div><ul>
+<li>&quot;String&quot; -&gt; &quot;&lt;a href=&#39;reference url for String&#39;&gt;String&lt;/a&gt;&quot;</li>
+<li>&quot;Array&lt;Model&gt;&quot; -&gt; &quot;&lt;a href=&#39;reference url for Array&#39;&gt;Array&lt;/a&gt;&amp;lt;&lt;a href=&#39;internal url for Model&#39;&gt;Model&lt;/a&gt;&amp;gt;&quot;</li>
+</ul>
+</div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>rel_path</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>type</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L39">/src/render.coffee:39</a>)</span></div><pre class="sourcecode prettyprint .linenums:39">_makeTypeLink: (rel_path, type, place = '') -&gt;
+  return type if not type
+  getlink = (type) =&gt;
+    if @options.types[type]
+      link = @options.types[type]
+    else if @result.ids[type] and @result.ids[type] isnt 'DUPLICATED ENTRY'
+      filename = @result.ids[type].filename + '.html'
+      html_id = @result.ids[type].html_id or ''
+      link = &quot;#{rel_path}#{filename}##{html_id}&quot;
+    else
+      return @_makeMissingLink type, place
+    return &quot;&lt;a href='#{link}'&gt;#{type}&lt;/a&gt;&quot;
+  if res = type.match(/\[(.*)\]\((.*)\)/)
+    @options.types[res[1]] = res[2]
+    return &quot;&lt;a href='#{res[2]}'&gt;#{res[1]}&lt;/a&gt;&quot;
+  if res = type.match /(.*?)&lt;(.*)&gt;/
+    return &quot;#{@_makeTypeLink rel_path, res[1]}&amp;lt;#{@_makeTypeLink rel_path, res[2]}&amp;gt;&quot;
+  else
+    return getlink type</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderClasses"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderClasses_body"><h3 class="panel-title">Renderer::_renderClasses()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders classes</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderClasses_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L164">/src/render.coffee:164</a>)</span></div><pre class="sourcecode prettyprint .linenums:164">_renderClasses: -&gt;
+  return if @result.classes.length is 0
+  try fs.mkdirSync &quot;#{@options.output_dir}/classes&quot;
+  pug_options =
+    rel_path: '../'
+    type: 'classes'
+  @_renderOne pug_options, 'class-toc', 'classes/index'
+  @result.classes.forEach (klass) =&gt;
+    pug_options =
+      rel_path: '../'
+      name: klass.ctx.name
+      klass: klass
+      properties: klass.properties
+      type: 'classes'
+      _makeTypeLink: (path, type) =&gt;
+        @_makeTypeLink path, type, &quot;(in #{klass.full_path})&quot;
+    @_renderOne pug_options, 'class', klass.filename</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderFeatures"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderFeatures_body"><h3 class="panel-title">Renderer::_renderFeatures()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders features</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderFeatures_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L202">/src/render.coffee:202</a>)</span></div><pre class="sourcecode prettyprint .linenums:202">_renderFeatures: -&gt;
+  return if @result.features.length is 0
+  try fs.mkdirSync &quot;#{@options.output_dir}/features&quot;
+  @result.features.forEach (feature) =&gt;
+    pug_options =
+      rel_path: '../'
+      name: feature.name
+      feature: feature
+      type: 'features'
+    @_renderOne pug_options, 'feature', feature.filename</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderFiles"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderFiles_body"><h3 class="panel-title">Renderer::_renderFiles()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders files</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderFiles_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L215">/src/render.coffee:215</a>)</span></div><pre class="sourcecode prettyprint .linenums:215">_renderFiles: -&gt;
+  return if @result.files.length is 0
+  try fs.mkdirSync &quot;#{@options.output_dir}/files&quot;
+  @result.files.forEach (file) =&gt;
+    pug_options =
+      rel_path: '../'
+      name: file.name
+      file: file
+      type: 'files'
+    @_renderOne pug_options, 'file', file.filename</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderGuides"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderGuides_body"><h3 class="panel-title">Renderer::_renderGuides()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders guides</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderGuides_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L131">/src/render.coffee:131</a>)</span></div><pre class="sourcecode prettyprint .linenums:131">_renderGuides: -&gt;
+  return if @result.guides.length is 0
+  try fs.mkdirSync &quot;#{@options.output_dir}/guides&quot;
+  @result.guides.forEach (guide) =&gt;
+    pug_options =
+      rel_path: '../'
+      name: guide.name
+      content: guide.content
+      type: 'guides'
+    @_renderOne pug_options, 'extra', guide.filename</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderModules"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderModules_body"><h3 class="panel-title">Renderer::_renderModules()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders modules</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderModules_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L184">/src/render.coffee:184</a>)</span></div><pre class="sourcecode prettyprint .linenums:184">_renderModules: -&gt;
+  return if @result.modules.length is 0
+  try fs.mkdirSync &quot;#{@options.output_dir}/modules&quot;
+  pug_options =
+    rel_path: '../'
+    type: 'modules'
+  @_renderOne pug_options, 'module-toc', 'modules/index'
+  @result.modules.forEach (module) =&gt;
+    pug_options =
+      rel_path: '../'
+      name: module.ctx.name
+      module_data: module
+      properties: module.properties
+      type: 'modules'
+    @_renderOne pug_options, 'module', module.filename</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderOne"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderOne_body"><h3 class="panel-title">Renderer::_renderOne()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders one template</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderOne_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L104">/src/render.coffee:104</a>)</span></div><pre class="sourcecode prettyprint .linenums:104">_renderOne: (pug_options, template, output) -&gt;
+  pug_options.result = @result
+  pug_options.makeTypeLink = @_makeTypeLink.bind(@) if not pug_options.makeTypeLink
+  pug_options.makeSeeLink = @_makeSeeLink.bind(@)
+  pug_options.convertLink = @_convertLink.bind(@)
+  pug_options.github = @options.github
+  pug_options.cache = true
+  pug_options.self = true
+  pug.renderFile &quot;#{@templates_dir}/#{template}.pug&quot;, pug_options, (error, result) =&gt;
+    return console.error error.stack if error
+    output_file = &quot;#{@options.output_dir}/#{output}.html&quot;
+    fs.writeFile output_file, result, (error) =&gt;
+      return console.error 'failed to create '+output_file if error
+      console.log output_file + ' is created' if not @options.quiet</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderPages"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderPages_body"><h3 class="panel-title">Renderer::_renderPages()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders pages</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderPages_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L144">/src/render.coffee:144</a>)</span></div><pre class="sourcecode prettyprint .linenums:144">_renderPages: -&gt;
+  if @result.pages.length &gt; 0
+    pug_options =
+      rel_path: './'
+      name: 'Pages'
+      type: 'pages'
+    @_renderOne pug_options, 'pages', 'pages'</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderRESTApis"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderRESTApis_body"><h3 class="panel-title">Renderer::_renderRESTApis()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders REST apis</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderRESTApis_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L154">/src/render.coffee:154</a>)</span></div><pre class="sourcecode prettyprint .linenums:154">_renderRESTApis: -&gt;
+  if @result.restapis.length &gt; 0
+    pug_options =
+      rel_path: './'
+      name: 'REST APIs'
+      type: 'restapis'
+    @_renderOne pug_options, 'restapis', 'restapis'</pre></div></div></div></section><span class="fix-anchor" id="Renderer___renderReadme"></span><section class="private"><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer___renderReadme_body"><h3 class="panel-title">Renderer::_renderReadme()<span class="label label-private">private</span><span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Renders the README</p>
+</div></div><div class="panel-collapse collapse" id="Renderer___renderReadme_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L121">/src/render.coffee:121</a>)</span></div><pre class="sourcecode prettyprint .linenums:121">_renderReadme: -&gt;
+  pug_options =
+    rel_path: './'
+    name: 'README'
+    content: @result.readme
+    type: 'home'
+  @_renderOne pug_options, 'extra', 'index'</pre></div></div></div></section><span class="fix-anchor" id="Renderer__run"></span><section><div class="panel panel-success"><div class="panel-heading collapsed" data-toggle="collapse" data-target="#Renderer__run_body"><h3 class="panel-title">Renderer::run()<span class="pull-right glyphicon"></span></h3><div class="method-summary"><p>Runs</p>
+</div></div><div class="panel-collapse collapse" id="Renderer__run_body"><div class="panel-body"><div></div><h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(None)</td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><td>(Nothing)</td></tr></table><div class="showcode"><button class="btn btn-info">Show code</button><span> (defined in <a href="https://github.com/croquiscom/crojsdoc/blob/master//src/render.coffee#L244">/src/render.coffee:244</a>)</span></div><pre class="sourcecode prettyprint .linenums:244">run: -&gt;
+  @result.ns_pages = @_groupByNamespaces @result.pages
+  @result.ns_restapis = @_groupByNamespaces @result.restapis
+  @result.ns_classes = @_groupByNamespaces @result.classes
+  @result.ns_modules = @_groupByNamespaces @result.modules
+  @result.ns_features = @_groupByNamespaces @result.features
+  @result.ns_files = @_groupByNamespaces @result.files
+
+  @_copyResources @resources_dir, @options.output_dir, =&gt;
+    @_renderReadme()
+    @_renderGuides()
+    @_renderPages()
+    @_renderRESTApis()
+    @_renderClasses()
+    @_renderModules()
+    @_renderFeatures()
+    @_renderFiles()</pre></div></div></div></section></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>

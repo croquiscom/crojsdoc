@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - render.coffee</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../classes/index.html">Classes</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files - render.coffee <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs sidebar col-sm-3" data-spy="affix"><div class="cormo-sidenav"><div class="panel panel-default"><div class="panel-collapse collapse in" id="undefined_body"><ul class="nav nav-pills nav-stacked"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li class="active"><a href="../files/render.coffee.html">render.coffee</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#dox__body">dox/<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="dox__body"><ul class="nav nav-pills nav-stacked"><li><a href="../files/dox.dox.coffee.html">dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">utils.coffee</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#types__body">types/<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="types__body"><ul class="nav nav-pills nav-stacked"><li><a href="../files/types.code_context.coffee.html">code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">comment.coffee</a></li><li><a href="../files/types.content.coffee.html">content.coffee</a></li><li><a href="../files/types.options.coffee.html">options.coffee</a></li><li><a href="../files/types.result.coffee.html">result.coffee</a></li><li><a href="../files/types.tag.coffee.html">tag.coffee</a></li></ul></div></div></div></div><div class="col-sm-9 col-sm-offset-3"><section><h1>render.coffee</h1></section><pre class="prettyprint">##
+# Renders documentations from result of collector
+# @module render
+# @see Renderer
+
+fs = require 'fs.extra'
+pug = require 'pug'
+{resolve, dirname} = require 'path'
+
+##
+# Renders documentations from result of collector
+class Renderer
+  ##
+  # Creates a Renderer instance
+  constructor: (@result, @options) -&gt;
+    theme = 'default'
+    @resources_dir = resolve __dirname, '../themes', theme, 'resources'
+    @templates_dir = resolve __dirname, '../themes', theme, 'templates'
+
+  ##
+  # @param {String} type
+  # @return {String}
+  _makeMissingLink: (type, place = '') -&gt;
+    txt = if @result.ids[type]
+      &quot;'#{type}' link is ambiguous&quot;
+    else
+      &quot;'#{type}' link does not exist&quot;
+    console.log txt + &quot; #{place}&quot;
+    return &quot;&lt;span class='missing-link'&gt;#{type}&lt;/span&gt;&quot;
+
+  ##
+  # Makes links for given type
+  #
+  # * &quot;String&quot; -&amp;gt; &quot;&amp;lt;a href='reference url for String'&amp;gt;String&amp;lt;/a&amp;gt;&quot;
+  # * &quot;Array&amp;lt;Model&amp;gt;&quot; -&amp;gt; &quot;&amp;lt;a href='reference url for Array'&amp;gt;Array&amp;lt;/a&amp;gt;&amp;amp;lt;&amp;lt;a href='internal url for Model'&amp;gt;Model&amp;lt;/a&amp;gt;&amp;amp;gt;&quot;
+  # @param {String} rel_path
+  # @param {String} type
+  # @return {String}
+  _makeTypeLink: (rel_path, type, place = '') -&gt;
+    return type if not type
+    getlink = (type) =&gt;
+      if @options.types[type]
+        link = @options.types[type]
+      else if @result.ids[type] and @result.ids[type] isnt 'DUPLICATED ENTRY'
+        filename = @result.ids[type].filename + '.html'
+        html_id = @result.ids[type].html_id or ''
+        link = &quot;#{rel_path}#{filename}##{html_id}&quot;
+      else
+        return @_makeMissingLink type, place
+      return &quot;&lt;a href='#{link}'&gt;#{type}&lt;/a&gt;&quot;
+    if res = type.match(/\[(.*)\]\((.*)\)/)
+      @options.types[res[1]] = res[2]
+      return &quot;&lt;a href='#{res[2]}'&gt;#{res[1]}&lt;/a&gt;&quot;
+    if res = type.match /(.*?)&lt;(.*)&gt;/
+      return &quot;#{@_makeTypeLink rel_path, res[1]}&amp;lt;#{@_makeTypeLink rel_path, res[2]}&amp;gt;&quot;
+    else
+      return getlink type
+
+  ##
+  # @param {String} rel_path
+  # @param {String} str
+  # @return {String}
+  _makeSeeLink: (rel_path, str) -&gt;
+    if @result.ids[str]
+      filename = @result.ids[str].filename + '.html'
+      html_id = @result.ids[str].html_id or ''
+      str = &quot;&lt;a href='#{rel_path}#{filename}##{html_id}'&gt;#{str}&lt;/a&gt;&quot;
+    return str
+
+  ##
+  # Converts link markups to HTML links in the description
+  # @param {String} rel_path
+  # @param {String} str
+  # @return {String}
+  _convertLink: (rel_path, str) -&gt;
+    return '' if not str
+    str = str.replace /\[\[#([^\[\]]+)\]\]/g, (_, $1) =&gt;
+      if @result.ids[$1] and @result.ids[$1] isnt 'DUPLICATED ENTRY'
+        filename = @result.ids[$1].filename + '.html'
+        html_id = @result.ids[$1].html_id or ''
+        return &quot;&lt;a href='#{rel_path}#{filename}##{html_id}'&gt;#{$1}&lt;/a&gt;&quot;
+      else
+        return @_makeMissingLink $1
+    return str
+
+  ##
+  # @param {String} source
+  # @param {String} target
+  # @param {Function} callback
+  _copyResources: (source, target, callback) -&gt;
+    try
+      files = fs.readdirSync target
+    catch
+      files = []
+    for file in files
+      if file[0] isnt '.'
+        fs.rmrfSync resolve target, file
+    try fs.mkdirSync target
+    fs.copyRecursive source, target, -&gt;
+      callback()
+
+  ##
+  # Renders one template
+  _renderOne: (pug_options, template, output) -&gt;
+    pug_options.result = @result
+    pug_options.makeTypeLink = @_makeTypeLink.bind(@) if not pug_options.makeTypeLink
+    pug_options.makeSeeLink = @_makeSeeLink.bind(@)
+    pug_options.convertLink = @_convertLink.bind(@)
+    pug_options.github = @options.github
+    pug_options.cache = true
+    pug_options.self = true
+    pug.renderFile &quot;#{@templates_dir}/#{template}.pug&quot;, pug_options, (error, result) =&gt;
+      return console.error error.stack if error
+      output_file = &quot;#{@options.output_dir}/#{output}.html&quot;
+      fs.writeFile output_file, result, (error) =&gt;
+        return console.error 'failed to create '+output_file if error
+        console.log output_file + ' is created' if not @options.quiet
+
+  ##
+  # Renders the README
+  _renderReadme: -&gt;
+    pug_options =
+      rel_path: './'
+      name: 'README'
+      content: @result.readme
+      type: 'home'
+    @_renderOne pug_options, 'extra', 'index'
+
+  ##
+  # Renders guides
+  _renderGuides: -&gt;
+    return if @result.guides.length is 0
+    try fs.mkdirSync &quot;#{@options.output_dir}/guides&quot;
+    @result.guides.forEach (guide) =&gt;
+      pug_options =
+        rel_path: '../'
+        name: guide.name
+        content: guide.content
+        type: 'guides'
+      @_renderOne pug_options, 'extra', guide.filename
+
+  ##
+  # Renders pages
+  _renderPages: -&gt;
+    if @result.pages.length &gt; 0
+      pug_options =
+        rel_path: './'
+        name: 'Pages'
+        type: 'pages'
+      @_renderOne pug_options, 'pages', 'pages'
+
+  ##
+  # Renders REST apis
+  _renderRESTApis: -&gt;
+    if @result.restapis.length &gt; 0
+      pug_options =
+        rel_path: './'
+        name: 'REST APIs'
+        type: 'restapis'
+      @_renderOne pug_options, 'restapis', 'restapis'
+
+  ##
+  # Renders classes
+  _renderClasses: -&gt;
+    return if @result.classes.length is 0
+    try fs.mkdirSync &quot;#{@options.output_dir}/classes&quot;
+    pug_options =
+      rel_path: '../'
+      type: 'classes'
+    @_renderOne pug_options, 'class-toc', 'classes/index'
+    @result.classes.forEach (klass) =&gt;
+      pug_options =
+        rel_path: '../'
+        name: klass.ctx.name
+        klass: klass
+        properties: klass.properties
+        type: 'classes'
+        _makeTypeLink: (path, type) =&gt;
+          @_makeTypeLink path, type, &quot;(in #{klass.full_path})&quot;
+      @_renderOne pug_options, 'class', klass.filename
+
+  ##
+  # Renders modules
+  _renderModules: -&gt;
+    return if @result.modules.length is 0
+    try fs.mkdirSync &quot;#{@options.output_dir}/modules&quot;
+    pug_options =
+      rel_path: '../'
+      type: 'modules'
+    @_renderOne pug_options, 'module-toc', 'modules/index'
+    @result.modules.forEach (module) =&gt;
+      pug_options =
+        rel_path: '../'
+        name: module.ctx.name
+        module_data: module
+        properties: module.properties
+        type: 'modules'
+      @_renderOne pug_options, 'module', module.filename
+
+  ##
+  # Renders features
+  _renderFeatures: -&gt;
+    return if @result.features.length is 0
+    try fs.mkdirSync &quot;#{@options.output_dir}/features&quot;
+    @result.features.forEach (feature) =&gt;
+      pug_options =
+        rel_path: '../'
+        name: feature.name
+        feature: feature
+        type: 'features'
+      @_renderOne pug_options, 'feature', feature.filename
+
+  ##
+  # Renders files
+  _renderFiles: -&gt;
+    return if @result.files.length is 0
+    try fs.mkdirSync &quot;#{@options.output_dir}/files&quot;
+    @result.files.forEach (file) =&gt;
+      pug_options =
+        rel_path: '../'
+        name: file.name
+        file: file
+        type: 'files'
+      @_renderOne pug_options, 'file', file.filename
+
+  ##
+  # Groups items by namespaces
+  _groupByNamespaces: (items) -&gt;
+    if items.length is 0
+      return []
+    current_group = []
+    grouped_items = [current_group]
+    current_namespace = items[0].namespace
+    items.forEach (item) -&gt;
+      if current_namespace isnt item.namespace
+        current_group = []
+        grouped_items.push current_group
+        current_namespace = item.namespace
+      current_group.push item
+    return grouped_items
+
+  ##
+  # Runs
+  run: -&gt;
+    @result.ns_pages = @_groupByNamespaces @result.pages
+    @result.ns_restapis = @_groupByNamespaces @result.restapis
+    @result.ns_classes = @_groupByNamespaces @result.classes
+    @result.ns_modules = @_groupByNamespaces @result.modules
+    @result.ns_features = @_groupByNamespaces @result.features
+    @result.ns_files = @_groupByNamespaces @result.files
+
+    @_copyResources @resources_dir, @options.output_dir, =&gt;
+      @_renderReadme()
+      @_renderGuides()
+      @_renderPages()
+      @_renderRESTApis()
+      @_renderClasses()
+      @_renderModules()
+      @_renderFeatures()
+      @_renderFiles()
+
+##
+# Renders
+# @param {Result} result
+# @param {Options} options
+# @memberOf render
+render = (result, options) -&gt;
+  renderer = new Renderer result, options
+  renderer.run()
+
+module.exports = render</pre></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>

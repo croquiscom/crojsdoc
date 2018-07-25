@@ -1,4 +1,4 @@
-output: doc
+output: docs
 title: CroJSDoc
 quiet: true
 files: true

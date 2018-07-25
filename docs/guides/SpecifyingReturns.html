@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - Specifying returns</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"><link href="../tocify/jquery.tocify.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides - Specifying returns <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../classes/index.html">Classes</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs col-sm-3"><div id="toc"></div></div><div class="col-sm-9"><div><p>JavaScript has the asynchronous nature, and CroJSDoc provides some tags for documentation asynchronicity.</p>
+<h1 id="nodejs-style-s-callback">NodeJS style&#39;s callback</h1>
+<p>Use @nodejscallback.</p>
+<pre><code class="language-javascript">// (Borrowed from Node.js Manual)
+
+/**
+ * Asynchronously reads the entire contents of a file.
+ * @param {String} filename
+ * @param {Object} [options]
+ * @param {String} [options.encoding=null]
+ * @param {String} [options.flag=&#39;r&#39;]
+ * @return {String}
+ * @nodejscallback
+ */
+function readFile(filename, options, callback) {
+  require(&#39;fs&#39;).readFile(filename, options, callback);
+}
+
+readFile(&#39;test&#39;, { encoding: &#39;utf-8&#39; }, function (error, content) {
+  console.log(content);
+});</code></pre>
+<pre><code class="language-coffeescript"># (Borrowed from Node.js Manual)
+
+##
+# Asynchronously reads the entire contents of a file.
+# @param {String} filename
+# @param {Object} [options]
+# @param {String} [options.encoding=null]
+# @param {String} [options.flag=&#39;r&#39;]
+# @return {String}
+# @nodejscallback
+readFile = (filename, options, callback) -&gt;
+  require(&#39;fs&#39;).readFile filename, options, callback
+
+readFile &#39;test&#39;, encoding: &#39;utf-8&#39;, (error, content) -&gt;
+  console.log content</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Asynchronously reads the entire contents of a file.</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>filename</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>options</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>encoding=null</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>flag='r'</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>callback</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'>Function</a>(error, result)</span></td><td><span> NodeJS style's callback</span></td></tr><tr><td><span class="method-depth1"></span><code>error</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'>Error</a></span></td><td><span> See throws</span></td></tr><tr><td><span class="method-depth1"></span><code>result</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> See returns</span></td></tr></table><h4>Returns<small><span> as</span><span class="label label-info">NodeJS callback</span></small></h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table>
+</div>
+
+<h1 id="promise">Promise</h1>
+<p>Use @promise.</p>
+<pre><code class="language-javascript">/**
+ * Asynchronously reads the entire contents of a file.
+ * @param {String} filename
+ * @param {Object} [options]
+ * @param {String} [options.encoding=null]
+ * @param {String} [options.flag=&#39;r&#39;]
+ * @return {String}
+ * @promise
+ */
+function readFile(filename, options) {
+  return Promise.promisify(require(&#39;fs&#39;).readFile)(filename, options);
+}
+
+readFile(&#39;test&#39;, { encoding: &#39;utf-8&#39; })
+.then(function (content) {
+  console.log(content);
+});</code></pre>
+<pre><code class="language-coffeescript">##
+# Asynchronously reads the entire contents of a file.
+# @param {String} filename
+# @param {Object} [options]
+# @param {String} [options.encoding=null]
+# @param {String} [options.flag=&#39;r&#39;]
+# @return {String}
+# @promise
+readFile = (filename, options) -&gt;
+  Promise.promisify(require(&#39;fs&#39;).readFile) filename, options
+
+readFile &#39;test&#39;, encoding: &#39;utf-8&#39;
+.then (content) -&gt;
+  console.log content</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Asynchronously reads the entire contents of a file.</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>filename</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>options</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>encoding=null</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>flag='r'</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr></table><h4>Returns<small><span> as</span><span class="label label-info">Promise</span></small></h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table>
+</div>
+
+<h1 id="together">Together</h1>
+<p>@nodejscallback and @promise can be used together.</p>
+<pre><code class="language-javascript">/**
+ * Asynchronously reads the entire contents of a file.
+ * @param {String} filename
+ * @param {Object} [options]
+ * @param {String} [options.encoding=null]
+ * @param {String} [options.flag=&#39;r&#39;]
+ * @return {String}
+ * @nodejscallback
+ * @promise
+ */
+function readFile(filename, options, callback) {
+  return Promise.promisify(require(&#39;fs&#39;).readFile)(filename, options)
+  .nodeify(callback);
+}
+
+readFile(&#39;test&#39;, { encoding: &#39;utf-8&#39; }, function (error, content) {
+  console.log(content);
+});
+// or
+readFile(&#39;test&#39;, { encoding: &#39;utf-8&#39; })
+.then(function (content) {
+  console.log(content);
+});</code></pre>
+<pre><code class="language-coffeescript">##
+# Asynchronously reads the entire contents of a file.
+# @param {String} filename
+# @param {Object} [options]
+# @param {String} [options.encoding=null]
+# @param {String} [options.flag=&#39;r&#39;]
+# @return {String}
+# @nodejscallback
+# @promise
+readFile = (filename, options, callback) -&gt;
+  Promise.promisify(require(&#39;fs&#39;).readFile) filename, options
+  .nodeify callback
+
+readFile &#39;test&#39;, encoding: &#39;utf-8&#39;, (error, content) -&gt;
+  console.log content
+# or
+readFile &#39;test&#39;, encoding: &#39;utf-8&#39;
+.then (content) -&gt;
+  console.log content</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Asynchronously reads the entire contents of a file.</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>filename</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>options</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object'>Object</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>encoding=null</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>flag='r'</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>callback</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'>Function</a>(error, result)</span></td><td><span> NodeJS style's callback</span></td></tr><tr><td><span class="method-depth1"></span><code>error</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'>Error</a></span></td><td><span> See throws</span></td></tr><tr><td><span class="method-depth1"></span><code>result</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span> See returns</span></td></tr></table><h4>Returns<small><span> as</span><span class="label label-info">Promise</span><span class="label label-info">NodeJS callback</span></small></h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String'>String</a></span></td><td><span></span></td></tr></table>
+</div>
+
+<h1 id="use-ordinary-tags">Use ordinary tags</h1>
+<p>If you don&#39;t use NodeJS style&#39;s callback or the function returns an other value immediately,
+you can use ordinary tags.</p>
+<pre><code class="language-javascript">// (Borrowed from CORMO)
+
+/**
+ * Finds a record by id.
+ *
+ * If a callback is given, it returns the record in the callback.
+ * Otherwise, it returns an Query object for chaining.
+ * @param {RecordID} id
+ * @param {Function} [callback]
+ * @param {Error} callback.error
+ * @param {Model} callback.record
+ * @return {Query}
+ */
+find = function (id, callback) {}</code></pre>
+<pre><code class="language-coffeescript"># (Borrowed from CORMO)
+
+##
+# Finds a record by id.
+#
+# If a callback is given, it returns the record in the callback.
+# Otherwise, it returns an Query object for chaining.
+# @param {RecordID} id
+# @param {Function} [callback]
+# @param {Error} callback.error
+# @param {Model} callback.record
+# @return {Query}
+@find: (id, callback) -&gt;</code></pre>
+<p>The result of the above comment:</p>
+<div class='well'>
+<div><p>Finds a record by id.</p><p>If a callback is given, it returns the record in the callback. Otherwise, it returns an Query object for chaining.</p></div>
+<h4>Parameters</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td><span class="method-depth0"></span><code>id</code></td><td><span>RecordID</span></td><td><span> </span></td></tr><tr><td><span class="method-depth0"></span><code>callback</code><span class="pull-right label label-optional">optional</span></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function'>Function</a>(error, record)</span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>error</code></td><td><span><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error'>Error</a></span></td><td><span> </span></td></tr><tr><td><span class="method-depth1"></span><code>record</code></td><td><span>Model</span></td><td><span> </span></td></tr></table><h4>Returns</h4><table class="table table-bordered table-condensed table-hover"><tr><th>Name</th><th>Type</th><th>Description</th></tr><tr><td>(Returns)</td><td><span>Query</span></td><td><span></span></td></tr></table>
+</div></div></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><script src="http://code.jquery.com/ui/1.9.0/jquery-ui.min.js"></script><script src="../tocify/jquery.tocify.js"></script><script>$(function() {
+  $('#toc').tocify({extendPage:false, scrollTo:60});
+});</script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>
