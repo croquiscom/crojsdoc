@@ -1,0 +1,10 @@
+div.showcode
+  button.btn.btn-info= `${showcode_label}`
+  span
+    |  (defined in 
+    if self.github && self.github.sourcelink
+      a(href=`${self.github.repository}/blob/${self.github.branch}/${showcode_full_path}#L${showcode_line_number}`)= `${showcode_full_path}:${showcode_line_number}`
+    else
+      = `${showcode_full_path}:${showcode_line_number}`
+    |)
+pre.sourcecode.prettyprint(class='.linenums:'+showcode_line_number)= showcode_code

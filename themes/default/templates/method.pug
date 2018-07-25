@@ -5,17 +5,17 @@
 div.panel.panel-success
   div.panel-heading.collapsed(data-toggle='collapse',data-target='#'+item.html_id+'_body')
     h3.panel-title
-      | #{display_name}
+      = `${display_name}`
       if method.ctx.type==='method'
         | (
         each param, i in method.params
           if param.optional
             if param.default_value
-              | [#{param.name}=#{param.default_value}]
+              = `[${param.name}=${param.default_value}]`
             else
-              | [#{param.name}]
+              = `[${param.name}]`
           else
-            | #{param.name}
+            = `${param.name}`
           if i+1 < method.params.length
             | , 
         | )

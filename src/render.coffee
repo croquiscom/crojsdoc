@@ -4,7 +4,7 @@
 # @see Renderer
 
 fs = require 'fs.extra'
-jade = require 'jade'
+pug = require 'pug'
 {resolve, dirname} = require 'path'
 
 ##
@@ -101,15 +101,15 @@ class Renderer
 
   ##
   # Renders one template
-  _renderOne: (jade_options, template, output) ->
-    jade_options.result = @result
-    jade_options.makeTypeLink = @_makeTypeLink.bind(@) if not jade_options.makeTypeLink
-    jade_options.makeSeeLink = @_makeSeeLink.bind(@)
-    jade_options.convertLink = @_convertLink.bind(@)
-    jade_options.github = @options.github
-    jade_options.cache = true
-    jade_options.self = true
-    jade.renderFile "#{@templates_dir}/#{template}.jade", jade_options, (error, result) =>
+  _renderOne: (pug_options, template, output) ->
+    pug_options.result = @result
+    pug_options.makeTypeLink = @_makeTypeLink.bind(@) if not pug_options.makeTypeLink
+    pug_options.makeSeeLink = @_makeSeeLink.bind(@)
+    pug_options.convertLink = @_convertLink.bind(@)
+    pug_options.github = @options.github
+    pug_options.cache = true
+    pug_options.self = true
+    pug.renderFile "#{@templates_dir}/#{template}.pug", pug_options, (error, result) =>
       return console.error error.stack if error
       output_file = "#{@options.output_dir}/#{output}.html"
       fs.writeFile output_file, result, (error) =>
@@ -119,12 +119,12 @@ class Renderer
   ##
   # Renders the README
   _renderReadme: ->
-    jade_options =
+    pug_options =
       rel_path: './'
       name: 'README'
       content: @result.readme
       type: 'home'
-    @_renderOne jade_options, 'extra', 'index'
+    @_renderOne pug_options, 'extra', 'index'
 
   ##
   # Renders guides
@@ -132,44 +132,44 @@ class Renderer
     return if @result.guides.length is 0
     try fs.mkdirSync "#{@options.output_dir}/guides"
     @result.guides.forEach (guide) =>
-      jade_options =
+      pug_options =
         rel_path: '../'
         name: guide.name
         content: guide.content
         type: 'guides'
-      @_renderOne jade_options, 'extra', guide.filename
+      @_renderOne pug_options, 'extra', guide.filename
 
   ##
   # Renders pages
   _renderPages: ->
     if @result.pages.length > 0
-      jade_options =
+      pug_options =
         rel_path: './'
         name: 'Pages'
         type: 'pages'
-      @_renderOne jade_options, 'pages', 'pages'
+      @_renderOne pug_options, 'pages', 'pages'
 
   ##
   # Renders REST apis
   _renderRESTApis: ->
     if @result.restapis.length > 0
-      jade_options =
+      pug_options =
         rel_path: './'
         name: 'REST APIs'
         type: 'restapis'
-      @_renderOne jade_options, 'restapis', 'restapis'
+      @_renderOne pug_options, 'restapis', 'restapis'
 
   ##
   # Renders classes
   _renderClasses: ->
     return if @result.classes.length is 0
     try fs.mkdirSync "#{@options.output_dir}/classes"
-    jade_options =
+    pug_options =
       rel_path: '../'
       type: 'classes'
-    @_renderOne jade_options, 'class-toc', 'classes/index'
+    @_renderOne pug_options, 'class-toc', 'classes/index'
     @result.classes.forEach (klass) =>
-      jade_options =
+      pug_options =
         rel_path: '../'
         name: klass.ctx.name
         klass: klass
@@ -177,25 +177,25 @@ class Renderer
         type: 'classes'
         _makeTypeLink: (path, type) =>
           @_makeTypeLink path, type, "(in #{klass.full_path})"
-      @_renderOne jade_options, 'class', klass.filename
+      @_renderOne pug_options, 'class', klass.filename
 
   ##
   # Renders modules
   _renderModules: ->
     return if @result.modules.length is 0
     try fs.mkdirSync "#{@options.output_dir}/modules"
-    jade_options =
+    pug_options =
       rel_path: '../'
       type: 'modules'
-    @_renderOne jade_options, 'module-toc', 'modules/index'
+    @_renderOne pug_options, 'module-toc', 'modules/index'
     @result.modules.forEach (module) =>
-      jade_options =
+      pug_options =
         rel_path: '../'
         name: module.ctx.name
         module_data: module
         properties: module.properties
         type: 'modules'
-      @_renderOne jade_options, 'module', module.filename
+      @_renderOne pug_options, 'module', module.filename
 
   ##
   # Renders features
@@ -203,12 +203,12 @@ class Renderer
     return if @result.features.length is 0
     try fs.mkdirSync "#{@options.output_dir}/features"
     @result.features.forEach (feature) =>
-      jade_options =
+      pug_options =
         rel_path: '../'
         name: feature.name
         feature: feature
         type: 'features'
-      @_renderOne jade_options, 'feature', feature.filename
+      @_renderOne pug_options, 'feature', feature.filename
 
   ##
   # Renders files
@@ -216,12 +216,12 @@ class Renderer
     return if @result.files.length is 0
     try fs.mkdirSync "#{@options.output_dir}/files"
     @result.files.forEach (file) =>
-      jade_options =
+      pug_options =
         rel_path: '../'
         name: file.name
         file: file
         type: 'files'
-      @_renderOne jade_options, 'file', file.filename
+      @_renderOne pug_options, 'file', file.filename
 
   ##
   # Groups items by namespaces

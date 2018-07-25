@@ -6,7 +6,7 @@ block vars
   - var use_affix = false
 
 block style
-  link(href='#{self.rel_path}tocify/jquery.tocify.css', rel='stylesheet', type='text/css')
+  link(href=`${self.rel_path}tocify/jquery.tocify.css`, rel='stylesheet', type='text/css')
 
 block nav
   div#toc
@@ -17,7 +17,7 @@ block body
 
 block script
   script(src='http://code.jquery.com/ui/1.9.0/jquery-ui.min.js')
-  script(src='#{self.rel_path}tocify/jquery.tocify.js')
+  script(src=`${self.rel_path}tocify/jquery.tocify.js`)
   script.
     $(function() {
       $('#toc').tocify({extendPage:false, scrollTo:60});

@@ -8,7 +8,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
     div.collapse.navbar-collapse(id="top-navigation-collapse")
       ul.nav.navbar-nav
         li(class=(self.type=='home'?'active':''))
-          a(href='#{self.rel_path}index.html') Home
+          a(href=`${self.rel_path}index.html`) Home
         if self.result.guides.length > 0
           li.dropdown(class=(self.type=='guides'?'active':''))
             a.dropdown-toggle(data-toggle='dropdown',href='#')
@@ -23,20 +23,20 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
                   a(href=self.rel_path+item.filename+'.html')= item.name
         if self.result.modules.length > 0
           li(class=(self.type=='modules'?'active':''))
-            a(href='#{self.rel_path}modules/index.html') Modules
+            a(href=`${self.rel_path}modules/index.html`) Modules
               if self.type=='modules' && self.name
                 = ' - ' + self.name
         if self.result.classes.length > 0
           li(class=(self.type=='classes'?'active':''))
-            a(href='#{self.rel_path}classes/index.html') Classes
+            a(href=`${self.rel_path}classes/index.html`) Classes
               if self.type=='classes' && self.name
                 = ' - ' + self.name
         if self.result.pages.length > 0
           li(class=(self.type=='pages'?'active':''))
-            a(href='#{self.rel_path}pages.html') Pages
+            a(href=`${self.rel_path}pages.html`) Pages
         if self.result.restapis.length > 0
           li(class=(self.type=='restapis'?'active':''))
-            a(href='#{self.rel_path}restapis.html') REST APIs
+            a(href=`${self.rel_path}restapis.html`) REST APIs
         if self.result.features.length > 0
           li.dropdown(class=(self.type=='features'?'active':''))
             a.dropdown-toggle(data-toggle='dropdown',href='#')
