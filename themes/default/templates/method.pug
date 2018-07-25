@@ -2,11 +2,13 @@
 //- method: comment that includes description
 //- item!=method if overridden method
 
-div.panel(class="#{method.apimethod ? 'panel-' + method.apimethod.style : 'panel-success'}")
+- var api_styles = { GET: 'success', POST: 'info', PUT: 'warning', DELETE: 'danger' }
+
+div.panel(class=`${method.apimethod ? 'panel-' + (api_styles[method.apimethod] || 'default') : 'panel-success'}`)
   div.panel-heading.collapsed(data-toggle='collapse',data-target='#'+item.html_id+'_body')
     h3.panel-title
       if method.apimethod
-        span.label(class="label-#{method.apimethod.style}", style="margin:0 10px 0 0; vertical-align: top")= `${method.apimethod.string}`
+        span.label(class=`label-${api_styles[method.apimethod] || 'default'}`, style="margin:0 10px 0 0; vertical-align: top")= `${method.apimethod}`
         span= `${display_name}`
       else
         = `${display_name}`
