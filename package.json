@@ -18,7 +18,7 @@
     "crojsdoc": "./bin/crojsdoc"
   },
   "scripts": {
-    "build": "coffee -c -o lib src",
+    "build": "coffee -c -b -o lib src",
     "doc": "node bin/crojsdoc",
     "test": "NODE_ENV=test mocha --require coffeescript/register ./test/*.coffee"
   },
