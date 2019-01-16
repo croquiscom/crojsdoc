@@ -295,6 +295,10 @@ class Collector
       comments = dox.parseComments data, { raw: true }
       comments.forEach (comment) ->
         comment.language = 'javascript'
+    else if type is 'typescript'
+      comments = dox.parseCommentsTS data
+      comments.forEach (comment) ->
+        comment.language = 'typescript'
     else if type is 'page'
       namespace = ''
       name = path.substr(0, path.length-3).replace(/[^A-Za-z0-9]*Page$/, '')
@@ -427,7 +431,7 @@ class Collector
         when 'property', 'method'
           class_name = comment.ctx.class_name
           if class_name and class_comment = @result.classes[class_name]
-            if comment.ctx.is_coffeescript_constructor
+            if comment.ctx.is_constructor
               # merge to class comment
               class_comment.code = comment.code
               class_comment.codeStart = comment.codeStart
@@ -502,6 +506,8 @@ class Collector
       return 'coffeescript'
     else if /\.js$/.test path
       return 'javascript'
+    else if /\.ts$/.test path
+      return 'typescript'
     else if /Page\.md$/.test path
       return 'page'
     else if /Guide\.md$/.test path
@@ -539,13 +545,13 @@ class Collector
           @_addGuide path, data
         when 'feature'
           @_addFeature path, data
-        when 'coffeescript', 'javascript', 'page'
+        when 'coffeescript', 'javascript', 'typescript', 'page'
           comments = @_getComments type, full_path, path, data
           if comments?
             [].push.apply all_comments, comments
         when 'readme'
           @result.readme = markdown data
-      if type is 'coffeescript' or type is 'javascript'
+      if type is 'coffeescript' or type is 'javascript' or type is 'typescript'
         @_addFile path, data
       file_count_read++
       console.log path + ' is processed' if not (@options.quiet or is_test_mode)

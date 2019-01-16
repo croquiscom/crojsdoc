@@ -63,7 +63,7 @@ exports.parseComments = (js, options = {}) ->
           comment.ctx = exports.parseCodeContext code, parentContext
 
           if comment.isConstructor and comment.ctx
-              comment.ctx.type = 'constructor'
+            comment.ctx.type = 'constructor'
 
           # starting a new namespace
           if comment.ctx and (comment.ctx.type is 'prototype' or comment.ctx.type is 'class')
@@ -334,8 +334,7 @@ exports.parseTagTypes = (str, tag) ->
   if not str
     if tag
       tag.types = []
-      tag.typesDescription = ''
-      tag.optional = tag.nullable = tag.nonNullable = tag.variable = false
+      tag.optional = false
     return []
   {parse, publish, NodeType} = require 'jsdoctypeparser'
   result = parse str.substr(1, str.length - 2)
@@ -364,28 +363,9 @@ exports.parseTagTypes = (str, tag) ->
 
   if tag
     tag.types = types
-    #tag.typesDescription = result.toHtml()
     tag.optional = (tag.name and tag.name.slice(0,1) is '[') or optional
-    #tag.nullable = result.nullable
-    #tag.nonNullable = result.nonNullable
-    #tag.variable = result.variable
 
   types
-
-##
-# Determine if a parameter is optional.
-#
-# Examples:
-# JSDoc: {Type} [name]
-# Google: {Type=} name
-# TypeScript: {Type?} name
-#
-# @param {Object} tag
-# @return {Boolean}
-# @api public
-exports.parseParamOptional = (tag) ->
-  lastTypeChar = tag.types.slice(-1)[0].slice(-1)
-  tag.name.slice(0,1) is '[' or lastTypeChar is '=' or lastTypeChar is '?'
 
 ##
 # Parse the context from the given `str` of js.
@@ -434,11 +414,12 @@ exports.contextPatternMatchers = [
   (str, parentContext) ->
     if /^\s*constructor\s*\(/.exec(str)
       return {
-        type: 'constructor'
+        type: 'method'
         constructor: parentContext.name
         cons: parentContext.name
         name: 'constructor'
         string: (if parentContext?.name then parentContext.name + '.prototype.' else '') + 'constructor()'
+        is_constructor: true
       }
   # class method
   (str, parentContext) ->
@@ -583,6 +564,3 @@ exports.contextPatternMatchers = [
         string: RegExp.$1
       }
 ]
-
-exports.setMarkedOptions = (opts) ->
-  markdown.setOptions opts

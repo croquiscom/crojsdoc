@@ -50,7 +50,7 @@ exports.parseCommentsCoffee = (coffee, options = {}) ->
         if comments[i].indent.search(comment.indent)<0
           break
         i--
-      comment.ctx = exports.parseCodeContextCoffee code, if i>=0 then comments[i] else null
+      comment.ctx = parseCodeContextCoffee code, if i>=0 then comments[i] else null
       comment.tags.forEach (tag) ->
         if tag.type is 'class'
           comment.ctx or= {}
@@ -175,7 +175,7 @@ exports.parseCommentsCoffee = (coffee, options = {}) ->
 # @param {String} str
 # @return {Object}
 # @api public
-exports.parseCodeContextCoffee = (str, parent) ->
+parseCodeContextCoffee = (str, parent) ->
   str = str.split('\n')[0]
 
   # function expression
@@ -249,7 +249,7 @@ exports.parseCodeContextCoffee = (str, parent) ->
         cons: class_name
         name: RegExp.$1
         string: class_name + '::' + RegExp.$1 + '()'
-        is_coffeescript_constructor: RegExp.$1 is 'constructor'
+        is_constructor: RegExp.$1 is 'constructor'
       }
     else
       return {

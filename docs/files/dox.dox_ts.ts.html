@@ -1,0 +1,234 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CroJSDoc - dox/dox_ts.ts</title><script>if (location.protocol.match(/^http/) && location.pathname.match('\.html') === null && location.pathname.slice(-1) !== '/') {
+  location.href = location.href + '/';
+}</script><link href="../bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]--><link href="../google-code-prettify/prettify.css" rel="stylesheet" type="text/css"><link href="../style.css" rel="stylesheet" type="text/css"></head><body data-spy="scroll" data-target=".sidebar"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#top-navigation-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><div class="collapse navbar-collapse" id="top-navigation-collapse"><ul class="nav navbar-nav"><li><a href="../index.html">Home</a></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Guides <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../guides/ListOfTags.html">List of tags</a></li><li><a href="../guides/SetupGithubPages.html">Setup github pages</a></li><li><a href="../guides/SpecifyingReturns.html">Specifying returns</a></li><li><a href="../guides/SpecifyingTypes.html">Specifying types</a></li></ul></li><li><a href="../modules/index.html">Modules</a></li><li><a href="../classes/index.html">Classes</a></li><li><a href="../restapis.html">REST APIs</a></li><li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Files - dox/dox_ts.ts <span class="caret"></span></a><ul class="dropdown-menu"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/example.ts.html">example.ts</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li><li><a href="../files/dox.dox.coffee.html">dox/dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox/dox_coffee.coffee</a></li><li><a href="../files/dox.dox_ts.ts.html">dox/dox_ts.ts</a></li><li><a href="../files/dox.index.coffee.html">dox/index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">dox/utils.coffee</a></li><li><a href="../files/types.code_context.coffee.html">types/code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">types/comment.coffee</a></li><li><a href="../files/types.content.coffee.html">types/content.coffee</a></li><li><a href="../files/types.options.coffee.html">types/options.coffee</a></li><li><a href="../files/types.result.coffee.html">types/result.coffee</a></li><li><a href="../files/types.tag.coffee.html">types/tag.coffee</a></li></ul></li></ul><div class="options"><label class="checkbox"><input id="options-private" type="checkbox"> Private </label></div></div></div></nav><div class="container-fluid content"><div class="row"><div class="hidden-xs sidebar col-sm-3" data-spy="affix"><div class="cormo-sidenav"><div class="panel panel-default"><div class="panel-collapse collapse in" id="undefined_body"><ul class="nav nav-pills nav-stacked"><li><a href="../files/api.js.html">api.js</a></li><li><a href="../files/cli.coffee.html">cli.coffee</a></li><li><a href="../files/collect.coffee.html">collect.coffee</a></li><li><a href="../files/example.coffee.html">example.coffee</a></li><li><a href="../files/example.js.html">example.js</a></li><li><a href="../files/example.ts.html">example.ts</a></li><li><a href="../files/plugin.coffee.html">plugin.coffee</a></li><li><a href="../files/render.coffee.html">render.coffee</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#dox__body">dox/<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="dox__body"><ul class="nav nav-pills nav-stacked"><li><a href="../files/dox.dox.coffee.html">dox.coffee</a></li><li><a href="../files/dox.dox_coffee.coffee.html">dox_coffee.coffee</a></li><li class="active"><a href="../files/dox.dox_ts.ts.html">dox_ts.ts</a></li><li><a href="../files/dox.index.coffee.html">index.coffee</a></li><li><a href="../files/dox.utils.coffee.html">utils.coffee</a></li></ul></div></div><div class="panel panel-default"><div class="panel-heading" data-toggle="collapse" data-target="#types__body">types/<span class="pull-right glyphicon"></span></div><div class="panel-collapse collapse in" id="types__body"><ul class="nav nav-pills nav-stacked"><li><a href="../files/types.code_context.coffee.html">code_context.coffee</a></li><li><a href="../files/types.comment.coffee.html">comment.coffee</a></li><li><a href="../files/types.content.coffee.html">content.coffee</a></li><li><a href="../files/types.options.coffee.html">options.coffee</a></li><li><a href="../files/types.result.coffee.html">result.coffee</a></li><li><a href="../files/types.tag.coffee.html">tag.coffee</a></li></ul></div></div></div></div><div class="col-sm-9 col-sm-offset-3"><section><h1>dox/dox_ts.ts</h1></section><pre class="prettyprint">// tslint:disable:no-bitwise
+
+import * as ts from 'typescript';
+
+function getTags(jsDoc: any) {
+  if (!jsDoc) {
+    return [];
+  }
+  const tags = jsDoc.tags as ts.JSDocTag[];
+  if (!tags) {
+    return [];
+  }
+  return tags.map((tag) =&gt; {
+    if (ts.isJSDocParameterTag(tag)) {
+      const type = 'param';
+      const name = (tag.name as ts.Identifier).text;
+      const description = tag.comment;
+      const string = `${name} ${tag.comment}`;
+      return { type, string, name, description, types: [], optional: false };
+    } else if (ts.isJSDocReturnTag(tag)) {
+      const type = 'return';
+      const description = tag.comment;
+      const string = tag.comment;
+      return { type, string, description, types: [], optional: false };
+    } else {
+      const type = tag.tagName.text.toLowerCase();
+      if (type === 'memberof') {
+        const parent = tag.comment;
+        const string = tag.comment;
+        return { type, parent, string };
+      } else {
+        const string = tag.comment;
+        return { type, string };
+      }
+    }
+  });
+}
+
+function traverse(sourceFile: ts.SourceFile, node: ts.Node, comments: any[], parentContext) {
+  const jsDocs: any[] = (node as any).jsDoc;
+  const jsDoc = jsDocs &amp;&amp; jsDocs.length &gt; 0 &amp;&amp; jsDocs[jsDocs.length - 1];
+  let startPos: number;
+  if (jsDoc) {
+    startPos = jsDoc.pos;
+  } else {
+    startPos = node.pos;
+  }
+  let codeStartPos: number;
+  if (jsDoc) {
+    codeStartPos = jsDoc.end + 1;
+  } else {
+    codeStartPos = node.pos;
+  }
+  const line = ts.getLineAndCharacterOfPosition(sourceFile, startPos).line + 1;
+  const codeStart = ts.getLineAndCharacterOfPosition(sourceFile, codeStartPos).line + 1;
+  const description = { full: '', summary: '', body: '' };
+  if (jsDoc) {
+    description.full = jsDoc.comment || '';
+    description.summary = description.full.split('\n\n')[0];
+    description.body = description.full.split('\n\n').slice(1).join('\n\n');
+  }
+
+  if (jsDocs &amp;&amp; jsDocs.length &gt; 1) {
+    for (const doc of jsDocs.slice(0, jsDocs.length - 1)) {
+      const comment = {
+        code: '', codeStart: 1, ctx: undefined, description: { full: '', summary: '', body: '' },
+        isClass: false, isConstructor: false, isEvent: false, isPrivate: false,
+        line: 1, tags: getTags(doc),
+      };
+      comments.push(comment);
+    }
+  }
+
+  if (ts.isSourceFile(node)) {
+    for (const statement of node.statements) {
+      traverse(sourceFile, statement, comments, parentContext);
+    }
+  } else if (ts.isClassDeclaration(node)) {
+    const name = sourceFile.text.substring(node.name.pos, node.name.end).trim();
+    const ctx = {
+      cons: name,
+      constructor: name,
+      extends: '',
+      name,
+      string: `new ${name}()`,
+      type: 'class',
+    };
+    const comment = {
+      code: node.getText(sourceFile), codeStart, ctx, description,
+      isClass: true, isConstructor: false, isEvent: false, isPrivate: false,
+      line, tags: getTags(jsDoc),
+    };
+    comments.push(comment);
+    for (const member of node.members) {
+      traverse(sourceFile, member, comments, comment.ctx);
+    }
+  } else if (ts.isConstructorDeclaration(node)) {
+    const ctx = {
+      cons: parentContext.name,
+      constructor: parentContext.name,
+      is_constructor: true,
+      name: 'constructor',
+      string: `${parentContext.name}.prototype.constructor()`,
+      type: 'method',
+    };
+    const comment = {
+      code: node.getText(sourceFile), codeStart, ctx, description,
+      isClass: false, isConstructor: false, isEvent: false, isPrivate: false,
+      line, tags: getTags(jsDoc),
+    };
+    comments.push(comment);
+  } else if (ts.isMethodDeclaration(node)) {
+    const name = sourceFile.text.substring(node.name.pos, node.name.end).trim();
+    const modifierFlags = ts.getCombinedModifierFlags(node);
+    const isPrivate = (modifierFlags &amp; (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) !== 0;
+    const isStatic = (modifierFlags &amp; ts.ModifierFlags.Static) !== 0;
+    let ctx;
+    if (isStatic) {
+      ctx = {
+        name,
+        receiver: parentContext.name,
+        string: `${parentContext.name}.${name}()`,
+        type: 'method',
+      };
+    } else {
+      ctx = {
+        cons: parentContext.name,
+        constructor: parentContext.name,
+        name,
+        string: `${parentContext.name}.prototype.${name}()`,
+        type: 'method',
+      };
+    }
+    const comment = {
+      code: node.getText(sourceFile), codeStart, ctx, description,
+      isClass: false, isConstructor: false, isEvent: false, isPrivate,
+      line, tags: getTags(jsDoc),
+    };
+    comments.push(comment);
+  } else if (ts.isPropertyDeclaration(node)) {
+    const name = sourceFile.text.substring(node.name.pos, node.name.end).trim();
+    const modifierFlags = ts.getCombinedModifierFlags(node);
+    const isPrivate = (modifierFlags &amp; (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) !== 0;
+    const isStatic = (modifierFlags &amp; ts.ModifierFlags.Static) !== 0;
+    let ctx;
+    if (isStatic) {
+      ctx = {
+        name,
+        receiver: parentContext.name,
+        string: `${parentContext.name}.${name}()`,
+        type: 'property',
+      };
+    } else {
+      ctx = {
+        cons: parentContext.name,
+        constructor: parentContext.name,
+        name,
+        string: `${parentContext.name}.prototype.${name}()`,
+        type: 'property',
+      };
+    }
+    const comment = {
+      code: node.getText(sourceFile), codeStart, ctx, description,
+      isClass: false, isConstructor: false, isEvent: false, isPrivate,
+      line, tags: getTags(jsDoc),
+    };
+    comments.push(comment);
+  } else if (ts.isFunctionDeclaration(node)) {
+    const name = sourceFile.text.substring(node.name.pos, node.name.end).trim();
+    const ctx = {
+      name,
+      string: `${name}()`,
+      type: 'function',
+    };
+    const comment = {
+      code: node.getText(sourceFile), codeStart, ctx, description,
+      isClass: false, isConstructor: false, isEvent: false, isPrivate: false,
+      line, tags: getTags(jsDoc),
+    };
+    comments.push(comment);
+  } else if (ts.isExpressionStatement(node)) {
+    const expression = node.expression;
+    let ctx;
+    if (ts.isBinaryExpression(expression)) {
+      const isFunc = ts.isFunctionExpression(expression.right);
+      const left = expression.left;
+      if (ts.isPropertyAccessExpression(left)) {
+        if (ts.isIdentifier(left.expression)) {
+          ctx = {
+            name: left.name.text,
+            receiver: left.expression.text,
+            string: `${left.expression.text}.${left.name.text}()`,
+            type: isFunc ? 'method' : 'property',
+          };
+        } else if (ts.isPropertyAccessExpression(left.expression)) {
+          const leftExpr = left.expression;
+          if (leftExpr.name.text === 'prototype' &amp;&amp; ts.isIdentifier(leftExpr.expression)) {
+            ctx = {
+              cons: leftExpr.expression.text,
+              constructor: leftExpr.expression.text,
+              name: left.name.text,
+              string: `${leftExpr.expression.text}.prototype.${left.name.text}()`,
+              type: isFunc ? 'method' : 'property',
+            };
+          }
+        }
+      }
+    }
+    if (ctx) {
+      const comment = {
+        code: node.getText(sourceFile), codeStart, ctx, description,
+        isClass: false, isConstructor: false, isEvent: false, isPrivate: false,
+        line, tags: getTags(jsDoc),
+      };
+      comments.push(comment);
+    }
+  }
+}
+
+export function parseCommentsTS(data: string) {
+  const comments = [];
+  const compilerOptions = { strict: true, target: ts.ScriptTarget.ES2017 };
+  const compilerHost = ts.createCompilerHost(compilerOptions, true);
+  compilerHost.getSourceFile = (filename: string, languageVersion: ts.ScriptTarget) =&gt; {
+    const text = filename === 'source.ts' ? data : ts.sys.readFile(filename);
+    return ts.createSourceFile(filename, text, languageVersion);
+  };
+  const program = ts.createProgram(['source.ts'], compilerOptions, compilerHost);
+  const sourceFile = program.getSourceFile('source.ts');
+  traverse(sourceFile, sourceFile, comments, null);
+  return comments;
+}</pre></div></div></div><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script src="../bootstrap-3.2.0-dist/js/bootstrap.min.js"></script><script src="../google-code-prettify/prettify.js"></script><script src="../script.js"></script><script src="../group-examples.js"></script><a href="https://github.com/croquiscom/crojsdoc"><img class="github-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a></body></html>
