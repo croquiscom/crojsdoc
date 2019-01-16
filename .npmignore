@@ -1,8 +1,9 @@
 .DS_Store
 Cakefile
 crojsdoc.yaml
-doc
+docs
 examples
 guides
 node_modules
 src
+test
