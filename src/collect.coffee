@@ -227,7 +227,7 @@ class Collector
             comment.apimethod = tag.string.toUpperCase()
             id += '_' + comment.apimethod
           when 'param', 'return', 'returns', 'returnprop', 'throws', 'resterror', 'see'
-            , 'extends', 'todo', 'api', 'uses', 'override', 'example'
+            , 'extends', 'todo', 'api', 'uses', 'override', 'example', 'internal'
           else
             console.log "Unknown tag : #{tag.type} in #{comment.full_path}"
 
