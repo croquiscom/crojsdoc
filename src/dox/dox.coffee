@@ -336,7 +336,7 @@ exports.parseTagTypes = (str, tag) ->
       tag.types = []
       tag.optional = false
     return []
-  {parse, publish, NodeType} = require 'jsdoctypeparser'
+  {parse, publish, NodeType, SyntaxType} = require 'jsdoctypeparser'
   result = parse str.substr(1, str.length - 2)
   optional = false
 
@@ -357,6 +357,9 @@ exports.parseTagTypes = (str, tag) ->
         obj[entry.key] = transform entry.value
         obj
       , {}]
+    else if ast.type is NodeType.GENERIC and ast.meta.syntax is SyntaxType.GenericTypeSyntax.ANGLE_BRACKET_WITH_DOT
+      ast = {...ast, meta: {...ast.meta, syntax: SyntaxType.GenericTypeSyntax.ANGLE_BRACKET}}
+      [publish ast]
     else
       [publish ast]
   types = transform result
