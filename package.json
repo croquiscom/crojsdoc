@@ -48,6 +48,6 @@
     "coffeescript": "^2.4.1",
     "crojsdoc-plugin-auto-namespace": "^0.1.1",
     "crojsdoc-plugin-underscore-private": "^0.1.0",
-    "mocha": "^6.2.1"
+    "mocha": "^10.2.0"
   }
 }
